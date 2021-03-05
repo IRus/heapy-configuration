@@ -20,7 +20,7 @@ services:
     restart: "always"
     user: "${HOST_USER}"
     environment:
-      KOTBOT_OPTS: "${KOTBOT_OPTS}"
+      KOTBOT_OPTS: "-Xmx128m"
       KOTBOT_TOKEN: "${KOTBOT_TOKEN}"
       KOTBOT_RELEASE: "${KOTBOT_RELEASE}"
     healthcheck:
@@ -32,3 +32,45 @@ services:
       driver: "journald"
     mem_limit: 256m
     memswap_limit: 0
+  tgto:
+    image: "heapy/tgto:${TGTO_RELEASE}"
+    container_name: "tgto"
+    restart: "always"
+    environment:
+      TGTO_OPTS: "-Xmx128m"
+      TGTO_BOT_TOKEN: "${TGTO_BOT_TOKEN}"
+      TGTO_BASE_URL: "${TGTO_BASE_URL}"
+    logging:
+      driver: "journald"
+    mem_limit: 256m
+    memswap_limit: 0m
+    ports:
+      - "8090:8080"
+    depends_on:
+      - tgto_database
+  tgto_database:
+    image: "postgres:10.5"
+    container_name: "tgto_database"
+    restart: "always"
+    user: "${HOST_USER}"
+    environment:
+      POSTGRES_PASSWORD: "tgto"
+      POSTGRES_USER: "tgto"
+      POSTGRES_DB: "tgto"
+    volumes:
+      - "${DATA_HOME}/data/tgto/pgdata:/var/lib/postgresql/data"
+      - "/etc/passwd:/etc/passwd:ro"
+    mem_limit: 128m
+    memswap_limit: 0m
+    ports:
+      - "5436:5432"
+  repo_kotlin_link:
+    image: "heapy/repo.kotlin.link:${REPO_KOTLIN_LINK_RELEASE}"
+    container_name: "repo.kotlin.link"
+    restart: "always"
+    logging:
+      driver: "journald"
+    mem_limit: 256m
+    memswap_limit: 0m
+    ports:
+      - "8092:8080"
