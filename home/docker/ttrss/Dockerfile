@@ -2,9 +2,6 @@ FROM ubuntu:20.04
 
 EXPOSE 9000/tcp
 
-ENV HOST_UID=1000
-ENV HOST_GID=1000
-
 ENV TTRSS_DB_TYPE="pgsql"
 ENV TTRSS_DB_HOST="ttrss_database"
 ENV TTRSS_DB_USER="tinytinyrss"
@@ -57,11 +54,6 @@ RUN { \
 RUN sed -i.bak 's/\(memory_limit =\) 128M/\1 256M/' /etc/php/7.4/fpm/php.ini
 
 RUN git clone --depth=1 https://git.tt-rss.org/fox/tt-rss.git /ttrss
-
-RUN addgroup --gid $HOST_GID ttrss
-RUN adduser --disabled-login --home /ttrss --gid $HOST_GID --uid $HOST_UID ttrss
-
-RUN chown -R $HOST_GID:$HOST_UID /ttrss
 
 WORKDIR /ttrss
 
