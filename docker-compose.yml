@@ -49,7 +49,7 @@ services:
     depends_on:
       - tgto_database
   tgto_database:
-    image: "postgres:10.5"
+    image: "postgres:13.2"
     container_name: "tgto_database"
     restart: "always"
     user: "${HOST_USER}"
