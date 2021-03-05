@@ -12,7 +12,7 @@ else
   echo "[+] Using the detected external IP: ${EXTERNAL_IP}."
 fi
 
-INTERNAL_IP="$(ip -4 route get 8.8.8.8 | grep '^8\.8\.8\.8\s' | grep -Eo 'src\s+\d+\.\d+\.\d+\.\d+' | awk '{print $2}')"
+INTERNAL_IP="$(ip -4 route get 8.8.8.8 | grep '^8\.8\.8\.8\s' | grep -Po 'src\s+\d+\.\d+\.\d+\.\d+' | awk '{print $2}')"
 if [[ -z "$INTERNAL_IP" ]]; then
   echo "[F] Cannot determine internal IP address."
   exit 4
