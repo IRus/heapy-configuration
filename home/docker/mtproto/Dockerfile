@@ -29,4 +29,4 @@ RUN echo "Building ${VERSION}"
 RUN curl -s https://core.telegram.org/getProxySecret -o proxy-secret
 RUN curl -s https://core.telegram.org/getProxyConfig -o proxy-multi.conf
 
-ENTRYPOINT ["run.sh"]
+ENTRYPOINT ["/run.sh"]
