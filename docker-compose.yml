@@ -13,7 +13,7 @@ services:
     mem_limit: 256m
     memswap_limit: 0m
     ports:
-      - "9090:9090"
+      - "127.0.0.1:9090:9090"
   kotbot:
     image: "heapy/kotbot:${KOTBOT_RELEASE}"
     container_name: "kotbot"
@@ -45,7 +45,7 @@ services:
     mem_limit: 256m
     memswap_limit: 0m
     ports:
-      - "8090:8080"
+      - "127.0.0.1:8090:8080"
     depends_on:
       - tgto_database
   tgto_database:
@@ -63,7 +63,7 @@ services:
     mem_limit: 128m
     memswap_limit: 0m
     ports:
-      - "5436:5432"
+      - "127.0.0.1:5436:5432"
   repo_kotlin_link:
     image: "heapy/repo.kotlin.link:${REPO_KOTLIN_LINK_RELEASE}"
     container_name: "repo.kotlin.link"
@@ -73,7 +73,7 @@ services:
     mem_limit: 256m
     memswap_limit: 0m
     ports:
-      - "8092:8080"
+      - "127.0.0.1:8092:8080"
   ttrss_postgresql:
     container_name: "ttrss_postgresql"
     image: "postgres:10.5"
@@ -91,7 +91,7 @@ services:
     mem_limit: 256m
     memswap_limit: 0m
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
   mtproto:
     container_name: "mtproto"
     image: "heapy/mtproto:latest"
