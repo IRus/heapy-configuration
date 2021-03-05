@@ -28,4 +28,4 @@ RUN echo "Building ${VERSION}"
 RUN curl -s https://core.telegram.org/getProxySecret -o proxy-secret
 RUN curl -s https://core.telegram.org/getProxyConfig -o proxy-multi.conf
 
-ENTRYPOINT /mtproto-proxy -u nobody -p 8888 -H 443 -S ${PROXY_SECRET} --aes-pwd proxy-secret proxy-multi.conf -M 1
+ENTRYPOINT /mtproto-proxy -u nobody -p 8080 -H 8888 -S ${PROXY_SECRET} --aes-pwd proxy-secret proxy-multi.conf -M 1
