@@ -53,10 +53,6 @@ RUN { \
 
 RUN sed -i.bak 's/\(memory_limit =\) 128M/\1 256M/' /etc/php/7.4/fpm/php.ini
 
-RUN git clone --depth=1 https://git.tt-rss.org/fox/tt-rss.git /ttrss
-
-WORKDIR /ttrss
-
-ADD entrypoint.sh /ttrss
-
-CMD ["/ttrss/entrypoint.sh"]
+ADD entrypoint.sh /
+RUN git clone --depth=1 https://git.tt-rss.org/fox/tt-rss.git /ttrss/reader
+CMD ["/entrypoint.sh"]
