@@ -2,8 +2,8 @@ FROM ubuntu:20.04
 
 ARG HUGO_VERSION
 
-RUN export DEBIAN_FRONTEND=noninteractive; apt update \
-    && apt install --no-install-recommends -yq \
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update \
+    && apt-get install --no-install-recommends -qqy \
         asciidoctor \
         wget \
     && rm -rf /var/lib/apt/lists/*
