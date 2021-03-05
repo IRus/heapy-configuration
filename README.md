@@ -13,6 +13,11 @@
 
 # Instance modifications
 
+1. Install base packages: `htop tmux mc`
+2. Disable ssh password authentication
+3. Set root password `passwd root`
+4. Add ssh keys
+
 ## Docker install
 
 ## Docker-Compose
