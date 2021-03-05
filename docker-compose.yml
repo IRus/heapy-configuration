@@ -74,3 +74,21 @@ services:
     memswap_limit: 0m
     ports:
       - "8092:8080"
+  ttrss_postgresql:
+    container_name: "ttrss_postgresql"
+    image: "postgres:10.5"
+    restart: "always"
+    user: "${HOST_USER}"
+    environment:
+      POSTGRES_USER: "tinytinyrss"
+      POSTGRES_PASSWORD: "HPALUhAY28G4LWDf"
+      POSTGRES_DB: "tinytinyrss"
+    volumes:
+      - "${DATA_HOME}/data/ttrss/pgdata:/var/lib/postgresql/data"
+      - "/etc/passwd:/etc/passwd:ro"
+    logging:
+      driver: "journald"
+    mem_limit: 256m
+    memswap_limit: 0m
+    ports:
+      - "5432:5432"
