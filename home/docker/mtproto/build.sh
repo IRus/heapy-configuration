@@ -2,4 +2,12 @@
 
 set -e
 
-docker build -t "heapy/mtproto:latest" .
+if [ ! -f seq.txt ]; then
+  echo "0" > seq.txt;
+fi
+
+SEQ="$(cat seq.txt)";
+((SEQ = SEQ + 1));
+echo "${SEQ}" > seq.txt;
+
+docker build  --build-arg VERSION="${SEQ}" -t "heapy/mtproto:latest" .
