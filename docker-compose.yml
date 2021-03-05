@@ -103,4 +103,4 @@ services:
     mem_limit: 256m
     memswap_limit: 0m
     ports:
-      - "8888:8888"
+      - "0.0.0.0:8888:8888"
