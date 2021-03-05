@@ -94,7 +94,6 @@ services:
     container_name: "ttrss"
     image: "heapy/ttrss:${TTRSS_RELEASE}"
     restart: "always"
-    user: "${HOST_USER}"
     volumes:
       - "${DATA_HOME}/data/ttrss/data/cache:/ttrss/reader/cache"
       - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
