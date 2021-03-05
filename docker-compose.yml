@@ -96,9 +96,9 @@ services:
     restart: "always"
     user: "${HOST_USER}"
     volumes:
-      - "${DATA_HOME}/data/ttrss/data/cache:/ttrss/cache"
-      - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/lock"
-      - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/feed-icons"
+      - "${DATA_HOME}/data/ttrss/data/cache:/ttrss/reader/cache"
+      - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
+      - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/reader/feed-icons"
     logging:
       driver: "journald"
     mem_limit: 256m
