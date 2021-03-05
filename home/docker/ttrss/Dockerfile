@@ -31,17 +31,14 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get update \
         git postgresql-client sudo ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-RUN cat /etc/php/7.4/fpm/pool.d/www.conf
-RUN cat /etc/php/7.4/fpm/php.ini
-
 RUN sed -i.bak 's/^listen = 127.0.0.1:9000/listen = 9000/' /etc/php/7.4/fpm/pool.d/www.conf
 RUN sed -i.bak 's/\(memory_limit =\) 128M/\1 256M/' /etc/php/7.4/fpm/php.ini
 RUN sed -i.bak 's/;clear_env = .*/clear_env = no/i' /etc/php/7.4/fpm/pool.d/www.conf
 
 RUN git clone --depth=1 https://git.tt-rss.org/fox/tt-rss.git /ttrss
 
-RUN addgroup -g $HOST_GID ttrss
-RUN adduser -D -h /ttrss -G ttrss -u $HOST_UID ttrss
+RUN addgroup --gid $HOST_GID ttrss
+RUN adduser --disabled-login --home /ttrss --gid $HOST_GID --uid $HOST_UID ttrss
 
 RUN chown -R $HOST_GID:$HOST_UID /ttrss
 
