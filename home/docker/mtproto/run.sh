@@ -20,4 +20,4 @@ else
   echo "[+] Using the detected internal IP: ${INTERNAL_IP}."
 fi
 
-exec /mtproto-proxy -u nobody -p 8080 -H 8888 -S "${PROXY_SECRET}" --nat-info "$INTERNAL_IP:$IP" --aes-pwd proxy-secret proxy-multi.conf -M 1
+exec /mtproto-proxy -u nobody -p 8080 -H 8888 -S "${PROXY_SECRET}" --nat-info "$INTERNAL_IP:$EXTERNAL_IP" --aes-pwd proxy-secret proxy-multi.conf -M 1
