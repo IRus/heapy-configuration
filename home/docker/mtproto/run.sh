@@ -4,4 +4,20 @@ echo "Secret used: [${PROXY_SECRET}]"
 
 /mtproto-proxy --help
 
-exec /mtproto-proxy -u nobody -p 8080 -H 8888 -S "${PROXY_SECRET}" --aes-pwd proxy-secret proxy-multi.conf -M 1
+EXTERNAL_IP="$(curl -s -4 "https://digitalresistance.dog/myIp")"
+if [[ -z "$EXTERNAL_IP" ]]; then
+  echo "[F] Cannot determine external IP address."
+  exit 3
+else
+  echo "[+] Using the detected external IP: ${EXTERNAL_IP}."
+fi
+
+INTERNAL_IP="$(ip -4 route get 8.8.8.8 | grep '^8\.8\.8\.8\s' | grep -Eo 'src\s+\d+\.\d+\.\d+\.\d+' | awk '{print $2}')"
+if [[ -z "$INTERNAL_IP" ]]; then
+  echo "[F] Cannot determine internal IP address."
+  exit 4
+else
+  echo "[+] Using the detected internal IP: ${INTERNAL_IP}."
+fi
+
+exec /mtproto-proxy -u nobody -p 8080 -H 8888 -S "${PROXY_SECRET}" --nat-info "$INTERNAL_IP:$IP" --aes-pwd proxy-secret proxy-multi.conf -M 1
