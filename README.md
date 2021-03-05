@@ -1,6 +1,5 @@
 # TODO
 
-- Dockerize mtproto (remove extra instance)
 - Dockerize ttrss
 - Dockerize grafana
 - Dockerize streetall.name
