@@ -76,7 +76,7 @@ services:
       - "127.0.0.1:8092:8080"
   ttrss_database:
     container_name: "ttrss_database"
-    image: "postgres:10.5"
+    image: "postgres:10.16"
     restart: "always"
     user: "${HOST_USER}"
     environment:
@@ -88,7 +88,7 @@ services:
       - "/etc/passwd:/etc/passwd:ro"
     logging:
       driver: "journald"
-    mem_limit: 256m
+    mem_limit: 512m
     memswap_limit: 0m
   ttrss:
     container_name: "ttrss"
