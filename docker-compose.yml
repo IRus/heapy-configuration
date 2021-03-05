@@ -74,8 +74,8 @@ services:
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8092:8080"
-  ttrss_postgresql:
-    container_name: "ttrss_postgresql"
+  ttrss_database:
+    container_name: "ttrss_database"
     image: "postgres:10.5"
     restart: "always"
     user: "${HOST_USER}"
@@ -90,8 +90,23 @@ services:
       driver: "journald"
     mem_limit: 256m
     memswap_limit: 0m
+  ttrss:
+    container_name: "ttrss"
+    image: "heapy/ttrss:${TTRSS_RELEASE}"
+    restart: "always"
+    user: "${HOST_USER}"
+    volumes:
+      - "${DATA_HOME}/data/ttrss/data/cache:/ttrss/cache"
+      - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/lock"
+      - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/feed-icons"
+    logging:
+      driver: "journald"
+    mem_limit: 256m
+    memswap_limit: 0m
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:8093:9000"
+    depends_on:
+      - ttrss_database
   mtproto:
     container_name: "mtproto"
     image: "heapy/mtproto:latest"
