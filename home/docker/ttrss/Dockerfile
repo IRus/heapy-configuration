@@ -31,9 +31,30 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get update \
         git postgresql-client sudo ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-RUN sed -i.bak 's/^listen = 127.0.0.1:9000/listen = 9000/' /etc/php/7.4/fpm/pool.d/www.conf
+RUN { \
+        echo '[global]'; \
+        echo 'error_log = /proc/self/fd/2'; \
+        echo; echo '; https://github.com/docker-library/php/pull/725#issuecomment-443540114'; echo 'log_limit = 8192'; \
+        echo; \
+        echo '[www]'; \
+        echo '; if we send this to /proc/self/fd/1, it never appears'; \
+        echo 'access.log = /proc/self/fd/2'; \
+        echo; \
+        echo 'clear_env = no'; \
+        echo; \
+        echo '; Ensure worker stdout and stderr are sent to the main error log.'; \
+        echo 'catch_workers_output = yes'; \
+        echo 'decorate_workers_output = no'; \
+    } | tee /etc/php/7.4/fpm/pool.d/docker.conf; \
+    { \
+        echo '[global]'; \
+        echo 'daemonize = no'; \
+        echo; \
+        echo '[www]'; \
+        echo 'listen = 9000'; \
+    } | tee /etc/php/7.4/fpm/pool.d/zz-docker.conf
+
 RUN sed -i.bak 's/\(memory_limit =\) 128M/\1 256M/' /etc/php/7.4/fpm/php.ini
-RUN sed -i.bak 's/;clear_env = .*/clear_env = no/i' /etc/php/7.4/fpm/pool.d/www.conf
 
 RUN git clone --depth=1 https://git.tt-rss.org/fox/tt-rss.git /ttrss
 
