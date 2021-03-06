@@ -2,8 +2,7 @@
 
 set -e
 
-cd /home/rick/nginx/files/ibragimov.by/root/reader/
-git fetch
-git diff origin/master
-git pull
-sudo chown www-data:www-data -R .
+cd /home/rick/heapy-configuration/home/docker/ttrss || exit 1
+./build.sh
+cd /home/rick/heapy-configuration/ || exit 1
+docker-compose up -d
