@@ -109,8 +109,10 @@ services:
     image: "heapy/ttrss-nginx:latest"
     command: ["nginx-debug", "-g", "daemon off;"]
     restart: "always"
-    volumes_from:
-      - ttrss:ro
+    volumes:
+      - "${DATA_HOME}/data/ttrss/data/cache:/ttrss/reader/cache"
+      - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
+      - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/reader/feed-icons"
     ports:
       - "8093:80" # todo: localhost
     logging:
