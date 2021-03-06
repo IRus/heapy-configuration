@@ -1,6 +1,5 @@
 # TODO
 
-- Dockerize ttrss
 - Dockerize grafana
 - Dockerize streetall.name
 - Dockerize bkug.by
