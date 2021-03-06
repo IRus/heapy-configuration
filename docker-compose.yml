@@ -106,11 +106,9 @@ services:
       - ttrss_database
   ttrss_nginx:
     container_name: "ttrss_nginx"
-    image: "nginx:1.19.7"
+    image: "heapy/ttrss-nginx:latest"
     command: ["nginx-debug", "-g", "daemon off;"]
     restart: "always"
-    volumes:
-      - "${DATA_HOME}/config/ttrss/nginx.conf:/etc/nginx/conf.d/default.conf:ro"
     volumes_from:
       - ttrss:ro
     ports:

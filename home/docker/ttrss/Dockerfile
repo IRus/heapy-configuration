@@ -61,8 +61,6 @@ RUN adduser --disabled-login --home /ttrss --gid $HOST_GID --uid $HOST_UID ttrss
 
 ADD entrypoint.sh /
 
-VOLUME /ttrss
-
 RUN git clone --depth=1 https://git.tt-rss.org/fox/tt-rss.git /ttrss/reader
 
 RUN chown -R $HOST_GID:$HOST_UID /ttrss
