@@ -7,7 +7,6 @@
 - Setup new instance using [Cloud-Init](https://www.digitalocean.com/community/tutorials/how-to-use-cloud-config-for-your-initial-server-setup)
 - Move workload to new instance
 - Solution for offline metrics (loki + smth? [goaccess](https://www.cyberciti.biz/faq/how-to-install-goaccess-web-log-analyzer-with-nginx-on-linux-or-unix/)?)
-- Tgto Postgres -> Xodus/Any embedded DB + Prom Metrics
 
 # Instance modifications
 

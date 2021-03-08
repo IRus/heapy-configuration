@@ -49,24 +49,6 @@ services:
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8090:8080"
-    depends_on:
-      - tgto_database
-  tgto_database:
-    image: "postgres:10.16"
-    container_name: "tgto_database"
-    restart: "always"
-    user: "${HOST_USER}"
-    environment:
-      POSTGRES_PASSWORD: "tgto"
-      POSTGRES_USER: "tgto"
-      POSTGRES_DB: "tgto"
-    volumes:
-      - "${DATA_HOME}/data/tgto/pgdata:/var/lib/postgresql/data"
-      - "/etc/passwd:/etc/passwd:ro"
-    mem_limit: 128m
-    memswap_limit: 0m
-    ports:
-      - "127.0.0.1:5436:5432"
   repo_kotlin_link:
     image: "heapy/repo.kotlin.link:${REPO_KOTLIN_LINK_RELEASE}"
     container_name: "repo.kotlin.link"
