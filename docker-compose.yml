@@ -40,6 +40,9 @@ services:
       TGTO_OPTS: "-Xmx128m"
       TGTO_BOT_TOKEN: "${TGTO_BOT_TOKEN}"
       TGTO_BASE_URL: "${TGTO_BASE_URL}"
+      TGTO_STORE_PATH: "${TGTO_STORE_PATH}"
+    volumes:
+      - "${DATA_HOME}/data/tgto/xodus:/data/xodus"
     logging:
       driver: "journald"
     mem_limit: 256m
