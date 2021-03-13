@@ -11,4 +11,4 @@ SEQ="$(cat seq.txt)";
 echo "${SEQ}" > seq.txt;
 
 docker build --build-arg VERSION="${SEQ}" -t "heapy/ttrss:latest" -t "heapy/ttrss:${SEQ}" .
-docker build -t "heapy/ttrss-nginx:latest" --file Nginx.Dockerfile .
+docker build --build-arg VERSION="${SEQ}" -t "heapy/ttrss-nginx:latest" -t "heapy/ttrss-nginx:${SEQ}" --file Nginx.Dockerfile .
