@@ -63,8 +63,7 @@ ADD entrypoint.sh /
 
 ARG VERSION
 RUN echo "Building ${VERSION}"
-
-RUN git clone --depth=1 https://git.tt-rss.org/fox/tt-rss.git /ttrss/reader
+COPY reader /ttrss/reader
 
 RUN chown -R $HOST_GID:$HOST_UID /ttrss
 

@@ -10,4 +10,6 @@ SEQ="$(cat seq.txt)";
 ((SEQ = SEQ + 1));
 echo "${SEQ}" > seq.txt;
 
-docker build  --build-arg VERSION="${SEQ}" -t "heapy/mtproto:latest" .
+docker build --progress=plain \
+             --build-arg VERSION="${SEQ}" \
+             -t "heapy/mtproto:latest" .

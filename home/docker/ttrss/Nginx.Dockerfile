@@ -7,8 +7,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get update \
 
 ARG VERSION
 RUN echo "Building ${VERSION}"
-
-RUN git clone --depth=1 https://git.tt-rss.org/fox/tt-rss.git /ttrss/reader
+COPY reader /ttrss/reader
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY fastcgi-php.conf /etc/nginx/snippets/fastcgi-php.conf
