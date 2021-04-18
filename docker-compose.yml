@@ -33,7 +33,7 @@ services:
     mem_limit: 256m
     memswap_limit: 0
   tgto:
-    image: "heapy/tgto:${TGTO_RELEASE}"
+    image: "ghcr.io/heapy/tgto:${TGTO_RELEASE}"
     container_name: "tgto"
     restart: "always"
     environment:
