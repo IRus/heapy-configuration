@@ -37,7 +37,7 @@ services:
     container_name: "tgto"
     restart: "always"
     environment:
-      TGTO_OPTS: "-Xmx128m"
+      TGTO_OPTS: "-Xmx64m"
       TGTO_BOT_TOKEN: "${TGTO_BOT_TOKEN}"
       TGTO_BASE_URL: "${TGTO_BASE_URL}"
       TGTO_STORE_PATH: "${TGTO_STORE_PATH}"
