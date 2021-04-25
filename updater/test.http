@@ -1,0 +1,11 @@
+GET http://localhost:8080/versions
+
+###
+
+POST http://localhost:8080/update
+
+###
+
+POST https://repo.kotlin.link/update
+
+###
