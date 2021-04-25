@@ -50,7 +50,7 @@ services:
     ports:
       - "127.0.0.1:8090:8080"
   repo_kotlin_link:
-    image: "heapy/repo.kotlin.link:${REPO_KOTLIN_LINK_RELEASE}"
+    image: "ghcr.io/heapy/repo.kotlin.link:${REPO_KOTLIN_LINK_RELEASE}"
     container_name: "repo.kotlin.link"
     restart: "always"
     logging:
