@@ -137,4 +137,4 @@ services:
     mem_limit: 128m
     memswap_limit: 0m
     ports:
-      - "127.0.0.1:8094:8080"
+      - "127.0.0.1:8094:80"
