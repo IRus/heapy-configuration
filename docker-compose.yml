@@ -42,7 +42,12 @@ services:
       TGTO_BASE_URL: "${TGTO_BASE_URL}"
       TGTO_STORE_PATH: "${TGTO_STORE_PATH}"
     volumes:
-      - "${DATA_HOME}/data/tgto/xodus:/data/xodus"
+      - "${DATA_HOME}/data/tgto/mapdb:/data/mapdb"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     logging:
       driver: "journald"
     mem_limit: 256m
