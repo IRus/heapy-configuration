@@ -138,3 +138,13 @@ services:
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8094:80"
+  currency:
+    container_name: "currency"
+    image: "ghcr.io/irus/currency:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    mem_limit: 32m
+    memswap_limit: 0m
+    ports:
+      - "127.0.0.1:8095:80"
