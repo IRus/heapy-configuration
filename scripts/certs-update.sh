@@ -2,7 +2,7 @@
 
 sudo systemctl stop nginx.service
 # Uncomment to issue new certificate
-# sudo letsencrypt certonly --standalone -d repo.kotlin.link
+# sudo letsencrypt certonly --standalone -d streetball.by
 sudo certbot --standalone renew
 sudo systemctl start nginx.service
 
@@ -18,4 +18,5 @@ sudo systemctl start nginx.service
 # ibragimov.by
 # ruslan.ibragimov.by
 # streetball.name
+# streetball.by
 # shop.streetball.name
