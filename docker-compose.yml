@@ -148,3 +148,13 @@ services:
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8095:80"
+  ibragimov_blog:
+    container_name: "ibragimov_blog"
+    image: "ghcr.io/irus/blog:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    mem_limit: 32m
+    memswap_limit: 0m
+    ports:
+      - "127.0.0.1:8096:80"

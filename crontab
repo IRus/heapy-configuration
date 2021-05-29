@@ -1,3 +1,3 @@
 20 4 * * * /home/rick/heapy-configuration/scripts/reports.sh 1> /dev/null
 */15 * * * * /usr/bin/docker exec --user=1000:1000 ttrss /ttrss/reader/update.php --feeds --quite 1> /dev/null
-0 * * * * /home/rick/heapy-configuration/scripts/update.sh 1> /dev/null
+0 * * * * /home/rick/heapy-configuration/scripts/update.sh
