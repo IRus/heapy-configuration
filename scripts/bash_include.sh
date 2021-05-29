@@ -7,6 +7,6 @@ function update() {
   sudo apt-get autoremove
   sudo apt-get autoclean
 
-  ~/heapy-configuration/scripts/ttrss-update.sh
+  ~/heapy-configuration/scripts/docker-update.sh
   ~/heapy-configuration/scripts/certs-update.sh
 }

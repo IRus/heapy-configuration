@@ -17,15 +17,18 @@ fi
 
 cd reader || exit 1
 echo "Pull changes"
-git pull origin master || exit 1
+GIT_CHANGED=true
+git pull origin master | grep -q -v "Already up-to-date." && GIT_CHANGED=false
 cd - || exit 1
 
-docker build --progress=plain \
-             --build-arg VERSION="${SEQ}" \
-             -t "heapy/ttrss:latest" \
-             -t "heapy/ttrss:${SEQ}" .
-docker build --progress=plain \
-             --build-arg VERSION="${SEQ}" \
-             -t "heapy/ttrss-nginx:latest" \
-             -t "heapy/ttrss-nginx:${SEQ}" \
-             --file Nginx.Dockerfile .
+if $GIT_CHANGED; then
+  docker build --progress=plain \
+               --build-arg VERSION="${SEQ}" \
+               -t "heapy/ttrss:latest" \
+               -t "heapy/ttrss:${SEQ}" .
+  docker build --progress=plain \
+               --build-arg VERSION="${SEQ}" \
+               -t "heapy/ttrss-nginx:latest" \
+               -t "heapy/ttrss-nginx:${SEQ}" \
+               --file Nginx.Dockerfile .
+fi
