@@ -22,6 +22,7 @@ git pull origin master | grep -q -v "Already up-to-date." && GIT_CHANGED=false
 cd - || exit 1
 
 if $GIT_CHANGED; then
+  echo "Changes detected, building new ttrss container"
   docker build --progress=plain \
                --build-arg VERSION="${SEQ}" \
                -t "heapy/ttrss:latest" \
@@ -31,4 +32,6 @@ if $GIT_CHANGED; then
                -t "heapy/ttrss-nginx:latest" \
                -t "heapy/ttrss-nginx:${SEQ}" \
                --file Nginx.Dockerfile .
+else
+  echo "No changes to ttrss detected, skipping"
 fi

@@ -2,7 +2,7 @@
 
 set -e
 
-echp "Pull remote images"
+echo "Pull remote images"
 docker pull ghcr.io/irus/blog:main
 docker pull ghcr.io/irus/currency:main
 docker pull ghcr.io/kotlinby/awesome-kotlin:main
