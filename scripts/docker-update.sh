@@ -16,4 +16,4 @@ cd /home/rick/heapy-configuration/ || exit 1
 docker-compose up -d
 
 echo "Remove unused images"
-docker system prune -af
+docker system prune -f
