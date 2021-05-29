@@ -2,6 +2,7 @@
 
 set -e
 
+docker pull ghcr.io/irus/blog:main
 docker pull ghcr.io/irus/currency:main
 docker pull ghcr.io/kotlinby/awesome-kotlin:main
 
