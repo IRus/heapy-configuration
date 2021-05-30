@@ -158,3 +158,13 @@ services:
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8096:80"
+  ibragimov_pirs:
+    container_name: "ibragimov_pirs"
+    image: "ghcr.io/irus/pirs:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    mem_limit: 32m
+    memswap_limit: 0m
+    ports:
+      - "127.0.0.1:8097:80"
