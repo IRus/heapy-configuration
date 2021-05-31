@@ -14,7 +14,7 @@ cd /home/rick/heapy-configuration/home/docker/ttrss || exit 1
 
 echo "Update containers"
 cd /home/rick/heapy-configuration/ || exit 1
-docker-compose up -d
+/usr/local/bin/docker-compose up -d
 
 echo "Remove unused images"
 docker system prune -f
