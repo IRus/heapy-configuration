@@ -112,7 +112,7 @@ services:
       - "127.0.0.1:8093:80"
     logging:
       driver: "journald"
-    mem_limit: 64m
+    mem_limit: 32m
     memswap_limit: 0m
     depends_on:
       - ttrss
@@ -144,7 +144,7 @@ services:
     restart: "always"
     logging:
       driver: "journald"
-    mem_limit: 32m
+    mem_limit: 16m
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8095:80"
@@ -154,7 +154,7 @@ services:
     restart: "always"
     logging:
       driver: "journald"
-    mem_limit: 32m
+    mem_limit: 16m
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8096:80"
@@ -164,7 +164,7 @@ services:
     restart: "always"
     logging:
       driver: "journald"
-    mem_limit: 32m
+    mem_limit: 16m
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8097:80"
@@ -174,7 +174,7 @@ services:
     restart: "always"
     logging:
       driver: "journald"
-    mem_limit: 32m
+    mem_limit: 16m
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8098:80"
@@ -184,7 +184,7 @@ services:
     restart: "always"
     logging:
       driver: "journald"
-    mem_limit: 32m
+    mem_limit: 16m
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8099:80"
