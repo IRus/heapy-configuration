@@ -178,3 +178,13 @@ services:
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8098:80"
+  heapy_io:
+    container_name: "heapy_io"
+    image: "ghcr.io/heapy/heapy.io:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    mem_limit: 32m
+    memswap_limit: 0m
+    ports:
+      - "127.0.0.1:8099:80"
