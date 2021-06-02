@@ -168,3 +168,13 @@ services:
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8097:80"
+  heapy_kotlin_jobs:
+    container_name: "heapy_kotlin_jobs"
+    image: "ghcr.io/heapy/kotlin_jobs:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    mem_limit: 32m
+    memswap_limit: 0m
+    ports:
+      - "127.0.0.1:8098:80"

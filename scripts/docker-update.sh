@@ -6,6 +6,7 @@ echo "Pull remote images"
 docker pull ghcr.io/irus/pirs:main
 docker pull ghcr.io/irus/blog:main
 docker pull ghcr.io/irus/currency:main
+docker pull ghcr.io/heapy/kotlin_jobs:main
 docker pull ghcr.io/kotlinby/awesome-kotlin:main
 
 echo "Build new ttrss images"
