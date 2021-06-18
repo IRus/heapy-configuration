@@ -188,3 +188,13 @@ services:
     memswap_limit: 0m
     ports:
       - "127.0.0.1:8099:80"
+  supolka_com:
+    container_name: "supolka_com"
+    image: "ghcr.io/irus/open_pirs:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    mem_limit: 16m
+    memswap_limit: 0m
+    ports:
+    - "127.0.0.1:8100:80"
