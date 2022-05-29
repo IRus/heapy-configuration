@@ -166,6 +166,6 @@ services:
       resources:
         limits:
           cpus: "0.1"
-          memory: "16M"
+          memory: "32M"
     networks:
       - gotron
