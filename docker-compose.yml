@@ -27,24 +27,6 @@ services:
     memswap_limit: 0m
     ports:
       - "127.0.0.1:9090:9090"
-  kotbot:
-    image: "ghcr.io/heapy/kotbot:${KOTBOT_VERSION}"
-    container_name: "kotbot"
-    restart: "always"
-    user: "${HOST_USER}"
-    environment:
-      KOTBOT_OPTS: "-Xmx128m"
-      KOTBOT_TOKEN: "${KOTBOT_TOKEN}"
-      KOTBOT_VERSION: "${KOTBOT_VERSION}"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    logging:
-      driver: "journald"
-    mem_limit: 256m
-    memswap_limit: 0
   mtproto:
     container_name: "mtproto"
     image: "heapy/mtproto:latest"
@@ -57,26 +39,6 @@ services:
     memswap_limit: 0m
     ports:
       - "0.0.0.0:8888:8888"
-  heapy_kotlin_jobs:
-    container_name: "heapy_kotlin_jobs"
-    image: "ghcr.io/heapy/kotlin_jobs:main"
-    restart: "always"
-    logging:
-      driver: "journald"
-    mem_limit: 16m
-    memswap_limit: 0m
-    ports:
-      - "127.0.0.1:8098:80"
-  heapy_io:
-    container_name: "heapy_io"
-    image: "ghcr.io/heapy/heapy.io:main"
-    restart: "always"
-    logging:
-      driver: "journald"
-    mem_limit: 16m
-    memswap_limit: 0m
-    ports:
-      - "127.0.0.1:8099:80"
   wireguard:
     container_name: "wireguard"
     image: "weejewel/wg-easy"
