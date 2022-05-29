@@ -81,6 +81,30 @@ services:
     networks:
       - gotron
 
+  kotbot:
+    image: "ghcr.io/heapy/kotbot:${KOTBOT_VERSION}"
+    container_name: "kotbot"
+    restart: "always"
+    user: "${HOST_USER}"
+    environment:
+      KOTBOT_OPTS: "-Xmx128m"
+      KOTBOT_TOKEN: "${KOTBOT_TOKEN}"
+      KOTBOT_VERSION: "${KOTBOT_VERSION}"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/api/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
+    networks:
+      - gotron
+
   ttrss_database:
     container_name: "ttrss_database"
     image: "postgres:14.3"
@@ -169,3 +193,57 @@ services:
           memory: "32M"
     networks:
       - gotron
+
+  heapy_io_kotlin_jobs:
+    container_name: "heapy_io_kotlin_jobs"
+    image: "ghcr.io/heapy/kotlin_jobs:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: "16M"
+    networks:
+      - gotron
+
+  heapy_io:
+    container_name: "heapy_io"
+    image: "ghcr.io/heapy/heapy.io:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: "16M"
+    networks:
+      - gotron
+
+  wireguard:
+    container_name: "wireguard"
+    image: "weejewel/wg-easy"
+    restart: "always"
+    environment:
+      WG_HOST: "vpn.heapy.io"
+      PASSWORD: "${WIREGUARD_PASSWORD}"
+    volumes:
+      - "${DATA_HOME}/data/wireguard:/etc/wireguard"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
+    ports:
+      - "51820:51820/udp"
+      - "0.0.0.0:51821:51821/tcp"
+    cap_add:
+      - "NET_ADMIN"
+      - "SYS_MODULE"
+    sysctls:
+      - "net.ipv4.conf.all.src_valid_mark=1"
+      - "net.ipv4.ip_forward=1"
