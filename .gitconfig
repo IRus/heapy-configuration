@@ -1,0 +1,5 @@
+[alias]
+	s = status
+	lg = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+	pl = pull --rebase --autostash --prune
+

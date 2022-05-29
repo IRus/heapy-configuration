@@ -1,0 +1,171 @@
+version: "3.9"
+
+networks:
+  gotron:
+    name: gotron
+    driver: bridge
+
+services:
+  ingress:
+    image: "nginx:stable-alpine"
+    container_name: "ingress"
+    restart: "always"
+    user: "${HOST_USER}"
+    volumes:
+      - ${DATA_HOME}/config/nginx/conf.d:/etc/nginx/conf.d
+      - ${DATA_HOME}/data/letsencrypt:/letsencrypt
+      - ${DATA_HOME}/data/nginx/logs:/logs
+      - ${DATA_HOME}/data/nginx/config:/config
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "64M"
+    stop_grace_period: 30s
+    sysctls:
+      net.core.somaxconn: 2048
+    ulimits:
+      nofile:
+        soft: 10240
+        hard: 40960
+    networks:
+      - gotron
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+
+  supolka_com:
+    container_name: "supolka_com"
+    image: "ghcr.io/irus/open_pirs:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: "16M"
+    networks:
+      - gotron
+
+  kotlin_link:
+    container_name: "kotlin_link"
+    image: "ghcr.io/kotlinby/awesome-kotlin:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "32M"
+    networks:
+      - gotron
+
+  repo_kotlin_link:
+    image: "ghcr.io/heapy/repo.kotlin.link:${REPO_KOTLIN_LINK_RELEASE}"
+    container_name: "repo.kotlin.link"
+    restart: "always"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "512M"
+    networks:
+      - gotron
+
+  ttrss_database:
+    container_name: "ttrss_database"
+    image: "postgres:14.3"
+    restart: "always"
+    environment:
+      POSTGRES_USER: "tinytinyrss"
+      POSTGRES_PASSWORD: "HPALUhAY28G4LWDf"
+      POSTGRES_DB: "tinytinyrss"
+    volumes:
+      - "${DATA_HOME}/data/ttrss/pgdata:/var/lib/postgresql/data"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "1024M"
+    networks:
+      - gotron
+
+  ttrss:
+    container_name: "ttrss"
+    image: "heapy/ttrss:latest"
+    restart: "always"
+    volumes:
+      - "${DATA_HOME}/data/ttrss/data/cache:/ttrss/reader/cache"
+      - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
+      - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/reader/feed-icons"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
+    depends_on:
+      - ttrss_database
+    networks:
+      - gotron
+
+  ttrss_nginx:
+    container_name: "ttrss_nginx"
+    image: "heapy/ttrss-nginx:latest"
+    command: [ "nginx-debug", "-g", "daemon off;" ]
+    restart: "always"
+    volumes:
+      - "${DATA_HOME}/data/ttrss/data/cache:/ttrss/reader/cache"
+      - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
+      - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/reader/feed-icons"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "32M"
+    networks:
+      - gotron
+    depends_on:
+      - ttrss
+
+  ibragimov_by_currency:
+    container_name: "ibragimov_by_currency"
+    image: "ghcr.io/irus/currency:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: "16M"
+    networks:
+      - gotron
+
+  ruslan_ibragimov_by:
+    container_name: "ruslan_ibragimov_by"
+    image: "ghcr.io/irus/blog:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: "16M"
+    networks:
+      - gotron

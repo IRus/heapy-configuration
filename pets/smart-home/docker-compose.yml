@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  mosquitto:
+    container_name: "mosquitto"
+    restart: always
+    image: "eclipse-mosquitto:2.0"
+    volumes:
+      - "./mosquitto/config:/mosquitto/config"
+      - "./mosquitto/data:/mosquitto/data"
+      - "./mosquitto/log:/mosquitto/log"
+    ports:
+      - "0.0.0.0:1883:1883"
+      - "0.0.0.0:9001:9001"
+  zigbee2mqtt:
+    container_name: "zigbee2mqtt"
+    restart: always
+    image: "koenkk/zigbee2mqtt:1.24.0"
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+    volumes:
+      - ./zigbee2mqtt:/app/data
+      - /run/udev:/run/udev:ro
+    ports:
+      - "0.0.0.0:9002:9002"
+    environment:
+      - TZ=Europe/Minsk
+    privileged: true
+  home_assistant:
+    container_name: "home_assistant"
+    restart: always
+    privileged: true
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - ./home_assistant:/config
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "0.0.0.0:8123:8123"
+    network_mode: host
