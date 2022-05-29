@@ -280,7 +280,7 @@ services:
           cpus: "1"
           memory: "256M"
     ports:
-      - "127.0.0.1:3000:3000"
+      - "3000:3000"
 
   prometheus:
     image: "prom/prometheus:v2.35.0"
