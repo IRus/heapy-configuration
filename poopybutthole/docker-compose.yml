@@ -248,3 +248,52 @@ services:
       - "net.ipv4.ip_forward=1"
     networks:
       - gotron
+
+  mtproto:
+    container_name: "mtproto"
+    image: "heapy/mtproto:latest"
+    restart: "always"
+    environment:
+      PROXY_SECRET: "${PROXY_SECRET}"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
+    ports:
+      - "8888:8888"
+
+  grafana:
+    image: "grafana/grafana:8.5.3"
+    container_name: "grafana"
+    restart: "always"
+    user: "${HOST_USER}"
+    volumes:
+      - "${DATA_HOME}/data/grafana:/var/lib/grafana"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
+    ports:
+      - "127.0.0.1:3000:3000"
+
+  prometheus:
+    image: "prom/prometheus:v2.35.0"
+    container_name: "prometheus"
+    restart: "always"
+    user: "${HOST_USER}"
+    volumes:
+      - "${DATA_HOME}/data/prometheus:/prometheus"
+      - "${DATA_HOME}/config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
