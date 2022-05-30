@@ -365,3 +365,25 @@ services:
     mem_swappiness: 0
     networks:
       - gotron
+
+  bkug_by:
+    container_name: "bkug_by"
+    image: "wordpress:6-php8.1-apache"
+    restart: always
+    logging:
+      driver: "journald"
+    volumes:
+      - "${DATA_HOME}/data/bkug_by/wordpress:/var/www/html"
+    ports:
+      - 8081:80
+
+  bkug_by_db:
+    container_name: "bkug_by_db"
+    image: "mariadb:10.8"
+    restart: always
+    logging:
+      driver: "journald"
+    volumes:
+      - "${DATA_HOME}/data/bkug_by/maria:/var/lib/mysql"
+    environment:
+      MARIADB_ROOT_PASSWORD: "Eb95FAoyGMLiMXp1xcBPDzCBf0jMnL3EFKTnBZBWaz3ac0pVrS"
