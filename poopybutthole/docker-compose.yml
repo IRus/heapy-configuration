@@ -370,6 +370,7 @@ services:
     container_name: "bkug_by"
     image: "wordpress:6-php8.1-apache"
     restart: always
+    user: "${HOST_USER}"
     logging:
       driver: "journald"
     volumes:
@@ -383,6 +384,7 @@ services:
     container_name: "bkug_by_db"
     image: "mariadb:10.8"
     restart: always
+    user: "${HOST_USER}"
     logging:
       driver: "journald"
     volumes:
