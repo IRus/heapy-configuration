@@ -9,9 +9,7 @@ services:
     container_name: "ingress"
     restart: "always"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     user: "${HOST_USER}"
     volumes:
       - ${DATA_HOME}/config/nginx/conf.d:/etc/nginx/conf.d
@@ -42,9 +40,7 @@ services:
     image: "ghcr.io/irus/open_pirs:main"
     restart: "always"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -60,9 +56,7 @@ services:
     image: "ghcr.io/kotlinby/awesome-kotlin:main"
     restart: "always"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -83,9 +77,7 @@ services:
       timeout: 10s
       retries: 3
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -111,9 +103,7 @@ services:
       timeout: 10s
       retries: 3
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -135,9 +125,7 @@ services:
     volumes:
       - "${DATA_HOME}/data/ttrss/pgdata:/var/lib/postgresql/data"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -157,9 +145,7 @@ services:
       - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
       - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/reader/feed-icons"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -182,9 +168,7 @@ services:
       - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
       - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/reader/feed-icons"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -202,9 +186,7 @@ services:
     image: "ghcr.io/irus/currency:main"
     restart: "always"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -220,9 +202,7 @@ services:
     image: "ghcr.io/irus/blog:main"
     restart: "always"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -238,9 +218,7 @@ services:
     image: "ghcr.io/heapy/kotlin_jobs:main"
     restart: "always"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -256,9 +234,7 @@ services:
     image: "ghcr.io/heapy/heapy.io:main"
     restart: "always"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -279,9 +255,7 @@ services:
     volumes:
       - "${DATA_HOME}/data/wireguard:/etc/wireguard"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
@@ -307,9 +281,7 @@ services:
     environment:
       PROXY_SECRET: "${PROXY_SECRET}"
     logging:
-      driver: "loki"
-      options:
-        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
+      driver: "journald"
     deploy:
       resources:
         limits:
