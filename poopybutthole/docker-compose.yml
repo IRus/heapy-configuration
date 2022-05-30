@@ -376,6 +376,8 @@ services:
       - "${DATA_HOME}/data/bkug_by/wordpress:/var/www/html"
     ports:
       - 8081:80
+    networks:
+      - gotron
 
   bkug_by_db:
     container_name: "bkug_by_db"
@@ -387,3 +389,5 @@ services:
       - "${DATA_HOME}/data/bkug_by/maria:/var/lib/mysql"
     environment:
       MARIADB_ROOT_PASSWORD: "Eb95FAoyGMLiMXp1xcBPDzCBf0jMnL3EFKTnBZBWaz3ac0pVrS"
+    networks:
+      - gotron
