@@ -1,6 +1,6 @@
 # https://github.com/grafana/loki/blob/main/clients/cmd/promtail/promtail-docker-config.yaml
 server:
-  http_listen_port: 9080
+  http_listen_port: 3200
   grpc_listen_port: 0
 
 positions:

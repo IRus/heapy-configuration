@@ -374,7 +374,7 @@ services:
     logging:
       driver: "journald"
     ports:
-      - "3100:80"
+      - "3100:3100"
     command: -config.file=/etc/loki/config.yml
     stop_grace_period: 30s
     mem_swappiness: 0
@@ -394,6 +394,6 @@ services:
     stop_grace_period: 30s
     mem_swappiness: 0
     ports:
-      - "3200:80"
+      - "3200:3200"
     networks:
       - gotron
