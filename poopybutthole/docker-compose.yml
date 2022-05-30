@@ -375,8 +375,6 @@ services:
       driver: "journald"
     volumes:
       - "${DATA_HOME}/data/bkug_by/wordpress:/var/www/html"
-    ports:
-      - 8081:80
     networks:
       - gotron
 
