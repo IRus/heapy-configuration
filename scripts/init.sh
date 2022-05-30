@@ -43,3 +43,6 @@ cp "${REPODIR}/.gitconfig" "/root/.gitconfig"
 # Generate DH parameters
 dnf install -y openssl
 openssl dhparam -out "${REPODIR}/data/nginx/config/dhparam.pem" 4096
+
+# Install Loki Docker Driver
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions

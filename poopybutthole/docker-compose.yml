@@ -1,5 +1,3 @@
-version: "3.9"
-
 networks:
   gotron:
     name: gotron
@@ -10,6 +8,10 @@ services:
     image: "nginx:stable-alpine"
     container_name: "ingress"
     restart: "always"
+    logging:
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     user: "${HOST_USER}"
     volumes:
       - ${DATA_HOME}/config/nginx/conf.d:/etc/nginx/conf.d
@@ -22,6 +24,7 @@ services:
           cpus: "1"
           memory: "64M"
     stop_grace_period: 30s
+    mem_swappiness: 0
     sysctls:
       net.core.somaxconn: 2048
     ulimits:
@@ -39,26 +42,34 @@ services:
     image: "ghcr.io/irus/open_pirs:main"
     restart: "always"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "0.1"
           memory: "16M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     networks:
       - gotron
 
   kotlin_link:
-    container_name: "kotlin_link"
+    container_name: "kotlin.link"
     image: "ghcr.io/kotlinby/awesome-kotlin:main"
     restart: "always"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "1"
           memory: "32M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     networks:
       - gotron
 
@@ -72,12 +83,16 @@ services:
       timeout: 10s
       retries: 3
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "1"
           memory: "512M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     networks:
       - gotron
 
@@ -96,12 +111,16 @@ services:
       timeout: 10s
       retries: 3
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "1"
           memory: "256M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     networks:
       - gotron
 
@@ -116,12 +135,16 @@ services:
     volumes:
       - "${DATA_HOME}/data/ttrss/pgdata:/var/lib/postgresql/data"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "1"
           memory: "1024M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     networks:
       - gotron
 
@@ -134,12 +157,16 @@ services:
       - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
       - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/reader/feed-icons"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "1"
           memory: "256M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     depends_on:
       - ttrss_database
     networks:
@@ -155,12 +182,16 @@ services:
       - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
       - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/reader/feed-icons"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "1"
           memory: "32M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     networks:
       - gotron
     depends_on:
@@ -171,12 +202,16 @@ services:
     image: "ghcr.io/irus/currency:main"
     restart: "always"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "0.1"
           memory: "16M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     networks:
       - gotron
 
@@ -185,12 +220,16 @@ services:
     image: "ghcr.io/irus/blog:main"
     restart: "always"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "0.1"
           memory: "32M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     networks:
       - gotron
 
@@ -199,12 +238,16 @@ services:
     image: "ghcr.io/heapy/kotlin_jobs:main"
     restart: "always"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "0.1"
           memory: "16M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     networks:
       - gotron
 
@@ -213,12 +256,16 @@ services:
     image: "ghcr.io/heapy/heapy.io:main"
     restart: "always"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "0.1"
           memory: "16M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     networks:
       - gotron
 
@@ -232,12 +279,16 @@ services:
     volumes:
       - "${DATA_HOME}/data/wireguard:/etc/wireguard"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "1"
           memory: "256M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     ports:
       - "51820:51820/udp"
     cap_add:
@@ -256,18 +307,24 @@ services:
     environment:
       PROXY_SECRET: "${PROXY_SECRET}"
     logging:
-      driver: "journald"
+      driver: "loki"
+      options:
+        loki-url: "http://monitoring_loki:3100/loki/api/v1/push"
     deploy:
       resources:
         limits:
           cpus: "1"
           memory: "256M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     ports:
       - "8888:8888"
+    networks:
+      - gotron
 
-  grafana:
+  monitoring_grafana:
+    container_name: "monitoring_grafana"
     image: "grafana/grafana:8.5.3"
-    container_name: "grafana"
     restart: "always"
     user: "${HOST_USER}"
     volumes:
@@ -279,12 +336,16 @@ services:
         limits:
           cpus: "1"
           memory: "256M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
     ports:
       - "3000:3000"
+    networks:
+      - gotron
 
-  prometheus:
+  monitoring_prometheus:
+    container_name: "monitoring_prometheus"
     image: "prom/prometheus:v2.35.0"
-    container_name: "prometheus"
     restart: "always"
     user: "${HOST_USER}"
     volumes:
@@ -297,3 +358,42 @@ services:
         limits:
           cpus: "1"
           memory: "256M"
+    stop_grace_period: 30s
+    mem_swappiness: 0
+    networks:
+      - gotron
+
+  monitoring_loki:
+    container_name: "monitoring_loki"
+    image: "grafana/loki:2.5.0"
+    restart: "always"
+    user: "${HOST_USER}"
+    volumes:
+      - "${DATA_HOME}/data/loki:/loki"
+      - "${DATA_HOME}/config/loki/config.yml:/etc/loki/config.yml:ro"
+    logging:
+      driver: "journald"
+    ports:
+      - "3100:80"
+    command: -config.file=/etc/loki/config.yml
+    stop_grace_period: 30s
+    mem_swappiness: 0
+    networks:
+      - gotron
+
+  monitoring_promtail:
+    container_name: "monitoring_promtail"
+    image: "grafana/promtail:2.5.0"
+    restart: always
+    volumes:
+      - "${DATA_HOME}/config/promtail/config.yml:/etc/promtail/config.yml:ro"
+      - "/var/log/journal/:/var/log/journal/:ro"
+      - "/run/log/journal/:/run/log/journal/:ro"
+      - "/etc/machine-id:/etc/machine-id:ro"
+    command: -config.file=/etc/promtail/config.yml
+    stop_grace_period: 30s
+    mem_swappiness: 0
+    ports:
+      - "3200:80"
+    networks:
+      - gotron
