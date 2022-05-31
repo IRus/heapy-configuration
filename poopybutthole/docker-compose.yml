@@ -437,3 +437,39 @@ services:
       MARIADB_ROOT_PASSWORD: "YKmpxXYrAwQOgREv2f9iGXNzyheGVwLlGK8SA1qcvk0S8kOtby"
     networks:
       - gotron
+
+  shop_streetball_name:
+    container_name: "shop_streetball_name"
+    image: "wordpress:6-php8.1-apache"
+    restart: always
+    user: "${HOST_USER}"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
+    volumes:
+      - "${DATA_HOME}/data/shop_streetball_name/wordpress:/var/www/html"
+    networks:
+      - gotron
+
+  shop_streetball_name_db:
+    container_name: "shop_streetball_name_db"
+    image: "mariadb:10.8"
+    restart: always
+    user: "${HOST_USER}"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
+    volumes:
+      - "${DATA_HOME}/data/shop_streetball_name/maria:/var/lib/mysql"
+    environment:
+      MARIADB_ROOT_PASSWORD: "YKmpxXYrAwQOgREv2f9iGXNzyheGVwLlGK8SA1qcvk0S8kOtby"
+    networks:
+      - gotron
