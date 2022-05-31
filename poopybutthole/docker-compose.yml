@@ -470,6 +470,6 @@ services:
     volumes:
       - "${DATA_HOME}/data/shop_streetball_name/maria:/var/lib/mysql"
     environment:
-      MARIADB_ROOT_PASSWORD: "YKmpxXYrAwQOgREv2f9iGXNzyheGVwLlGK8SA1qcvk0S8kOtby"
+      MARIADB_ROOT_PASSWORD: "7xcDfuvCt4BsNTB1LpDWUleWcc5WxWcyUxcXdo10hEQy2w4VrZ"
     networks:
       - gotron
