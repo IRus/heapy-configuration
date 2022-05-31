@@ -368,7 +368,7 @@ services:
 
   bkug_by:
     container_name: "bkug_by"
-    image: "wordpress:6-php8.0-apache"
+    image: "wordpress:6-php8.1-apache"
     restart: always
     user: "${HOST_USER}"
     logging:
@@ -399,5 +399,41 @@ services:
       - "${DATA_HOME}/data/bkug_by/maria:/var/lib/mysql"
     environment:
       MARIADB_ROOT_PASSWORD: "Eb95FAoyGMLiMXp1xcBPDzCBf0jMnL3EFKTnBZBWaz3ac0pVrS"
+    networks:
+      - gotron
+
+  streetball_name:
+    container_name: "streetball_name"
+    image: "wordpress:6-php8.1-apache"
+    restart: always
+    user: "${HOST_USER}"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
+    volumes:
+      - "${DATA_HOME}/data/streetball_name/wordpress:/var/www/html"
+    networks:
+      - gotron
+
+  streetball_name_db:
+    container_name: "streetball_name_db"
+    image: "mariadb:10.8"
+    restart: always
+    user: "${HOST_USER}"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
+    volumes:
+      - "${DATA_HOME}/data/streetball_name/maria:/var/lib/mysql"
+    environment:
+      MARIADB_ROOT_PASSWORD: "YKmpxXYrAwQOgREv2f9iGXNzyheGVwLlGK8SA1qcvk0S8kOtby"
     networks:
       - gotron

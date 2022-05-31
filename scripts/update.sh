@@ -15,7 +15,7 @@ REPODIR="${WORKDIR}/heapy-configuration"
 #   cd /mnt/volume_ams3_01/heapy-configuration/
 # }
 
-echo "[1] Pull remote images"
+echo "[1] Update packages"
 dnf update -y
 
 echo "[2] Pull remote images"
@@ -42,21 +42,19 @@ echo "[6] Update certificates"
 mkdir -p "${REPODIR}/data/letsencrypt/etc"
 mkdir -p "${REPODIR}/data/letsencrypt/var"
 
-# Generate
-#  repo.kotlin.link
+# Generated
 #  bkug.by
-#  izotova.by
+#  store.bkug.by
 #  heapy.io
 #  kotbot.heapy.io
-#  wireguard.heapy.io
+#  vpn.heapy.io
 #  ibragimov.by
 #  ruslan.ibragimov.by
-#  streetball.name
-#  streetball.by
-#  shop.streetball.name
-
-# Generated
 #  kotlin.link
+#  repo.kotlin.link
+#  shop.streetball.name
+#  streetball.by
+#  streetball.name
 #  supolka.com
 
 docker stop ingress
