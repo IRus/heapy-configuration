@@ -368,11 +368,16 @@ services:
 
   bkug_by:
     container_name: "bkug_by"
-    image: "wordpress:6-php8.1-apache"
+    image: "wordpress:6-php8.0-apache"
     restart: always
     user: "${HOST_USER}"
     logging:
       driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
     volumes:
       - "${DATA_HOME}/data/bkug_by/wordpress:/var/www/html"
     networks:
@@ -385,6 +390,11 @@ services:
     user: "${HOST_USER}"
     logging:
       driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "256M"
     volumes:
       - "${DATA_HOME}/data/bkug_by/maria:/var/lib/mysql"
     environment:
