@@ -34,6 +34,20 @@ services:
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
+    depends_on:
+      - supolka_com
+      - kotlin_link
+      - repo_kotlin_link
+      - kotbot
+      - ttrss_nginx
+      - ibragimov_by_currency
+      - ruslan_ibragimov_by
+      - heapy_io_kotlin_jobs
+      - heapy_io
+      - wireguard
+      - bkug_by
+      - streetball_name
+      - shop_streetball_name
 
   supolka_com:
     container_name: "supolka_com"
