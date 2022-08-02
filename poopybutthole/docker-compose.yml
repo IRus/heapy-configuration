@@ -361,6 +361,11 @@ services:
       - "${DATA_HOME}/config/loki/config.yml:/etc/loki/config.yml:ro"
     logging:
       driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "128M"
     command: -config.file=/etc/loki/config.yml
     stop_grace_period: 30s
     mem_swappiness: 0
@@ -376,6 +381,11 @@ services:
       - "/var/log/journal/:/var/log/journal/:ro"
       - "/run/log/journal/:/run/log/journal/:ro"
       - "/etc/machine-id:/etc/machine-id:ro"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "128M"
     command: -config.file=/etc/promtail/config.yml
     stop_grace_period: 30s
     mem_swappiness: 0
