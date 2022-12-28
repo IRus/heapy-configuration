@@ -251,6 +251,7 @@ services:
     restart: "always"
     environment:
       REPO_OPTS: "-Xmx32m -XX:+UseShenandoahGC"
+      MODE: "server"
       HEADER: "X-Real-IP"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
