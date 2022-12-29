@@ -50,7 +50,7 @@ services:
       - shop_streetball_name
 
   supolka_com:
-    container_name: "supolka_com"
+    container_name: "supolka.com"
     image: "ghcr.io/irus/open_pirs:main"
     restart: "always"
     logging:
@@ -106,7 +106,7 @@ services:
 
   kotbot:
     image: "ghcr.io/heapy/kotbot:${KOTBOT_VERSION}"
-    container_name: "kotbot"
+    container_name: "kotbot.heapy.io"
     restart: "always"
     user: "${HOST_USER}"
     environment:
@@ -175,7 +175,7 @@ services:
       - gotron
 
   ttrss_nginx:
-    container_name: "ttrss_nginx"
+    container_name: "ibragimov.by/reader"
     image: "heapy/ttrss-nginx:latest"
     command: [ "nginx-debug", "-g", "daemon off;" ]
     restart: "always"
@@ -198,7 +198,7 @@ services:
       - ttrss
 
   ibragimov_by_currency:
-    container_name: "ibragimov_by_currency"
+    container_name: "ibragimov.by/currency"
     image: "ghcr.io/irus/currency:main"
     restart: "always"
     logging:
@@ -214,7 +214,7 @@ services:
       - gotron
 
   ruslan_ibragimov_by:
-    container_name: "ruslan_ibragimov_by"
+    container_name: "ruslan.ibragimov.by"
     image: "ghcr.io/irus/blog:main"
     restart: "always"
     logging:
@@ -230,7 +230,7 @@ services:
       - gotron
 
   heapy_io_kotlin_jobs:
-    container_name: "heapy_io_kotlin_jobs"
+    container_name: "heapy.io/kotlin_jobs"
     image: "ghcr.io/heapy/kotlin_jobs:main"
     restart: "always"
     logging:
@@ -246,7 +246,7 @@ services:
       - gotron
 
   ddns_heapy_io:
-    container_name: "ddns_heapy_io"
+    container_name: "ddns.heapy.io"
     image: "ghcr.io/heapy/ddns-fullstack:main"
     restart: "always"
     environment:
@@ -271,7 +271,7 @@ services:
       - gotron
 
   heapy_io:
-    container_name: "heapy_io"
+    container_name: "heapy.io"
     image: "ghcr.io/heapy/heapy.io:main"
     restart: "always"
     logging:
@@ -418,8 +418,8 @@ services:
       - gotron
 
   bkug_by:
-    container_name: "bkug_by"
-    image: "wordpress:6-php8.1-apache"
+    container_name: "bkug.by"
+    image: "wordpress:6.1-php8.1-apache"
     restart: always
     user: "${HOST_USER}"
     logging:
@@ -435,7 +435,7 @@ services:
       - gotron
 
   bkug_by_db:
-    container_name: "bkug_by_db"
+    container_name: "bkug.by_db"
     image: "mariadb:10.8"
     restart: always
     user: "${HOST_USER}"
@@ -454,8 +454,8 @@ services:
       - gotron
 
   streetball_name:
-    container_name: "streetball_name"
-    image: "wordpress:6-php8.1-apache"
+    container_name: "streetball.name"
+    image: "wordpress:6.1-php8.1-apache"
     restart: always
     user: "${HOST_USER}"
     logging:
@@ -471,7 +471,7 @@ services:
       - gotron
 
   streetball_name_db:
-    container_name: "streetball_name_db"
+    container_name: "streetball.name_db"
     image: "mariadb:10.8"
     restart: always
     user: "${HOST_USER}"
@@ -490,8 +490,8 @@ services:
       - gotron
 
   shop_streetball_name:
-    container_name: "shop_streetball_name"
-    image: "wordpress:6-php8.1-apache"
+    container_name: "shop.streetball.name"
+    image: "wordpress:6.1-php8.1-apache"
     restart: always
     user: "${HOST_USER}"
     logging:
@@ -507,7 +507,7 @@ services:
       - gotron
 
   shop_streetball_name_db:
-    container_name: "shop_streetball_name_db"
+    container_name: "shop.streetball.name_db"
     image: "mariadb:10.8"
     restart: always
     user: "${HOST_USER}"
