@@ -230,7 +230,7 @@ services:
       - gotron
 
   heapy_io_kotlin_jobs:
-    container_name: "heapy.io/kotlin_jobs"
+    container_name: "heapy.io-kotlin_jobs"
     image: "ghcr.io/heapy/kotlin_jobs:main"
     restart: "always"
     logging:
