@@ -38,6 +38,7 @@ services:
       - supolka_com
       - kotlin_link
       - repo_kotlin_link
+      - ddns_heapy_io
       - kotbot
       - ttrss_nginx
       - ibragimov_by_currency
@@ -198,7 +199,7 @@ services:
       - ttrss
 
   ibragimov_by_currency:
-    container_name: "ibragimov.by/currency"
+    container_name: "ibragimov.by-currency"
     image: "ghcr.io/irus/currency:main"
     restart: "always"
     logging:
