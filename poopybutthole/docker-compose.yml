@@ -176,7 +176,7 @@ services:
       - gotron
 
   ttrss_nginx:
-    container_name: "ibragimov.by/reader"
+    container_name: "ibragimov.by-reader"
     image: "heapy/ttrss-nginx:latest"
     command: [ "nginx-debug", "-g", "daemon off;" ]
     restart: "always"
