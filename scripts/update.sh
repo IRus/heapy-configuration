@@ -24,6 +24,7 @@ docker pull ghcr.io/irus/currency:main
 docker pull ghcr.io/irus/open_pirs:main
 docker pull ghcr.io/heapy/heapy.io:main
 docker pull ghcr.io/heapy/kotlin_jobs:main
+docker pull ghcr.io/heapy/ddns-fullstack:main
 docker pull ghcr.io/kotlinby/awesome-kotlin:main
 
 echo "[3] Build new ttrss images"
@@ -46,6 +47,7 @@ mkdir -p "${REPODIR}/data/letsencrypt/var"
 #  bkug.by
 #  store.bkug.by
 #  heapy.io
+#  ddns.heapy.io
 #  kotbot.heapy.io
 #  vpn.heapy.io
 #  ibragimov.by
