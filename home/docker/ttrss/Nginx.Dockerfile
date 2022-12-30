@@ -1,9 +1,6 @@
-FROM nginx:1.19.7
+FROM nginx:stable-alpine
 
-RUN export DEBIAN_FRONTEND=noninteractive; apt-get update \
-    && apt-get install --no-install-recommends -qqy \
-        git ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk --no-cache add git ca-certificates
 
 ARG VERSION
 RUN echo "Building ${VERSION}"
