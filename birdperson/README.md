@@ -17,11 +17,12 @@ sudo nano /etc/ssh/sshd_config # disable password login
 
 ```
 sudo apt install mc htop
-package: docker
+repo: docker
 binary: docker compose
 binary: lazydocker
 binary: cloudflared
 binary: argonone (fan control)
+binary: rclone
 ```
 
 ### lazydocker
@@ -56,7 +57,16 @@ curl https://download.argon40.com/argon1.sh | bash
 argonone-config
 ```
 
-### rpi
+### rclone
+
+```
+https://downloads.rclone.org/v1.61.1/rclone-v1.61.1-linux-arm-v7.zip --output-document rclone.zip
+unzip -j rclone-v1.61.1-linux-arm-v7.zip rclone-v1.61.1-linux-arm-v7/rclone
+sudo mv rclone /usr/bin/rclone
+rclone selfupdate
+```
+
+## rpi config
 
 ```
 sudo raspi-config

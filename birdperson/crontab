@@ -1,3 +1,7 @@
 # crontab -l -u pi
-# Restarting Lytko thermostat, because otherwise there are huge chance it will stuck
+
+# Regularly restarting Lytko thermostat, because otherwise there are huge chance it will stuck
 0 */6 * * * curl http://192.168.1.246/reset
+
+# Backup home
+20 4 * * * /home/pi/iot/backup.sh
