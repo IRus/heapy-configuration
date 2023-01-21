@@ -4,6 +4,7 @@
 
 ```
 hostnamectl set-hostname birdperson
+sudo nano /etc/hosts (old name -> new name)
 ```
 
 ## ssh
