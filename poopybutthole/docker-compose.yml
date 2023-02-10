@@ -35,7 +35,6 @@ services:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
     depends_on:
-      - supolka_com
       - kotlin_link
       - repo_kotlin_link
       - ddns_heapy_io
@@ -49,22 +48,6 @@ services:
       - bkug_by
       - streetball_name
       - shop_streetball_name
-
-  supolka_com:
-    container_name: "supolka.com"
-    image: "ghcr.io/irus/open_pirs:main"
-    restart: "always"
-    logging:
-      driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: "16M"
-    stop_grace_period: 30s
-    mem_swappiness: 0
-    networks:
-      - gotron
 
   kotlin_link:
     container_name: "kotlin.link"
