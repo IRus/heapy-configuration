@@ -9,7 +9,6 @@ echo "[0] Pull remote images"
 docker pull ghcr.io/irus/blog:main
 docker pull ghcr.io/irus/currency:main
 docker pull ghcr.io/heapy/heapy.io:main
-docker pull ghcr.io/irus/open_pirs:main
 docker pull ghcr.io/heapy/kotlin_jobs:main
 docker pull ghcr.io/kotlinby/awesome-kotlin:main
 
