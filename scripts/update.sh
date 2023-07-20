@@ -21,7 +21,6 @@ dnf update -y
 echo "[2] Pull remote images"
 docker pull ghcr.io/irus/blog:main
 docker pull ghcr.io/irus/currency:main
-docker pull ghcr.io/irus/open_pirs:main
 docker pull ghcr.io/heapy/heapy.io:main
 docker pull ghcr.io/heapy/kotlin_jobs:main
 docker pull ghcr.io/heapy/ddns-fullstack:main
@@ -57,7 +56,6 @@ mkdir -p "${REPODIR}/data/letsencrypt/var"
 #  shop.streetball.name
 #  streetball.by
 #  streetball.name
-#  supolka.com
 
 docker stop ingress
 
