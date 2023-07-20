@@ -133,6 +133,7 @@ services:
           memory: "1024M"
     stop_grace_period: 30s
     mem_swappiness: 0
+    shm_size: "512M"
     networks:
       - gotron
 
