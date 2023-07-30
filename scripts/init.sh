@@ -27,6 +27,12 @@ curl -SL https://github.com/docker/compose/releases/download/v2.20.2/docker-comp
 chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 docker compose version
 
+# Install lazydocker
+curl -SL https://github.com/jesseduffield/lazydocker/releases/download/v0.21.0/lazydocker_0.21.0_Linux_x86_64.tar.gz -o lazydocker.tar.gz
+tar xzvf lazydocker.tar.gz lazydocker
+sudo mv lazydocker /usr/bin/lazydocker
+rm lazydocker.tar.gz
+
 # Download repo
 git clone https://github.com/IRus/heapy-configuration.git
 
