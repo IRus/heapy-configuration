@@ -404,7 +404,7 @@ services:
 
   bkug_by:
     container_name: "bkug.by"
-    image: "wordpress:6.2-php8.2-apache"
+    image: "wordpress:6.3-php8.2-apache"
     restart: always
     user: "${HOST_USER}"
     logging:
@@ -440,7 +440,7 @@ services:
 
   streetball_name:
     container_name: "streetball.name"
-    image: "wordpress:6.2-php8.2-apache"
+    image: "wordpress:6.3-php8.2-apache"
     restart: always
     user: "${HOST_USER}"
     logging:
@@ -476,7 +476,7 @@ services:
 
   shop_streetball_name:
     container_name: "shop.streetball.name"
-    image: "wordpress:6.2-php8.2-apache"
+    image: "wordpress:6.3-php8.2-apache"
     restart: always
     user: "${HOST_USER}"
     logging:
