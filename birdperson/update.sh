@@ -9,5 +9,5 @@ sudo apt autoclean
 sudo apt clean
 
 docker pull eclipse-mosquitto:2.0
-docker pull koenkk/zigbee2mqtt:1.33.0
+docker pull koenkk/zigbee2mqtt:1.33.1
 docker pull ghcr.io/home-assistant/home-assistant:stable
