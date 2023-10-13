@@ -1,0 +1,16 @@
+# https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+
+global:
+    scrape_interval: 30s
+
+scrape_configs:
+  - job_name: "home_assistant"
+    scrape_interval: 30s
+    metrics_path: "/api/prometheus"
+
+    authorization:
+        credentials: "your.longlived.token"
+
+    scheme: http
+    static_configs:
+        - targets: ["home_assistant:8123"]
