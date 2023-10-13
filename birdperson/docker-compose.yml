@@ -29,6 +29,7 @@ services:
     container_name: "prometheus"
     restart: "always"
     image: "prom/prometheus:v2.47.2"
+    user: "1000:1000"
     volumes:
       - "./prometheus/data:/prometheus"
       - "./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
