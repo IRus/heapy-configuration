@@ -13,4 +13,4 @@ scrape_configs:
 
     scheme: http
     static_configs:
-        - targets: ["host.docker.internal:8123"]
+        - targets: ["localhost:8123"]

@@ -33,8 +33,7 @@ services:
     volumes:
       - "./prometheus/data:/prometheus"
       - "./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-    ports:
-      - "0.0.0.0:9090:9090"
+    network_mode: "host"
   home_assistant:
     container_name: "home_assistant"
     restart: "always"
