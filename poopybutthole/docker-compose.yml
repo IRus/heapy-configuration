@@ -519,15 +519,15 @@ services:
     networks:
       - gotron
 
-    redis:
-      container_name: "redis"
-      image: "redis:7.2.1"
-      restart: always
-      user: "${HOST_USER}"
-      logging:
-        driver: "journald"
-      deploy:
-        resources:
-          limits:
-            cpus: "1"
-            memory: "512M"
+  redis:
+    container_name: "redis"
+    image: "redis:7.2.1"
+    restart: always
+    user: "${HOST_USER}"
+    logging:
+      driver: "journald"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "512M"
