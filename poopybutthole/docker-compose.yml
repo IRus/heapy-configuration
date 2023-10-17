@@ -418,6 +418,9 @@ services:
       - "${DATA_HOME}/data/bkug_by/wordpress:/var/www/html"
     networks:
       - gotron
+    depends_on:
+      - bkug
+      - redis
 
   bkug_by_db:
     container_name: "bkug.by_db"
@@ -454,6 +457,9 @@ services:
       - "${DATA_HOME}/data/streetball_name/wordpress:/var/www/html"
     networks:
       - gotron
+    depends_on:
+      - streetball_name_db
+      - redis
 
   streetball_name_db:
     container_name: "streetball.name_db"
@@ -490,6 +496,9 @@ services:
       - "${DATA_HOME}/data/shop_streetball_name/wordpress:/var/www/html"
     networks:
       - gotron
+    depends_on:
+      - shop_streetball_name_db
+      - redis
 
   shop_streetball_name_db:
     container_name: "shop.streetball.name_db"
@@ -509,3 +518,16 @@ services:
       MARIADB_ROOT_PASSWORD: "7xcDfuvCt4BsNTB1LpDWUleWcc5WxWcyUxcXdo10hEQy2w4VrZ"
     networks:
       - gotron
+
+    redis:
+      container_name: "redis"
+      image: "redis:7.2.1"
+      restart: always
+      user: "${HOST_USER}"
+      logging:
+        driver: "journald"
+      deploy:
+        resources:
+          limits:
+            cpus: "1"
+            memory: "512M"
