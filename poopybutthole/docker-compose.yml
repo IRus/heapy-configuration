@@ -419,7 +419,7 @@ services:
     networks:
       - gotron
     depends_on:
-      - bkug
+      - bkug_by_db
       - redis
 
   bkug_by_db:
