@@ -2,5 +2,6 @@
 
 set -e
 
+git pull
 cp docker-compose.yml ~/iot/
-cp ../birdperson/update.sh ~/
+../birdperson/update.sh
