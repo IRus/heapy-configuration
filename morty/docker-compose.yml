@@ -8,8 +8,8 @@ services:
       - "./mosquitto/data:/mosquitto/data"
       - "./mosquitto/log:/mosquitto/log"
     ports:
-      - "0.0.0.0:1883:1883"
-      - "0.0.0.0:9001:9001"
+      - "127.0.0.1:1883:1883"
+      - "127.0.0.1:9001:9001"
   zigbee2mqtt:
     container_name: "zigbee2mqtt"
     restart: "always"
@@ -24,15 +24,6 @@ services:
       - "0.0.0.0:9002:9002"
     environment:
       - "TZ=Europe/Minsk"
-  prometheus:
-    container_name: "prometheus"
-    restart: "always"
-    image: "prom/prometheus:v2.47.2"
-    user: "1000:1000"
-    volumes:
-      - "./prometheus/data:/prometheus"
-      - "./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-    network_mode: "host"
   home_assistant:
     container_name: "home_assistant"
     restart: "always"
