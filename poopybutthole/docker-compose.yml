@@ -384,7 +384,7 @@ services:
 
   monitoring_promtail:
     container_name: "monitoring_promtail"
-    image: "grafana/promtail:2.5.0"
+    image: "grafana/promtail:2.8.7"
     restart: always
     volumes:
       - "${DATA_HOME}/config/promtail/config.yml:/etc/promtail/config.yml:ro"
