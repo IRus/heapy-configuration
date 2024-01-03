@@ -10,7 +10,7 @@ sudo apt autoclean
 sudo apt clean
 
 docker pull eclipse-mosquitto:2.0
-docker pull koenkk/zigbee2mqtt:1.34.0
+docker pull koenkk/zigbee2mqtt:1.35.0
 docker pull ghcr.io/home-assistant/home-assistant:stable
 
 sudo cloudflared version
