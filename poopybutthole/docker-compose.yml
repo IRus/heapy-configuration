@@ -237,7 +237,7 @@ services:
     environment:
       REPO_OPTS: "-Xmx32m -XX:+UseShenandoahGC"
       MODE: "server"
-      HEADER: "X-Real-IP"
+      HEADER: "CF-Connecting-IP"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
       interval: 30s
