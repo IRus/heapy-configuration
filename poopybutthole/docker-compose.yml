@@ -37,7 +37,6 @@ services:
     depends_on:
       - kotlin_link
       - repo_kotlin_link
-      - ddns_heapy_io
       - kotbot
       - ttrss_nginx
       - ibragimov_by_currency
@@ -225,31 +224,6 @@ services:
         limits:
           cpus: "0.1"
           memory: "16M"
-    stop_grace_period: 30s
-    mem_swappiness: 0
-    networks:
-      - gotron
-
-  ddns_heapy_io:
-    container_name: "ddns.heapy.io"
-    image: "ghcr.io/heapy/ddns-fullstack:main"
-    restart: "always"
-    environment:
-      REPO_OPTS: "-Xmx32m -XX:+UseShenandoahGC"
-      MODE: "server"
-      HEADER: "CF-Connecting-IP"
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    logging:
-      driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: "128M"
     stop_grace_period: 30s
     mem_swappiness: 0
     networks:
