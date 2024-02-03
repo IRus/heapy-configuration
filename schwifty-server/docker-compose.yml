@@ -60,6 +60,8 @@ services:
     container_name: "heapy.io-kotlin_jobs"
     image: "ghcr.io/heapy/kotlin_jobs:main"
     restart: "always"
+    environment:
+      - TUNNEL_TOKEN: "${TUNNEL_TOKEN}"
     logging:
       driver: "journald"
     deploy:
