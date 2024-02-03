@@ -1,5 +1,5 @@
 networks:
-  gotron:
+  schwifty:
     name: schwifty
     driver: bridge
 
