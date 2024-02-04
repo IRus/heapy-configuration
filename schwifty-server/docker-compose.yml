@@ -17,8 +17,8 @@ services:
       - schwifty
     depends_on:
       - heapy_io
-#      - ibragimov_by_currency
-#      - ruslan_ibragimov_by
+      - ruslan_ibragimov_by
+  #      - ibragimov_by_currency
 
 #  ibragimov_by_currency:
 #    container_name: "ibragimov.by-currency"
@@ -35,22 +35,16 @@ services:
 #    mem_swappiness: 0
 #    networks:
 #      - schwifty
-#
-#  ruslan_ibragimov_by:
-#    container_name: "ruslan.ibragimov.by"
-#    image: "ghcr.io/irus/blog:main"
-#    restart: "always"
-#    logging:
-#      driver: "journald"
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: "1"
-#          memory: "32M"
-#    stop_grace_period: 30s
-#    mem_swappiness: 0
-#    networks:
-#      - schwifty
+
+  ruslan_ibragimov_by:
+    container_name: "ruslan.ibragimov.by"
+    image: "ghcr.io/irus/blog:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
 
   heapy_io:
     image: "nginx:stable-alpine"
