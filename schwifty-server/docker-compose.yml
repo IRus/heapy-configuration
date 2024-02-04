@@ -80,3 +80,53 @@ services:
     stop_grace_period: 30s
     networks:
       - schwifty
+
+  ttrss_database:
+    container_name: "ttrss_database"
+    image: "postgres:15.3"
+    restart: "always"
+    environment:
+      POSTGRES_USER: "tinytinyrss"
+      POSTGRES_PASSWORD: "HPALUhAY28G4LWDf"
+      POSTGRES_DB: "tinytinyrss"
+    volumes:
+      - "./ttrss/data/pgdata:/var/lib/postgresql/data"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    shm_size: "512M"
+    networks:
+      - schwifty
+
+  ttrss:
+    container_name: "ttrss"
+    image: "heapy/ttrss:latest"
+    restart: "always"
+    volumes:
+      - "./ttrss/data/cache:/ttrss/reader/cache"
+      - "./ttrss/data/lock:/ttrss/reader/lock"
+      - "./ttrss/data/feed-icons:/ttrss/reader/feed-icons"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    depends_on:
+      - ttrss_database
+    networks:
+      - schwifty
+
+  ttrss_nginx:
+    container_name: "ibragimov.by-reader"
+    image: "heapy/ttrss-nginx:latest"
+    command: [ "nginx-debug", "-g", "daemon off;" ]
+    restart: "always"
+    volumes:
+      - "./ttrss/data/cache:/ttrss/reader/cache"
+      - "./ttrss/data/lock:/ttrss/reader/lock"
+      - "./ttrss/data/feed-icons:/ttrss/reader/feed-icons"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+    depends_on:
+      - ttrss
