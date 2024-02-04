@@ -40,9 +40,6 @@ services:
       - kotbot
       - ttrss_nginx
       - ibragimov_by_currency
-      - ruslan_ibragimov_by
-      - heapy_io_kotlin_jobs
-      - heapy_io
       - wireguard
       - bkug_by
       - streetball_name
@@ -184,54 +181,6 @@ services:
   ibragimov_by_currency:
     container_name: "ibragimov.by-currency"
     image: "ghcr.io/irus/currency:main"
-    restart: "always"
-    logging:
-      driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: "16M"
-    stop_grace_period: 30s
-    mem_swappiness: 0
-    networks:
-      - gotron
-
-  ruslan_ibragimov_by:
-    container_name: "ruslan.ibragimov.by"
-    image: "ghcr.io/irus/blog:main"
-    restart: "always"
-    logging:
-      driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: "32M"
-    stop_grace_period: 30s
-    mem_swappiness: 0
-    networks:
-      - gotron
-
-  heapy_io_kotlin_jobs:
-    container_name: "heapy.io-kotlin_jobs"
-    image: "ghcr.io/heapy/kotlin_jobs:main"
-    restart: "always"
-    logging:
-      driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: "16M"
-    stop_grace_period: 30s
-    mem_swappiness: 0
-    networks:
-      - gotron
-
-  heapy_io:
-    container_name: "heapy.io"
-    image: "ghcr.io/heapy/heapy.io:main"
     restart: "always"
     logging:
       driver: "journald"
