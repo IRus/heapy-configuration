@@ -58,7 +58,6 @@ services:
     restart: "always"
     logging:
       driver: "journald"
-    user: "${HOST_USER}"
     volumes:
       - ./heapy_io/nginx/conf.d:/etc/nginx/conf.d
     stop_grace_period: 30s
