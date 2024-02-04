@@ -54,7 +54,7 @@ services:
 
   heapy_io:
     image: "nginx:stable-alpine"
-    container_name: "heapy_io"
+    container_name: "heapy.io-ingress"
     restart: "always"
     logging:
       driver: "journald"
@@ -66,7 +66,7 @@ services:
       - schwifty
     depends_on:
       - heapy_io_kotlin_jobs
-#      - heapy_io_root
+      - heapy_io_root
 
   heapy_io_kotlin_jobs:
     container_name: "heapy.io-kotlin_jobs"
@@ -77,19 +77,13 @@ services:
     stop_grace_period: 30s
     networks:
       - schwifty
-#
-#  heapy_io_root:
-#    container_name: "heapy.io"
-#    image: "ghcr.io/heapy/heapy.io:main"
-#    restart: "always"
-#    logging:
-#      driver: "journald"
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: "1"
-#          memory: "32M"
-#    stop_grace_period: 30s
-#    mem_swappiness: 0
-#    networks:
-#      - schwifty
+
+  heapy_io_root:
+    container_name: "heapy.io"
+    image: "ghcr.io/heapy/heapy.io:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
