@@ -13,19 +13,13 @@ services:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     logging:
       driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "256M"
     networks:
       - schwifty
     depends_on:
+      - heapy_io
 #      - ibragimov_by_currency
 #      - ruslan_ibragimov_by
-      - heapy_io_kotlin_jobs
-#      - heapy_io
-  
+
 #  ibragimov_by_currency:
 #    container_name: "ibragimov.by-currency"
 #    image: "ghcr.io/irus/currency:main"
@@ -58,23 +52,33 @@ services:
 #    networks:
 #      - schwifty
 
+  heapy_io:
+    image: "nginx:stable-alpine"
+    container_name: "heapy_io"
+    restart: "always"
+    logging:
+      driver: "journald"
+    user: "${HOST_USER}"
+    volumes:
+      - ./heapy_io/nginx/conf.d:/etc/nginx/conf.d
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+    depends_on:
+      - heapy_io_kotlin_jobs
+#      - heapy_io_root
+
   heapy_io_kotlin_jobs:
     container_name: "heapy.io-kotlin_jobs"
     image: "ghcr.io/heapy/kotlin_jobs:main"
     restart: "always"
     logging:
       driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "32M"
     stop_grace_period: 30s
-    mem_swappiness: 0
     networks:
       - schwifty
 #
-#  heapy_io:
+#  heapy_io_root:
 #    container_name: "heapy.io"
 #    image: "ghcr.io/heapy/heapy.io:main"
 #    restart: "always"
