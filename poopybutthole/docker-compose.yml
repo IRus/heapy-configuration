@@ -116,7 +116,7 @@ services:
       GLIDER_BASIC_AUTH: ${GLIDER_BASIC_AUTH}
     logging:
       driver: "journald"
-    command: [ "-listen", ":8443?auth=${GLIDER_BASIC_AUTH}", "-verbose" ]
+    command: [ "-listen", "0.0.0.0:8443?auth=${GLIDER_BASIC_AUTH}", "-verbose" ]
     stop_grace_period: 30s
     networks:
       - gotron
