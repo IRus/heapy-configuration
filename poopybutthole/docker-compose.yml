@@ -12,7 +12,7 @@ services:
       driver: "journald"
     user: "${HOST_USER}"
     volumes:
-      - ./ingress/config/nginx/conf.d:/etc/nginx/conf.d
+      - ./ingress/nginx/conf.d:/etc/nginx/conf.d
       - ${DATA_HOME}/data/letsencrypt:/letsencrypt
       - ${DATA_HOME}/data/nginx/logs:/logs
       - ${DATA_HOME}/data/nginx/config:/config
