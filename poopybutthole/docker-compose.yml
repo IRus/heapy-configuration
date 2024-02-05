@@ -38,8 +38,6 @@ services:
       - kotlin_link
       - repo_kotlin_link
       - kotbot
-      - ttrss_nginx
-      - ibragimov_by_currency
       - wireguard
       - bkug_by
       - streetball_name
@@ -110,87 +108,18 @@ services:
     networks:
       - gotron
 
-  ttrss_database:
-    container_name: "ttrss_database"
-    image: "postgres:15.3"
+  glider:
+    container_name: "glider"
+    image: "nadoo/glider"
     restart: "always"
     environment:
-      POSTGRES_USER: "tinytinyrss"
-      POSTGRES_PASSWORD: "HPALUhAY28G4LWDf"
-      POSTGRES_DB: "tinytinyrss"
-    volumes:
-      - "${DATA_HOME}/data/ttrss/pgdata:/var/lib/postgresql/data"
+      GLIDER_BASIC_AUTH: ${GLIDER_BASIC_AUTH}
     logging:
       driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "1024M"
+    command: [ "-listen", ":8443?auth=${GLIDER_BASIC_AUTH}", "-verbose" ]
     stop_grace_period: 30s
-    mem_swappiness: 0
-    shm_size: "512M"
-    networks:
-      - gotron
-
-  ttrss:
-    container_name: "ttrss"
-    image: "heapy/ttrss:latest"
-    restart: "always"
-    volumes:
-      - "${DATA_HOME}/data/ttrss/data/cache:/ttrss/reader/cache"
-      - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
-      - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/reader/feed-icons"
-    logging:
-      driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "256M"
-    stop_grace_period: 30s
-    mem_swappiness: 0
-    depends_on:
-      - ttrss_database
-    networks:
-      - gotron
-
-  ttrss_nginx:
-    container_name: "ibragimov.by-reader"
-    image: "heapy/ttrss-nginx:latest"
-    command: [ "nginx-debug", "-g", "daemon off;" ]
-    restart: "always"
-    volumes:
-      - "${DATA_HOME}/data/ttrss/data/cache:/ttrss/reader/cache"
-      - "${DATA_HOME}/data/ttrss/data/lock:/ttrss/reader/lock"
-      - "${DATA_HOME}/data/ttrss/data/feed-icons:/ttrss/reader/feed-icons"
-    logging:
-      driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "32M"
-    stop_grace_period: 30s
-    mem_swappiness: 0
-    networks:
-      - gotron
-    depends_on:
-      - ttrss
-
-  ibragimov_by_currency:
-    container_name: "ibragimov.by-currency"
-    image: "ghcr.io/irus/currency:main"
-    restart: "always"
-    logging:
-      driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: "16M"
-    stop_grace_period: 30s
-    mem_swappiness: 0
+    ports:
+      - "8443:8443"
     networks:
       - gotron
 
@@ -205,13 +134,7 @@ services:
       - "${DATA_HOME}/data/wireguard:/etc/wireguard"
     logging:
       driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "256M"
     stop_grace_period: 30s
-    mem_swappiness: 0
     ports:
       - "51820:51820/udp"
     cap_add:
@@ -231,13 +154,7 @@ services:
       PROXY_SECRET: "${PROXY_SECRET}"
     logging:
       driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "256M"
     stop_grace_period: 30s
-    mem_swappiness: 0
     ports:
       - "8888:8888"
     networks:
