@@ -139,3 +139,13 @@ services:
       - schwifty
     depends_on:
       - ttrss
+
+  kotlin_link:
+    container_name: "kotlin.link"
+    image: "ghcr.io/kotlinby/awesome-kotlin:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty

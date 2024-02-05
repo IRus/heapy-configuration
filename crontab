@@ -1,2 +1,0 @@
-*/15 * * * * /usr/bin/docker exec --user=1:1 ttrss /ttrss/reader/update.php --feeds --quite 1> /dev/null
-*/15 * * * * /mnt/volume_ams3_01/heapy-configuration/scripts/update-docker.sh

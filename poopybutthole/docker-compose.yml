@@ -13,9 +13,9 @@ services:
     user: "${HOST_USER}"
     volumes:
       - ./ingress/nginx/conf.d:/etc/nginx/conf.d
-      - ${DATA_HOME}/data/letsencrypt:/letsencrypt
-      - ${DATA_HOME}/data/nginx/logs:/logs
-      - ${DATA_HOME}/data/nginx/config:/config
+      - ./ingress/data/letsencrypt:/letsencrypt
+      - ./ingress/data/nginx/logs:/logs
+      - ./ingress/data/nginx/config:/config
     deploy:
       resources:
         limits:
@@ -35,29 +35,12 @@ services:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
     depends_on:
-      - kotlin_link
       - repo_kotlin_link
       - kotbot
       - wireguard
       - bkug_by
       - streetball_name
       - shop_streetball_name
-
-  kotlin_link:
-    container_name: "kotlin.link"
-    image: "ghcr.io/kotlinby/awesome-kotlin:main"
-    restart: "always"
-    logging:
-      driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "32M"
-    stop_grace_period: 30s
-    mem_swappiness: 0
-    networks:
-      - gotron
 
   repo_kotlin_link:
     image: "ghcr.io/heapy/repo.kotlin.link:${REPO_KOTLIN_LINK_RELEASE}"

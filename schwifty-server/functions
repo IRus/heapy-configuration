@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Install script
+# source /home/pi/heapy-configuration/schwifty-server/functions
+
+PROJECT="/home/pi/heapy-configuration/schwifty-server";
+
+function update_system() {
+  echo "[📦] Update packages"
+  apt update
+  apt dist-upgrade -y
+  apt autoremove -y
+  apt autoclean
+}
+
+function pull_docker_images() {
+  echo "[🆕] Pull latest images"
+  docker pull ghcr.io/irus/blog:main
+  docker pull ghcr.io/irus/currency:main
+  docker pull ghcr.io/heapy/heapy.io:main
+  docker pull ghcr.io/heapy/kotlin_jobs:main
+  docker pull ghcr.io/kotlinby/awesome-kotlin:main
+}
+
+function build_ttrss() {
+    echo "[🔨] Build new ttrss images"
+    cd "${PROJECT}/ttrss/docker" || exit 1
+    ./build.sh
+}
+
+function compose_up() {
+  echo "[🌈] Update containers"
+  cd "${PROJECT}" || exit 1
+  docker compose up -d
+}
+
+function prune_docker_images() {
+  echo "[🧹] Remove unused images";
+  docker system prune -f;
+}
+
+function update() {
+  update_system;
+  pull_docker_images;
+  build_ttrss;
+  compose_up;
+  prune_docker_images;
+}
+
+function home() {
+  cd $PROJECT || exit 1
+}
+
+function update_feed() {
+    /usr/bin/docker exec --user=1:1 ttrss /ttrss/reader/update.php --feeds --quite
+}
+
+alias ll='ls -alhF'
+
+case "$1" in
+  update_docker)
+    pull_docker_images;
+    compose_up;
+    ;;
+  update_feed)
+    update_feed;
+    ;;
+  *)
+    echo "No valid function alias specified."
+    exit 1
+    ;;
+esac

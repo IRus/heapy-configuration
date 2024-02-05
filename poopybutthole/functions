@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# Install script
+# source /mnt/volume_ams3_01/heapy-configuration/poopybutthole/functions
+
+PROJECT="/mnt/volume_ams3_01/heapy-configuration/poopybutthole";
+
+function update_system() {
+  echo "[📦] Update packages"
+  dnf update -y
+}
+
+# Generated
+#  proxy.ibragimov.by
+#  bkug.by
+#  store.bkug.by
+#  kotbot.heapy.io
+#  vpn.heapy.io
+#  kotlin.link
+#  repo.kotlin.link
+#  shop.streetball.name
+#  streetball.by
+#  streetball.name
+function update_certificates() {
+  echo "[📃] Update certificates"
+  mkdir -p "${PROJECT}/ingress/data/letsencrypt/etc"
+  mkdir -p "${PROJECT}/ingress/data/letsencrypt/var"
+
+  docker stop ingress
+
+  docker run -it --rm --name certbot \
+    -v "${PROJECT}/ingress/data/letsencrypt/etc:/etc/letsencrypt" \
+    -v "${PROJECT}/ingress/data/letsencrypt/var:/var/lib/letsencrypt" \
+    -p 80:80 \
+    -p 443:443 \
+    certbot/certbot renew
+
+  docker start ingress
+}
+
+function update() {
+  update_system;
+  update_certificates;
+}
+
+function home() {
+  cd $PROJECT || exit 1
+}
+
+function issue_certificate() {
+  DOMAIN=$1
+
+  docker stop ingress
+
+  docker run -it --rm --name certbot \
+    -v "${PROJECT}/ingress/data/letsencrypt/etc:/etc/letsencrypt" \
+    -v "${PROJECT}/ingress/data/letsencrypt/var:/var/lib/letsencrypt" \
+    -p 80:80 \
+    -p 443:443 \
+    certbot/certbot certonly --standalone -d "${DOMAIN}"
+
+  docker start ingress
+}
+
+function delete_certificate() {
+  docker stop ingress
+
+  docker run -it --rm --name certbot \
+    -v "${PROJECT}/ingress/data/letsencrypt/etc:/etc/letsencrypt" \
+    -v "${PROJECT}/ingress/data/letsencrypt/var:/var/lib/letsencrypt" \
+    -p 80:80 \
+    -p 443:443 \
+    certbot/certbot delete
+
+  docker start ingress
+}
+
