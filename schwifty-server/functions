@@ -66,7 +66,5 @@ case "$1" in
     update_feed;
     ;;
   *)
-    echo "No valid function alias specified."
-    exit 1
     ;;
 esac
