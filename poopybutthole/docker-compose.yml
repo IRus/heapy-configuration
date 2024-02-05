@@ -12,7 +12,7 @@ services:
       driver: "journald"
     user: "${HOST_USER}"
     volumes:
-      - ${DATA_HOME}/config/nginx/conf.d:/etc/nginx/conf.d
+      - ./ingress/config/nginx/conf.d:/etc/nginx/conf.d
       - ${DATA_HOME}/data/letsencrypt:/letsencrypt
       - ${DATA_HOME}/data/nginx/logs:/logs
       - ${DATA_HOME}/data/nginx/config:/config
@@ -118,8 +118,6 @@ services:
       driver: "journald"
     command: [ "-listen", ":8443?auth=${GLIDER_BASIC_AUTH}", "-verbose" ]
     stop_grace_period: 30s
-    ports:
-      - "8443:8443"
     networks:
       - gotron
 
