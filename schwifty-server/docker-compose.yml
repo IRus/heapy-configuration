@@ -19,6 +19,12 @@ services:
       - heapy_io
       - ruslan_ibragimov_by
       - ibragimov_by
+      - streetball_by
+      - streetball_name
+      - shop_streetball_name
+      - kotbot
+      - kotlin_link
+      - repo_kotlin_link
 
   ruslan_ibragimov_by:
     container_name: "ruslan.ibragimov.by"
@@ -112,7 +118,7 @@ services:
     image: "heapy/ttrss:main"
     restart: "always"
     environment:
-      - TTRSS_HTTP_PROXY=${TTRSS_HTTP_PROXY
+      - TTRSS_HTTP_PROXY=${TTRSS_HTTP_PROXY}
     volumes:
       - "./ttrss/data/cache:/ttrss/reader/cache"
       - "./ttrss/data/lock:/ttrss/reader/lock"
@@ -146,6 +152,183 @@ services:
     container_name: "kotlin.link"
     image: "ghcr.io/kotlinby/awesome-kotlin:main"
     restart: "always"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+
+  monitoring_grafana:
+    container_name: "monitoring_grafana"
+    image: "grafana/grafana:10.2.3"
+    restart: "always"
+    volumes:
+      - "./grafana/data:/var/lib/grafana"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+
+  monitoring_prometheus:
+    container_name: "monitoring_prometheus"
+    image: "prom/prometheus:v2.48.1"
+    restart: "always"
+    volumes:
+      - "./prometheus/data:/prometheus"
+      - "./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+
+  monitoring_loki:
+    container_name: "monitoring_loki"
+    image: "grafana/loki:2.8.7"
+    restart: "always"
+    volumes:
+      - "./loki/data:/loki"
+      - "./loki/config/config.yml:/etc/loki/config.yml:ro"
+    logging:
+      driver: "journald"
+    command: -config.file=/etc/loki/config.yml
+    networks:
+      - schwifty
+
+  monitoring_promtail:
+    container_name: "monitoring_promtail"
+    image: "grafana/promtail:2.8.7"
+    restart: always
+    volumes:
+      - "./promtail/config/config.yml:/etc/promtail/config.yml:ro"
+      - "/var/log/journal/:/var/log/journal/:ro"
+      - "/run/log/journal/:/run/log/journal/:ro"
+      - "/etc/machine-id:/etc/machine-id:ro"
+    command: -config.file=/etc/promtail/config.yml
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+
+  bkug_by:
+    container_name: "bkug.by"
+    image: "wordpress:6.4-php8.2-apache"
+    restart: always
+    logging:
+      driver: "journald"
+    volumes:
+      - "./bkug_by/wordpress:/var/www/html"
+    networks:
+      - schwifty
+    depends_on:
+      - bkug_by_db
+
+  bkug_by_db:
+    container_name: "bkug.by_db"
+    image: "mariadb:10.11"
+    restart: always
+    logging:
+      driver: "journald"
+    volumes:
+      - "./bkug_by/maria:/var/lib/mysql"
+    environment:
+      MARIADB_ROOT_PASSWORD: "Eb95FAoyGMLiMXp1xcBPDzCBf0jMnL3EFKTnBZBWaz3ac0pVrS"
+    networks:
+      - schwifty
+
+  streetball_by:
+    image: "nginx:stable-alpine"
+    container_name: "streetball.by-ingress"
+    restart: "always"
+    logging:
+      driver: "journald"
+    volumes:
+      - ./streetball_by/nginx/conf.d:/etc/nginx/conf.d
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+
+  streetball_name:
+    container_name: "streetball.name"
+    image: "wordpress:6.4-php8.2-apache"
+    restart: always
+    logging:
+      driver: "journald"
+    volumes:
+      - "./streetball_name/wordpress:/var/www/html"
+    networks:
+      - schwifty
+    depends_on:
+      - streetball_name_db
+
+  streetball_name_db:
+    container_name: "streetball.name_db"
+    image: "mariadb:10.11"
+    restart: always
+    logging:
+      driver: "journald"
+    volumes:
+      - "./streetball_name/maria:/var/lib/mysql"
+    environment:
+      MARIADB_ROOT_PASSWORD: "YKmpxXYrAwQOgREv2f9iGXNzyheGVwLlGK8SA1qcvk0S8kOtby"
+    networks:
+      - schwifty
+
+  shop_streetball_name:
+    container_name: "shop.streetball.name"
+    image: "wordpress:6.4-php8.2-apache"
+    restart: always
+    logging:
+      driver: "journald"
+    volumes:
+      - "./shop_streetball_name/wordpress:/var/www/html"
+    networks:
+      - schwifty
+    depends_on:
+      - shop_streetball_name_db
+
+  shop_streetball_name_db:
+    container_name: "shop.streetball.name_db"
+    image: "mariadb:10.11"
+    restart: always
+    logging:
+      driver: "journald"
+    volumes:
+      - "./shop_streetball_name/maria:/var/lib/mysql"
+    environment:
+      MARIADB_ROOT_PASSWORD: "7xcDfuvCt4BsNTB1LpDWUleWcc5WxWcyUxcXdo10hEQy2w4VrZ"
+    networks:
+      - schwifty
+
+  repo_kotlin_link:
+    image: "ghcr.io/heapy/repo.kotlin.link:main"
+    container_name: "repo.kotlin.link"
+    restart: "always"
+    environment:
+      REPO_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+
+  kotbot:
+    image: "ghcr.io/heapy/kotbot:main"
+    container_name: "kotbot.heapy.io"
+    restart: "always"
+    environment:
+      KOTBOT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
+      KOTBOT_TOKEN: "${KOTBOT_TOKEN}"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/api/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     logging:
       driver: "journald"
     stop_grace_period: 30s
