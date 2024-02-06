@@ -327,6 +327,11 @@ services:
     environment:
       KOTBOT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
       KOTBOT_TOKEN: "${KOTBOT_TOKEN}"
+      KOTBOT_POSTGRES_USER: "kotbot"
+      KOTBOT_POSTGRES_PASSWORD: "kotbot"
+      KOTBOT_POSTGRES_DATABASE: "kotbot"
+      KOTBOT_POSTGRES_HOST: "kotbot_database"
+      KOTBOT_POSTGRES_PORT: "5432"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/api/health" ]
       interval: 30s
@@ -335,5 +340,24 @@ services:
     logging:
       driver: "journald"
     stop_grace_period: 30s
+    networks:
+      - schwifty
+    depends_on:
+      - kotbot_database
+
+  kotbot_database:
+    container_name: "kotbot_database"
+    image: "postgres:16.1"
+    restart: "always"
+    environment:
+      POSTGRES_USER: "kotbot"
+      POSTGRES_PASSWORD: "kotbot"
+      POSTGRES_DB: "kotbot"
+    volumes:
+      - "./kotbot/pgdata:/var/lib/postgresql/data"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    shm_size: "512M"
     networks:
       - schwifty
