@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Install script
-# source /mnt/volume_ams3_01/heapy-configuration/poopybutthole/functions
+# source /root/heapy-configuration/poopybutthole/functions
 
-PROJECT="/mnt/volume_ams3_01/heapy-configuration/poopybutthole";
+PROJECT="/root/heapy-configuration/poopybutthole";
 
 function hh_update_system() {
   echo "[📦] Update packages"
@@ -11,16 +11,7 @@ function hh_update_system() {
 }
 
 # Generated
-#  proxy.ibragimov.by
-#  bkug.by
-#  store.bkug.by
-#  kotbot.heapy.io
 #  vpn.heapy.io
-#  kotlin.link
-#  repo.kotlin.link
-#  shop.streetball.name
-#  streetball.by
-#  streetball.name
 function hh_update_certificates() {
   echo "[📃] Update certificates"
   mkdir -p "${PROJECT}/ingress/data/letsencrypt/etc"
