@@ -16,13 +16,7 @@ services:
       - ./ingress/data/letsencrypt:/letsencrypt
       - ./ingress/data/nginx/logs:/logs
       - ./ingress/data/nginx/config:/config
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "64M"
     stop_grace_period: 30s
-    mem_swappiness: 0
     sysctls:
       net.core.somaxconn: 2048
     ulimits:
@@ -55,13 +49,7 @@ services:
       retries: 3
     logging:
       driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "128M"
     stop_grace_period: 30s
-    mem_swappiness: 0
     networks:
       - gotron
 
@@ -81,25 +69,19 @@ services:
       retries: 3
     logging:
       driver: "journald"
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: "256M"
     stop_grace_period: 30s
-    mem_swappiness: 0
     networks:
       - gotron
 
-  glider:
-    container_name: "glider"
-    image: "nadoo/glider"
+  tinyproxy:
+    image: "heapy/tinyproxy:main"
+    container_name: "tinyproxy"
     restart: "always"
-    environment:
-      GLIDER_BASIC_AUTH: ${GLIDER_BASIC_AUTH}
     logging:
       driver: "journald"
-    command: [ "-listen", "0.0.0.0:8443?auth=${GLIDER_BASIC_AUTH}", "-verbose" ]
+    environment:
+      USERNAME: ${TINYPROXY_USERNAME}
+      PASSWORD: ${TINYPROXY_PASSWORD}
     stop_grace_period: 30s
     networks:
       - gotron

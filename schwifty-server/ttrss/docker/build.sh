@@ -22,8 +22,8 @@ cd - || exit 1
 
 docker build --progress=plain \
              --build-arg VERSION="${SEQ}" \
-             -t "heapy/ttrss:latest" .
+             -t "heapy/ttrss:main" .
 docker build --progress=plain \
              --build-arg VERSION="${SEQ}" \
-             -t "heapy/ttrss-nginx:latest" \
+             -t "heapy/ttrss-nginx:main" \
              --file Nginx.Dockerfile .

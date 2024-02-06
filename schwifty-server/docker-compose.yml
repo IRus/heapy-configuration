@@ -109,7 +109,7 @@ services:
 
   ttrss:
     container_name: "ttrss"
-    image: "heapy/ttrss:latest"
+    image: "heapy/ttrss:main"
     restart: "always"
     environment:
       - TTRSS_HTTP_PROXY=${TTRSS_HTTP_PROXY
@@ -127,7 +127,7 @@ services:
 
   ttrss_nginx:
     container_name: "ibragimov.by-reader"
-    image: "heapy/ttrss-nginx:latest"
+    image: "heapy/ttrss-nginx:main"
     command: [ "nginx-debug", "-g", "daemon off;" ]
     restart: "always"
     volumes:

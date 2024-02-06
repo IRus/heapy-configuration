@@ -12,4 +12,4 @@ echo "${SEQ}" > seq.txt;
 
 docker build --progress=plain \
              --build-arg VERSION="${SEQ}" \
-             -t "heapy/mtproto:main" .
+             -t "heapy/tinyproxy:main" .
