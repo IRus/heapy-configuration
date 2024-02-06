@@ -83,6 +83,8 @@ services:
       USERNAME: ${TINYPROXY_USERNAME}
       PASSWORD: ${TINYPROXY_PASSWORD}
     stop_grace_period: 30s
+    ports:
+      - "8443:8888/udp"
     networks:
       - gotron
 
