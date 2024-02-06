@@ -2,7 +2,7 @@
 
 ```bash
 openssl req -new -x509 -days 65536 -nodes \
-    -out /etc/stunnel/stunnel.pem \
-    -keyout /etc/stunnel/stunnel.pem \
+    -out stunnel.pem \
+    -keyout stunnel.pem \
     -subj "/CN=localhost"
 ```
