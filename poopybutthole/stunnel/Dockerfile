@@ -6,4 +6,6 @@ COPY stunnel.pem /etc/stunnel/stunnel.pem
 COPY stunnel.conf /etc/stunnel/stunnel.conf
 USER nobody
 EXPOSE 443
+ARG VERSION
+RUN echo "Building ${VERSION}"
 CMD ["stunnel", "/etc/stunnel/stunnel.conf"]
