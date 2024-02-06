@@ -111,7 +111,7 @@ services:
 
   mtproto:
     container_name: "mtproto"
-    image: "heapy/mtproto:latest"
+    image: "heapy/mtproto:main"
     restart: "always"
     environment:
       PROXY_SECRET: "${PROXY_SECRET}"
