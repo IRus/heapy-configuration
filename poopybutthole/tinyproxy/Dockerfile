@@ -5,4 +5,4 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ARG VERSION
 RUN echo "Building ${VERSION}"
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["tinyproxy", "-d"]

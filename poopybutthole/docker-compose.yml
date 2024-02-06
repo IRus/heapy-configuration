@@ -79,14 +79,23 @@ services:
     restart: "always"
     logging:
       driver: "journald"
-    environment:
-      USERNAME: ${TINYPROXY_USERNAME}
-      PASSWORD: ${TINYPROXY_PASSWORD}
     stop_grace_period: 30s
-    ports:
-      - "8889:8888"
     networks:
       - gotron
+
+  stunnel:
+    image: "heapy/stunnel:main"
+    container_name: "stunnel"
+    restart: "always"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    ports:
+      - "8765:8765"
+    networks:
+      - gotron
+    depends_on:
+      - tinyproxy
 
   wireguard:
     container_name: "wireguard"
