@@ -5,7 +5,7 @@
 
 PROJECT="/mnt/volume_ams3_01/heapy-configuration/poopybutthole";
 
-function update_system() {
+function hh_update_system() {
   echo "[📦] Update packages"
   dnf update -y
 }
@@ -21,7 +21,7 @@ function update_system() {
 #  shop.streetball.name
 #  streetball.by
 #  streetball.name
-function update_certificates() {
+function hh_update_certificates() {
   echo "[📃] Update certificates"
   mkdir -p "${PROJECT}/ingress/data/letsencrypt/etc"
   mkdir -p "${PROJECT}/ingress/data/letsencrypt/var"
@@ -38,16 +38,16 @@ function update_certificates() {
   docker start ingress
 }
 
-function update() {
-  update_system;
-  update_certificates;
+function hh_update() {
+  hh_update_system;
+  hh_update_certificates;
 }
 
 function home() {
   cd $PROJECT || exit 1
 }
 
-function issue_certificate() {
+function hh_issue_certificate() {
   DOMAIN=$1
 
   docker stop ingress
@@ -62,7 +62,7 @@ function issue_certificate() {
   docker start ingress
 }
 
-function delete_certificate() {
+function hh_delete_certificate() {
   docker stop ingress
 
   docker run -it --rm --name certbot \
