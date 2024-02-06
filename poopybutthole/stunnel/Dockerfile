@@ -3,9 +3,7 @@ RUN apk --no-cache add stunnel
 RUN mkdir -p /etc/stunnel
 COPY stunnel.pem /etc/stunnel/stunnel.pem
 COPY stunnel.conf /etc/stunnel/stunnel.conf
-RUN chown -R nobody:nobody /etc/stunnel
 RUN chmod 644 /etc/stunnel/stunnel.pem
-USER nobody
 EXPOSE 443
 ARG VERSION
 RUN echo "Building ${VERSION}"
