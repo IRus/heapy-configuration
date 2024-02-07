@@ -1,4 +1,5 @@
 FROM alpine:latest
+USER NOBODY
 RUN apk --no-cache add stunnel
 RUN mkdir -p /etc/stunnel /var/run/stunnel
 COPY stunnel.conf /etc/stunnel/stunnel.conf
