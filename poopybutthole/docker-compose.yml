@@ -47,7 +47,7 @@ services:
     logging:
       driver: "journald"
     volumes:
-      - ./ingress/data/letsencrypt:/letsencrypt
+      - ./ingress/data/letsencrypt/etc:/etc/letsencrypt
     stop_grace_period: 30s
     ports:
       - "8765:8765"
