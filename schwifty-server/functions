@@ -7,10 +7,10 @@ PROJECT="/home/pi/heapy-configuration/schwifty-server";
 
 function hh_system_update() {
   echo "[📦] Update packages"
-  apt update
-  apt dist-upgrade -y
-  apt autoremove -y
-  apt autoclean
+  sudo apt update
+  sudo apt dist-upgrade -y
+  sudo apt autoremove -y
+  sudo apt autoclean
 }
 
 function hh_pull_docker_images() {
