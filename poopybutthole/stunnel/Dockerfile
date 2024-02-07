@@ -1,9 +1,7 @@
 FROM alpine:latest
 RUN apk --no-cache add stunnel
-RUN mkdir -p /etc/stunnel
-COPY stunnel.pem /etc/stunnel/stunnel.pem
+RUN mkdir -p /etc/stunnel /var/run/stunnel
 COPY stunnel.conf /etc/stunnel/stunnel.conf
-RUN chmod 644 /etc/stunnel/stunnel.pem
 EXPOSE 443
 ARG VERSION
 RUN echo "Building ${VERSION}"

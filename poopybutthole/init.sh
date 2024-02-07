@@ -2,11 +2,6 @@
 
 set -e
 
-WORKDIR="/mnt/volume_ams3_01"
-REPODIR="${WORKDIR}/heapy-configuration"
-
-cd "${WORKDIR}" || exit 1
-
 # Generic system update
 dnf update -y
 
@@ -28,22 +23,6 @@ tar xzvf lazydocker.tar.gz lazydocker
 sudo mv lazydocker /usr/bin/lazydocker
 rm lazydocker.tar.gz
 
-# Download repo
-git clone https://github.com/IRus/heapy-configuration.git
-
-# Data folder init
-mkdir -p "${REPODIR}/data/nginx/logs"
-mkdir -p "${REPODIR}/data/nginx/config"
-
-# .env init
-cp "${REPODIR}/poopybutthole/.env-template" "${REPODIR}/poopybutthole/.env"
-
-# Setup config files
-cp "${REPODIR}/.gitconfig" "/root/.gitconfig"
-
 # Generate DH parameters
 dnf install -y openssl
 openssl dhparam -out "${REPODIR}/data/nginx/config/dhparam.pem" 4096
-
-# Install Loki Docker Driver
-docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
