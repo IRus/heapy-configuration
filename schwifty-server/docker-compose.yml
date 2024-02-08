@@ -96,9 +96,11 @@ services:
     networks:
       - schwifty
 
+  # docker exec -it ttrss_database /usr/bin/pg_dumpall -U tinytinyrss > dumpfile
+  # docker exec -it ttrss_database psql -U tinytinyrss < dumpfile
   ttrss_database:
     container_name: "ttrss_database"
-    image: "postgres:15.3"
+    image: "postgres:16.1"
     restart: "always"
     environment:
       POSTGRES_USER: "tinytinyrss"

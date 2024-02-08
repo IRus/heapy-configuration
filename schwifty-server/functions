@@ -18,8 +18,12 @@ function hh_pull_docker_images() {
   docker pull ghcr.io/irus/blog:main
   docker pull ghcr.io/irus/currency:main
   docker pull ghcr.io/heapy/heapy.io:main
+  docker pull ghcr.io/heapy/kotbot:main
   docker pull ghcr.io/heapy/kotlin_jobs:main
+  docker pull ghcr.io/heapy/repo.kotlin.link:main
   docker pull ghcr.io/kotlinby/awesome-kotlin:main
+  docker pull cloudflare/cloudflared:latest
+  docker pull nginx:stable-alpine
 }
 
 function hh_build_ttrss() {
