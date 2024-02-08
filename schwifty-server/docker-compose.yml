@@ -331,7 +331,6 @@ services:
 
   kotbot:
     image: "ghcr.io/heapy/kotbot:main"
-    user: "1000:1000"
     container_name: "kotbot.heapy.io"
     restart: "always"
     environment:
@@ -347,8 +346,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    volumes:
-      - "/etc/passwd:/etc/passwd:ro"
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -359,6 +356,7 @@ services:
 
   kotbot_database:
     container_name: "kotbot_database"
+    user: "1000:1000"
     image: "postgres:16.1"
     restart: "always"
     environment:
@@ -367,6 +365,7 @@ services:
       POSTGRES_DB: "kotbot"
     volumes:
       - "./kotbot/pgdata:/var/lib/postgresql/data"
+      - "/etc/passwd:/etc/passwd:ro"
     logging:
       driver: "journald"
     stop_grace_period: 30s
