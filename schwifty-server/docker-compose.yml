@@ -235,7 +235,7 @@ services:
 
   bkug_by_db:
     container_name: "bkug.by_db"
-    image: "mariadb:10.11"
+    image: "mariadb:11.2"
     restart: always
     logging:
       driver: "journald"
@@ -243,6 +243,7 @@ services:
       - "./bkug_by/maria:/var/lib/mysql"
     environment:
       MARIADB_ROOT_PASSWORD: "Eb95FAoyGMLiMXp1xcBPDzCBf0jMnL3EFKTnBZBWaz3ac0pVrS"
+      MARIADB_AUTO_UPGRADE: "1"
     networks:
       - schwifty
 
@@ -274,7 +275,7 @@ services:
 
   streetball_name_db:
     container_name: "streetball.name_db"
-    image: "mariadb:10.11"
+    image: "mariadb:11.2"
     restart: always
     logging:
       driver: "journald"
@@ -282,6 +283,7 @@ services:
       - "./streetball_name/maria:/var/lib/mysql"
     environment:
       MARIADB_ROOT_PASSWORD: "YKmpxXYrAwQOgREv2f9iGXNzyheGVwLlGK8SA1qcvk0S8kOtby"
+      MARIADB_AUTO_UPGRADE: "1"
     networks:
       - schwifty
 
@@ -301,7 +303,7 @@ services:
 
   shop_streetball_name_db:
     container_name: "shop.streetball.name_db"
-    image: "mariadb:10.11"
+    image: "mariadb:11.2"
     restart: always
     logging:
       driver: "journald"
@@ -309,6 +311,7 @@ services:
       - "./shop_streetball_name/maria:/var/lib/mysql"
     environment:
       MARIADB_ROOT_PASSWORD: "7xcDfuvCt4BsNTB1LpDWUleWcc5WxWcyUxcXdo10hEQy2w4VrZ"
+      MARIADB_AUTO_UPGRADE: "1"
     networks:
       - schwifty
 
