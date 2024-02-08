@@ -97,7 +97,8 @@ services:
       - schwifty
 
   # docker exec -it ttrss_database /usr/bin/pg_dumpall -U tinytinyrss > dumpfile
-  # docker exec -it ttrss_database psql -U tinytinyrss < dumpfile
+  # docker cp dumpfile ttrss_database:/dumpfile
+  # docker exec ttrss_database psql -U tinytinyrss -d tinytinyrss -f /dumpfile
   ttrss_database:
     container_name: "ttrss_database"
     user: "1000:1000"
@@ -330,6 +331,7 @@ services:
 
   kotbot:
     image: "ghcr.io/heapy/kotbot:main"
+    user: "1000:1000"
     container_name: "kotbot.heapy.io"
     restart: "always"
     environment:
@@ -345,6 +347,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    volumes:
+      - "/etc/passwd:/etc/passwd:ro"
     logging:
       driver: "journald"
     stop_grace_period: 30s
