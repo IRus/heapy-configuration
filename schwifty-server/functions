@@ -52,7 +52,7 @@ function home() {
 }
 
 function hh_update_feed() {
-    /usr/bin/docker exec --user=1:1 ttrss /ttrss/reader/update.php --feeds --quite
+    /usr/bin/docker exec --user=1000:1000 ttrss /ttrss/reader/update.php --feeds --quite
 }
 
 alias ll='ls -alhF'

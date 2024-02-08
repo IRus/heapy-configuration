@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 EXPOSE 9000/tcp
 
@@ -45,25 +45,27 @@ RUN { \
         echo '; Ensure worker stdout and stderr are sent to the main error log.'; \
         echo 'catch_workers_output = yes'; \
         echo 'decorate_workers_output = no'; \
-    } | tee /etc/php/7.4/fpm/pool.d/docker.conf; \
+    } | tee /etc/php/8.1/fpm/pool.d/docker.conf; \
     { \
         echo '[global]'; \
         echo 'daemonize = no'; \
         echo; \
         echo '[www]'; \
         echo 'listen = 9000'; \
-    } | tee /etc/php/7.4/fpm/pool.d/zz-docker.conf
+        echo 'user = ttrss';  \
+        echo 'group = ttrss'; \
+    } | tee /etc/php/8.1/fpm/pool.d/zz-docker.conf
 
-RUN sed -i.bak 's/\(memory_limit =\) 128M/\1 256M/' /etc/php/7.4/fpm/php.ini
+RUN sed -i.bak 's/\(memory_limit =\) 128M/\1 256M/' /etc/php/8.1/fpm/php.ini
 
 RUN addgroup --gid $HOST_GID ttrss
 RUN adduser --disabled-login --home /ttrss --gid $HOST_GID --uid $HOST_UID ttrss
 
 ADD entrypoint.sh /
 
+COPY reader /ttrss/reader
 ARG VERSION
 RUN echo "Building ${VERSION}"
-COPY reader /ttrss/reader
 
 RUN chown -R $HOST_GID:$HOST_UID /ttrss
 
