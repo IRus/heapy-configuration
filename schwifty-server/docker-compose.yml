@@ -375,3 +375,19 @@ services:
     shm_size: "512M"
     networks:
       - schwifty
+
+  pgadmin:
+    container_name: "pgadmin"
+    image: "dpage/pgadmin4:latest"
+    restart: "always"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "foo@bar.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    shm_size: "512M"
+    ports:
+      - "5432:80"
+    networks:
+      - schwifty
