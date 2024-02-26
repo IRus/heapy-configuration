@@ -355,7 +355,7 @@ services:
       KOTBOT_POSTGRES_HOST: "kotbot_database"
       KOTBOT_POSTGRES_PORT: "5432"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/api/health" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -419,7 +419,7 @@ services:
       AWESOME_SERVER_GRACEFUL_SHUTDOWN_TIMEOUT: "10s"
       AWESOME_SERVER_REACT_DIST_PATH: "/app/frontend/"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/ping/test" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
       interval: 30s
       timeout: 10s
       retries: 3

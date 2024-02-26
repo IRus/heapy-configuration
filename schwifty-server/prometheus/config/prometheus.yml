@@ -5,7 +5,7 @@ global:
 
 scrape_configs:
   - job_name: "kotbot"
-    metrics_path: "/api/metrics"
+    metrics_path: "/metrics"
     scrape_interval: 30s
     static_configs:
       - targets: ["kotbot:8080"]
@@ -17,7 +17,7 @@ scrape_configs:
       - targets: ["repo_kotlin_link:8080"]
 
   - job_name: "kotlin_link"
-    metrics_path: "/metrics-micrometer"
+    metrics_path: "/metrics"
     scrape_interval: 30s
     static_configs:
       - targets: ["kotlin_link_v2:8080"]
