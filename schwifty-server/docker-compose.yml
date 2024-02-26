@@ -24,6 +24,7 @@ services:
       - shop_streetball_name
       - kotbot
       - kotlin_link
+      - kotlin_link_v2
       - repo_kotlin_link
 
   ruslan_ibragimov_by:
@@ -175,6 +176,9 @@ services:
     stop_grace_period: 30s
     networks:
       - schwifty
+    depends_on:
+      - monitoring_prometheus
+      - monitoring_loki
 
   monitoring_prometheus:
     container_name: "monitoring_prometheus"
@@ -189,6 +193,10 @@ services:
     stop_grace_period: 30s
     networks:
       - schwifty
+    depends_on:
+      - kotlin_link_v2
+      - kotbot
+      - repo_kotlin_link
 
   monitoring_loki:
     container_name: "monitoring_loki"
@@ -218,6 +226,8 @@ services:
     stop_grace_period: 30s
     networks:
       - schwifty
+    depends_on:
+      - monitoring_loki
 
   bkug_by:
     container_name: "bkug.by"
@@ -391,7 +401,6 @@ services:
       - "5432:80"
     networks:
       - schwifty
-
 
   kotlin_link_v2:
     image: "ghcr.io/kotlinby/awesome-kotlin:main-beta"
