@@ -22,6 +22,7 @@ function hh_pull_docker_images() {
   docker pull ghcr.io/heapy/kotlin_jobs:main
   docker pull ghcr.io/heapy/repo.kotlin.link:main
   docker pull ghcr.io/kotlinby/awesome-kotlin:main
+  docker pull ghcr.io/kotlinby/awesome-kotlin:main-beta
   docker pull cloudflare/cloudflared:latest
   docker pull nginx:stable-alpine
 }
