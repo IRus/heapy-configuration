@@ -62,6 +62,8 @@ function hh_update_feed() {
     /usr/bin/docker exec --user=1000:1000 ttrss /ttrss/reader/update.php --feeds --quite
 }
 
+alias temp="/opt/vc/bin/vcgencmd measure_temp";
+
 alias ll='ls -alhF'
 
 case "$1" in
