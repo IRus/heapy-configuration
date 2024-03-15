@@ -50,7 +50,7 @@ function home() {
   cd $PROJECT || exit 1
 }
 
-alias temp="/opt/vc/bin/vcgencmd measure_temp";
+alias temp="/usr/bin/vcgencmd measure_temp";
 
 alias ll='ls -alhF'
 
