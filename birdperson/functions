@@ -24,8 +24,9 @@ function hh_cloudflare_update() {
 function hh_pull_docker_images() {
   echo "[🆕] Pull latest images"
   docker pull eclipse-mosquitto:2.0
-  docker pull koenkk/zigbee2mqtt:1.36.0
-  docker pull ghcr.io/home-assistant/home-assistant:stable
+  docker pull koenkk/zigbee2mqtt:1.37.0
+  docker pull ghcr.io/home-assistant/home-assistant:2024.5
+  docker pull prom/prometheus:v2.51.2
 }
 
 function hh_compose_up() {
