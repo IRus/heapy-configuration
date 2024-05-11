@@ -10,7 +10,7 @@ sudo nano /etc/ssh/sshd_config # disable password login
 ## Packages
 
 ```
-sudo apt install mc htop
+sudo apt install nano mc git htop
 repo: docker
 binary: lazydocker
 binary: cloudflared
@@ -31,4 +31,13 @@ rm lazydocker.tar.gz
 wget https://github.com/cloudflare/cloudflared/releases/download/2024.4.1/cloudflared-linux-amd64
 sudo mv cloudflared-linux-amd64 /usr/bin/cloudflared
 sudo chmod u+x /usr/bin/cloudflared
+```
+
+### docker
+
+```
+https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+sudo usermod -aG docker $USER
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
 ```
