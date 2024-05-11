@@ -4,7 +4,8 @@ services:
     restart: "always"
     image: "nginx:stable-alpine"
     volumes:
-      - ./ingress/nginx/conf.d:/etc/nginx/conf.d
+      - "./ingress/nginx/conf.d:/etc/nginx/conf.d"
+      - "./ingress/nginx/data/.htpasswd:/etc/nginx/.htpasswd"
     stop_grace_period: 30s
     sysctls:
       net.core.somaxconn: 2048
