@@ -4,7 +4,7 @@ services:
     restart: "always"
     image: "quay.io/oauth2-proxy/oauth2-proxy:v7.6.0"
     volumes:
-      - "/ingress/authenticated-emails:/etc/oauth2-proxy/authenticated-emails"
+      - "./ingress/authenticated-emails:/etc/oauth2-proxy/authenticated-emails"
     ports:
       - "5001:4180"
     environment:
