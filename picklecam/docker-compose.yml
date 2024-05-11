@@ -1,0 +1,31 @@
+services:
+  frigate:
+    container_name: "frigate"
+    restart: "unless-stopped"
+    privileged: true
+    image: "ghcr.io/blakeblackshear/frigate:stable"
+    shm_size: "256mb"
+    volumes:
+      - "/dev/bus/usb:/dev/bus/usb"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./frigate/config:/config"
+      - "./frigate/storage:/media/frigate"
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              count: 1
+              capabilities: [gpu]
+    ports:
+      - "5000:5000"
+      - "8554:8554"
+      - "8555:8555/tcp"
+      - "8555:8555/udp"
+    environment:
+      FRIGATE_RTSP_PASSWORD: "${FRIGATE_RTSP_PASSWORD}"
