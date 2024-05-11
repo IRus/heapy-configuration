@@ -2,19 +2,20 @@ services:
   ingress:
     container_name: "ingress"
     restart: "always"
-    image: "nginx:stable-alpine"
+    image: "quay.io/oauth2-proxy/oauth2-proxy:7.6.0"
     volumes:
-      - "./ingress/nginx/conf.d:/etc/nginx/conf.d"
-      - "./ingress/nginx/data/.htpasswd:/etc/nginx/.htpasswd"
-    stop_grace_period: 30s
-    sysctls:
-      net.core.somaxconn: 2048
-    ulimits:
-      nofile:
-        soft: 10240
-        hard: 40960
+      - "/ingress/authenticated-emails:/etc/oauth2-proxy/authenticated-emails"
     ports:
-      - "5001:80"
+      - "5001:4180"
+    environment:
+      OAUTH2_PROXY_PROVIDER: "google"
+      OAUTH2_PROXY_CLIENT_ID: "${OAUTH2_PROXY_CLIENT_ID}"
+      OAUTH2_PROXY_CLIENT_SECRET: "${OAUTH2_PROXY_CLIENT_SECRET}"
+      OAUTH2_PROXY_COOKIE_SECRET: "${OAUTH2_PROXY_COOKIE_SECRET}"
+      OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE: "/etc/oauth2-proxy/authenticated-emails"
+      OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
+      OAUTH2_PROXY_REDIRECT_URL: "${OAUTH2_PROXY_REDIRECT_URL}"
+      OAUTH2_PROXY_UPSTREAMS: "http://frigate:5000"
     depends_on:
       - frigate
 
