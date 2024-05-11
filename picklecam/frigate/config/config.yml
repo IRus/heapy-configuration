@@ -1,0 +1,61 @@
+mqtt:
+  enabled: True
+  host: "192.168.1.250"
+  port: 1883
+
+ffmpeg:
+  hwaccel_args: preset-vaapi
+
+detectors:
+  coral:
+    type: edgetpu
+    device: usb
+
+objects:
+  track:
+    - person
+    - cat
+    - dog
+    - bird
+
+record:
+  enabled: True
+  retain:
+    days: 15
+    mode: motion
+  events:
+    retain:
+      default: 15
+      mode: motion
+
+snapshots:
+  enabled: True
+  retain:
+    default: 30
+
+birdseye:
+  enabled: True
+  mode: continuous
+
+cameras:
+  front:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_CAM251_PASSWORD}@192.168.1.251:554/stream1
+          roles:
+            - detect
+            - record
+  side:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_CAM252_PASSWORD}@192.168.1.252:554/stream1
+          roles:
+            - detect
+            - record
+  back:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_CAM253_PASSWORD}@192.168.1.253:554/stream1
+          roles:
+            - detect
+            - record
