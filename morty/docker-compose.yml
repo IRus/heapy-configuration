@@ -8,7 +8,7 @@ services:
       - "./mosquitto/data:/mosquitto/data"
       - "./mosquitto/log:/mosquitto/log"
     ports:
-      - "127.0.0.1:1883:1883"
+      - "0.0.0.0:1883:1883"
       - "127.0.0.1:9001:9001"
   zigbee2mqtt:
     container_name: "zigbee2mqtt"
@@ -28,29 +28,8 @@ services:
     container_name: "home_assistant"
     restart: "always"
     privileged: true
-    image: "ghcr.io/home-assistant/home-assistant:stable"
+    image: "ghcr.io/home-assistant/home-assistant:2024.5"
     volumes:
       - "./home_assistant:/config"
       - "/etc/localtime:/etc/localtime:ro"
     network_mode: "host"
-  frigate:
-    container_name: "frigate"
-    restart: "unless-stopped"
-    privileged: true
-    image: "ghcr.io/blakeblackshear/frigate:stable-standard-arm64"
-    shm_size: "64mb"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "./frigate/config:/config"
-      - "./frigate/storage:/media/frigate"
-      - type: tmpfs
-        target: /tmp/cache
-        tmpfs:
-          size: 1000000000
-    ports:
-      - "5000:5000"
-      - "8554:8554"
-      - "8555:8555/tcp"
-      - "8555:8555/udp"
-    environment:
-      FRIGATE_RTSP_PASSWORD: "${FRIGATE_RTSP_PASSWORD}"
