@@ -10,6 +10,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "./frigate/config:/config"
       - "./frigate/storage:/media/frigate"
+      - "/dev/dri/renderD128:/dev/dri/renderD128"
       - type: tmpfs
         target: /tmp/cache
         tmpfs:
