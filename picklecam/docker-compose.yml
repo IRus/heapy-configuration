@@ -1,7 +1,25 @@
 services:
+  ingress:
+    container_name: "ingress"
+    restart: "always"
+    image: "nginx:stable-alpine"
+    volumes:
+      - ./ingress/nginx/conf.d:/etc/nginx/conf.d
+    stop_grace_period: 30s
+    sysctls:
+      net.core.somaxconn: 2048
+    ulimits:
+      nofile:
+        soft: 10240
+        hard: 40960
+    ports:
+      - "5001:80"
+    depends_on:
+      - frigate
+
   frigate:
     container_name: "frigate"
-    restart: "unless-stopped"
+    restart: "always"
     privileged: true
     image: "ghcr.io/blakeblackshear/frigate:stable"
     shm_size: "256mb"
