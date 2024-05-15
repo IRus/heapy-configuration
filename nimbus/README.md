@@ -17,7 +17,7 @@ sudo nano /etc/ssh/sshd_config # disable password login
 ## Packages
 
 ```
-sudo apt install mc htop
+sudo apt install mc htop jq
 repo: docker
 binary: lazydocker
 binary: cloudflared
