@@ -24,7 +24,7 @@ CHECKIN_ID=$(sentry_start | jq -r .id)
 echo "CHECKIN_ID: ${CHECKIN_ID}"
 
 TIME=$(date "+%s")
-BACKUP_NAME="birdperson-${TIME}.tar.gz"
+BACKUP_NAME="nimbus-${TIME}.tar.gz"
 BACKUP_PATH="/tmp/${BACKUP_NAME}"
 
 echo "Backuping to ${BACKUP_PATH}"
@@ -36,7 +36,7 @@ sudo chown pi:pi "${BACKUP_PATH}"
 echo "Archive ${BACKUP_PATH} created"
 
 echo "Uploading ${BACKUP_NAME} to R2"
-rclone moveto "${BACKUP_PATH}" "r2:birdperson/${BACKUP_NAME}"
+rclone moveto "${BACKUP_PATH}" "r2:nimbus/${BACKUP_NAME}"
 
 echo "Notifying sentry.io that script finished"
 sentry_finish $CHECKIN_ID

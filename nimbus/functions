@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Install script
-# source /home/pi/heapy-configuration/birdperson/functions
+# source /home/pi/heapy-configuration/nimbus/functions
 
-PROJECT="/home/pi/heapy-configuration/birdperson";
+PROJECT="/home/pi/heapy-configuration/nimbus";
 
 function hh_system_update() {
   echo "[📦] Update packages"

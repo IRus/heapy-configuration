@@ -3,7 +3,7 @@
 ## hostname
 
 ```
-hostnamectl set-hostname birdperson
+hostnamectl set-hostname nimbus
 sudo nano /etc/hosts (old name -> new name)
 ```
 
@@ -19,7 +19,6 @@ sudo nano /etc/ssh/sshd_config # disable password login
 ```
 sudo apt install mc htop
 repo: docker
-binary: docker compose
 binary: lazydocker
 binary: cloudflared
 binary: argonone (fan control)
@@ -29,26 +28,17 @@ binary: rclone
 ### lazydocker
 
 ```
-wget https://github.com/jesseduffield/lazydocker/releases/download/v0.21.0/lazydocker_0.21.0_Linux_armv7.tar.gz --output-document lazydocker.tar.gz
+wget https://github.com/jesseduffield/lazydocker/releases/download/v0.23.1/lazydocker_0.23.1_Linux_arm64.tar.gz --output-document lazydocker.tar.gz
 tar xzvf lazydocker.tar.gz lazydocker
 sudo mv lazydocker /usr/bin/lazydocker
 rm lazydocker.tar.gz
 ```
 
-### docker compose
-
-```
-wget https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-armv7
-sudo mv docker-compose-linux-armv7 /usr/local/lib/docker/cli-plugins/docker-compose
-chmod u+x /usr/local/lib/docker/cli-plugins/docker-compose
-docker compose version
-```
-
 ### cloudflared
 
 ```
-wget https://github.com/cloudflare/cloudflared/releases/download/2023.7.3/cloudflared-linux-armhf
-sudo mv cloudflared-linux-armhf /usr/bin/cloudflared
+wget https://github.com/cloudflare/cloudflared/releases/download/2024.4.1/cloudflared-linux-arm64 --output-document cloudflared
+sudo mv cloudflared /usr/bin/cloudflared
 sudo chmod u+x /usr/bin/cloudflared
 ```
 
@@ -62,8 +52,8 @@ argonone-config
 ### rclone
 
 ```
-https://downloads.rclone.org/v1.61.1/rclone-v1.61.1-linux-arm-v7.zip --output-document rclone.zip
-unzip -j rclone-v1.61.1-linux-arm-v7.zip rclone-v1.61.1-linux-arm-v7/rclone
+wget https://downloads.rclone.org/v1.66.0/rclone-v1.66.0-linux-arm64.zip --output-document rclone.zip
+unzip -j rclone.zip rclone-v1.66.0-linux-arm64/rclone
 sudo mv rclone /usr/bin/rclone
 rclone selfupdate
 ```
@@ -80,6 +70,7 @@ sudo raspi-config
 sudo rpi-update
 sudo rpi-eeprom-update -a
 ```
+
 ## Services
 
 ```

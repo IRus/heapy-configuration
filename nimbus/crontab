@@ -4,4 +4,4 @@
 0 */6 * * * curl http://192.168.100.252/reset
 
 # Backup home
-20 4 * * * SENTRY_DSN="" /home/pi/heapy-configuration/birdperson/backup.sh >> /tmp/cron.log 2>&1
+20 4 * * * /home/pi/heapy-configuration/nimbus/backup.sh >> /tmp/cron.log 2>&1
