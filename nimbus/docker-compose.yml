@@ -14,7 +14,7 @@ services:
     container_name: "zigbee2mqtt"
     restart: "always"
     privileged: true
-    image: "koenkk/zigbee2mqtt:1.37.1"
+    image: "koenkk/zigbee2mqtt:1.39.0"
     devices:
       - "/dev/ttyUSB0:/dev/ttyUSB0"
     volumes:
@@ -37,7 +37,7 @@ services:
     container_name: "home_assistant"
     restart: "always"
     privileged: true
-    image: "ghcr.io/home-assistant/home-assistant:2024.5"
+    image: "ghcr.io/home-assistant/home-assistant:2024.6"
     volumes:
       - "./home_assistant:/config"
       - "/etc/localtime:/etc/localtime:ro"
