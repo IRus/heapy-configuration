@@ -54,6 +54,14 @@ function hh_update() {
   hh_prune_docker_images;
 }
 
+function hh_rpi_update() {
+  sudo rpi-update;
+}
+
+function hh_rpi_eeprom_update() {
+  sudo rpi-eeprom-update -a;
+}
+
 function home() {
   cd $PROJECT || exit 1
 }
