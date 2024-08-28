@@ -123,8 +123,6 @@ services:
     container_name: "ttrss"
     image: "heapy/ttrss:main"
     restart: "always"
-    environment:
-      - TTRSS_HTTP_PROXY=${TTRSS_HTTP_PROXY}
     volumes:
       - "./ttrss/data/cache:/ttrss/reader/cache"
       - "./ttrss/data/lock:/ttrss/reader/lock"
