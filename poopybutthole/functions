@@ -35,7 +35,13 @@ function hh_update() {
 }
 
 function home() {
-  cd $PROJECT || exit 1
+  cd "${PROJECT}" || exit 1
+}
+
+function hh_compose_up() {
+  echo "[🌈] Update containers"
+  cd "${PROJECT}" || exit 1
+  docker compose up -d
 }
 
 function hh_issue_certificate() {
