@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 as builder
+FROM ubuntu:20.04 AS builder
 WORKDIR /
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update \
     && apt-get install --no-install-recommends -qqy \
