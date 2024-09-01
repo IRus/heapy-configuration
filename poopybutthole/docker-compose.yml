@@ -6,6 +6,7 @@ services:
     environment:
       WG_HOST: "vpn.heapy.io"
       PASSWORD: "${WIREGUARD_PASSWORD}"
+      ENABLE_PROMETHEUS_METRICS: "true"
     volumes:
       - "./wireguard/data/:/etc/wireguard"
     logging:
