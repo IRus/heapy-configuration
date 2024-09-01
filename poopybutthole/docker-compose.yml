@@ -6,7 +6,6 @@ services:
     environment:
       WG_HOST: "vpn.heapy.io"
       PASSWORD: "${WIREGUARD_PASSWORD}"
-      ENABLE_PROMETHEUS_METRICS: "true"
     volumes:
       - "./wireguard/data/:/etc/wireguard"
     logging:
@@ -14,8 +13,7 @@ services:
     stop_grace_period: 30s
     ports:
       - "51820:51820/udp"
-      - "51821:51821"
-    network_mode: "host"
+      - "127.0.0.1:51821:51821"
     cap_add:
       - "NET_ADMIN"
       - "SYS_MODULE"
@@ -33,4 +31,4 @@ services:
       driver: "journald"
     stop_grace_period: 30s
     ports:
-      - "8888:8888"
+      - "127.0.0.1:8888:8888"
