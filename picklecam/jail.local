@@ -1,0 +1,29 @@
+# dnf install fail2ban -y
+# systemctl start fail2ban
+# systemctl enable fail2ban
+# cp jail.local /etc/fail2ban/jail.local
+# systemctl restart fail2ban
+# systemctl status fail2ban
+# systemctl status fail2ban
+# tail -f /var/log/fail2ban.log
+
+[INCLUDES]
+
+before = paths-fedora.conf
+
+[DEFAULT]
+
+bantime.increment = true
+bantime.rndtime = 20m
+bantime.factor = 16
+bantime  = 24h
+findtime  = 24h
+maxretry = 2
+maxmatches = %(maxretry)s
+
+[sshd]
+enabled = true
+mode   = aggressive
+port    = ssh
+logpath = %(sshd_log)s
+backend = %(sshd_backend)s
