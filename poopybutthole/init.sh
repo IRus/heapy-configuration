@@ -22,7 +22,3 @@ curl -SL https://github.com/jesseduffield/lazydocker/releases/download/v0.23.1/l
 tar xzvf lazydocker.tar.gz lazydocker
 sudo mv lazydocker /usr/bin/lazydocker
 rm lazydocker.tar.gz
-
-# Generate DH parameters
-dnf install -y openssl
-openssl dhparam -out "${REPODIR}/data/nginx/config/dhparam.pem" 4096

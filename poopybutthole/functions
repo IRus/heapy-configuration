@@ -10,28 +10,13 @@ function hh_update_system() {
   dnf update -y
 }
 
-# Generated
-#  vpn.heapy.io
-function hh_update_certificates() {
-  echo "[📃] Update certificates"
-  mkdir -p "${PROJECT}/ingress/data/letsencrypt/etc"
-  mkdir -p "${PROJECT}/ingress/data/letsencrypt/var"
-
-  docker stop ingress
-
-  docker run -it --rm --name certbot \
-    -v "${PROJECT}/ingress/data/letsencrypt/etc:/etc/letsencrypt" \
-    -v "${PROJECT}/ingress/data/letsencrypt/var:/var/lib/letsencrypt" \
-    -p 80:80 \
-    -p 443:443 \
-    certbot/certbot renew
-
-  docker start ingress
-}
-
 function hh_update() {
   hh_update_system;
-  hh_update_certificates;
+}
+
+function hh_pull_docker_images() {
+  echo "[🆕] Pull latest images"
+  docker pull weejewel/wg-easy
 }
 
 function home() {
@@ -43,32 +28,3 @@ function hh_compose_up() {
   cd "${PROJECT}" || exit 1
   docker compose up -d
 }
-
-function hh_issue_certificate() {
-  DOMAIN=$1
-
-  docker stop ingress
-
-  docker run -it --rm --name certbot \
-    -v "${PROJECT}/ingress/data/letsencrypt/etc:/etc/letsencrypt" \
-    -v "${PROJECT}/ingress/data/letsencrypt/var:/var/lib/letsencrypt" \
-    -p 80:80 \
-    -p 443:443 \
-    certbot/certbot certonly --standalone -d "${DOMAIN}"
-
-  docker start ingress
-}
-
-function hh_delete_certificate() {
-  docker stop ingress
-
-  docker run -it --rm --name certbot \
-    -v "${PROJECT}/ingress/data/letsencrypt/etc:/etc/letsencrypt" \
-    -v "${PROJECT}/ingress/data/letsencrypt/var:/var/lib/letsencrypt" \
-    -p 80:80 \
-    -p 443:443 \
-    certbot/certbot delete
-
-  docker start ingress
-}
-
