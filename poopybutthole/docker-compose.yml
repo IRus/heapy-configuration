@@ -1,7 +1,7 @@
 services:
   wireguard:
     container_name: "wireguard"
-    image: "weejewel/wg-easy"
+    image: "ghcr.io/wg-easy/wg-easy:latest"
     restart: "always"
     environment:
       WG_HOST: "vpn.heapy.io"

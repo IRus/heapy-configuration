@@ -16,7 +16,7 @@ function hh_update() {
 
 function hh_pull_docker_images() {
   echo "[🆕] Pull latest images"
-  docker pull weejewel/wg-easy
+  docker pull ghcr.io/wg-easy/wg-easy:latest
 }
 
 function home() {
