@@ -154,7 +154,7 @@ services:
 
   kotlin_link:
     container_name: "kotlin.link"
-    image: "ghcr.io/kotlinby/awesome-kotlin:main"
+    image: "ghcr.io/heapy/awesome-kotlin:main"
     restart: "always"
     logging:
       driver: "journald"
@@ -403,7 +403,7 @@ services:
       - schwifty
 
   kotlin_link_v2:
-    image: "ghcr.io/kotlinby/awesome-kotlin:main-beta"
+    image: "ghcr.io/heapy/awesome-kotlin:main-beta"
     container_name: "kotlin.link-v2"
     restart: "always"
     environment:
