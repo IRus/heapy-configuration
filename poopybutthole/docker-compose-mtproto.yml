@@ -1,0 +1,12 @@
+services:
+  mtproto:
+    container_name: "mtproto"
+    image: "heapy/mtproto:main"
+    restart: "unless-stopped"
+    environment:
+      PROXY_SECRET: "${PROXY_SECRET}"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    ports:
+      - "8888:8888"
