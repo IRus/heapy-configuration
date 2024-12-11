@@ -5,7 +5,7 @@ services:
     restart: "always"
     environment:
       WG_HOST: "vpn.heapy.io"
-      PASSWORD: "${WIREGUARD_PASSWORD}"
+      PASSWORD_HASH: "${WIREGUARD_PASSWORD_HASH}"
     volumes:
       - "./wireguard/data/:/etc/wireguard"
     logging:
