@@ -28,8 +28,9 @@ services:
     container_name: "home_assistant"
     restart: "always"
     privileged: true
-    image: "ghcr.io/home-assistant/home-assistant:2025.01"
+    image: "ghcr.io/home-assistant/home-assistant:2025.1"
     volumes:
       - "./home_assistant:/config"
       - "/etc/localtime:/etc/localtime:ro"
+      - "/run/dbus:/run/dbus:ro"
     network_mode: "host"
