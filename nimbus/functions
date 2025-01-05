@@ -25,7 +25,7 @@ function hh_pull_docker_images() {
   echo "[🆕] Pull latest images"
   docker pull eclipse-mosquitto:2.0
   docker pull koenkk/zigbee2mqtt:1.42.0
-  docker pull ghcr.io/home-assistant/home-assistant:2024.12
+  docker pull ghcr.io/home-assistant/home-assistant:2025.01
   docker pull prom/prometheus:v2.53.1
 }
 
