@@ -176,7 +176,7 @@ services:
       APP_UPSTREAM: "ttrss"
       APP_BASE: "/reader"
     volumes:
-      - "./ttrss/reader:/var/www/html/tt-rss"
+      - "./ttrss/reader:/var/www/html/tt-rss:ro"
     logging:
       driver: "journald"
     stop_grace_period: 30s
