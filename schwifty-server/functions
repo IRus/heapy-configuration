@@ -28,12 +28,6 @@ function hh_pull_docker_images() {
   docker pull nginx:stable-alpine
 }
 
-function hh_build_ttrss() {
-    echo "[🔨] Build new ttrss images"
-    cd "${PROJECT}/ttrss/docker" || exit 1
-    ./build.sh
-}
-
 function hh_compose_up() {
   echo "[🌈] Update containers"
   cd "${PROJECT}" || exit 1
@@ -48,7 +42,6 @@ function hh_prune_docker_images() {
 function hh_update() {
   hh_system_update;
   hh_pull_docker_images;
-  hh_build_ttrss;
   hh_compose_up;
   hh_prune_docker_images;
 }
@@ -65,10 +58,6 @@ function home() {
   cd $PROJECT || exit 1
 }
 
-function hh_update_feed() {
-    /usr/bin/docker exec --user=1000:1000 ttrss /ttrss/reader/update.php --feeds --quite
-}
-
 alias temp="/usr/bin/vcgencmd measure_temp";
 
 alias ll='ls -alhF'
@@ -77,9 +66,6 @@ case "$1" in
   hh_update_docker)
     hh_pull_docker_images;
     hh_compose_up;
-    ;;
-  hh_update_feed)
-    hh_update_feed;
     ;;
   *)
     ;;

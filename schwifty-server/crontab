@@ -1,2 +1,1 @@
-*/15 * * * * /home/pi/heapy-configuration/schwifty-server/functions hh_update_feed 1> /dev/null
 */15 * * * * /home/pi/heapy-configuration/schwifty-server/functions hh_update_docker
