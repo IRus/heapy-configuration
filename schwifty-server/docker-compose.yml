@@ -241,7 +241,7 @@ services:
 
   bkug_by_db:
     container_name: "bkug.by_db"
-    image: "mariadb:11.7"
+    image: "mariadb:11.6"
     restart: always
     logging:
       driver: "journald"
@@ -281,7 +281,7 @@ services:
 
   streetball_name_db:
     container_name: "streetball.name_db"
-    image: "mariadb:11.7"
+    image: "mariadb:11.6"
     restart: always
     logging:
       driver: "journald"
@@ -309,7 +309,7 @@ services:
 
   shop_streetball_name_db:
     container_name: "shop.streetball.name_db"
-    image: "mariadb:11.7"
+    image: "mariadb:11.6"
     restart: always
     logging:
       driver: "journald"
