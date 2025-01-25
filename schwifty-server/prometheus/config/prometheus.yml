@@ -20,4 +20,4 @@ scrape_configs:
     metrics_path: "/metrics"
     scrape_interval: 30s
     static_configs:
-      - targets: ["kotlin_link_v2:8080"]
+      - targets: ["kotlin_link:8080"]
