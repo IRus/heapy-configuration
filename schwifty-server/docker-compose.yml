@@ -118,6 +118,7 @@ services:
     networks:
       - schwifty
 
+  # docker build -t heapy/ttrss:main -f .docker/app/Dockerfile .
   ttrss:
     container_name: "ttrss"
     image: "heapy/ttrss:main"
@@ -137,14 +138,12 @@ services:
     logging:
       driver: "journald"
     stop_grace_period: 30s
-    build:
-      dockerfile: "./ttrss/reader/.docker/app/Dockerfile"
-      context: "."
     depends_on:
       - ttrss_database
     networks:
       - schwifty
 
+  # docker build -t heapy/ttrss-updater:main -f .docker/app/Dockerfile .
   ttrss_updater:
     container_name: "ttrss_updater"
     image: "heapy/ttrss-updater:main"
@@ -158,9 +157,6 @@ services:
       TTRSS_DB_NAME: "tinytinyrss"
       TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
       TTRSS_SELF_URL_PATH: "https://ibragimov.by/reader/"
-    build:
-      dockerfile: "./ttrss/reader/.docker/app/Dockerfile"
-      context: "."
     volumes:
       - "./ttrss/reader:/var/www/html/tt-rss"
     logging:
@@ -171,6 +167,7 @@ services:
     networks:
       - schwifty
 
+  # docker build -t heapy/ttrss-nginx:main -f .docker/web-nginx/Dockerfile .
   ttrss_nginx:
     container_name: "ibragimov.by-reader"
     image: "heapy/ttrss-nginx:main"
@@ -178,9 +175,6 @@ services:
     environment:
       APP_UPSTREAM: "ttrss"
       APP_BASE: "/reader"
-    build:
-      dockerfile: "./ttrss/reader/.docker/web-nginx/Dockerfile"
-      context: "."
     volumes:
       - "./ttrss/reader:/var/www/html/tt-rss"
     logging:
