@@ -174,7 +174,7 @@ services:
     restart: "always"
     environment:
       APP_UPSTREAM: "ttrss"
-      APP_BASE: "/reader"
+      APP_BASE: "/reader/"
     volumes:
       - "./ttrss/reader:/var/www/html/tt-rss"
     logging:
