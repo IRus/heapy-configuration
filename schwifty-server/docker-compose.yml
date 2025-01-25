@@ -139,7 +139,7 @@ services:
     stop_grace_period: 30s
     build:
       dockerfile: "./ttrss/reader/.docker/app/Dockerfile"
-      context: "./ttrss/reader"
+      context: "."
     depends_on:
       - ttrss_database
     networks:
@@ -160,7 +160,7 @@ services:
       TTRSS_SELF_URL_PATH: "https://ibragimov.by/reader/"
     build:
       dockerfile: "./ttrss/reader/.docker/app/Dockerfile"
-      context: "./ttrss/reader"
+      context: "."
     volumes:
       - "./ttrss/reader:/var/www/html/tt-rss"
     logging:
@@ -180,7 +180,7 @@ services:
       APP_BASE: "/reader"
     build:
       dockerfile: "./ttrss/reader/.docker/web-nginx/Dockerfile"
-      context: "./ttrss/reader"
+      context: "."
     volumes:
       - "./ttrss/reader:/var/www/html/tt-rss"
     logging:
