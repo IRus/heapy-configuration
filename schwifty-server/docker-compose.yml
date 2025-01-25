@@ -368,7 +368,7 @@ services:
   kotbot_database:
     container_name: "kotbot_database"
     user: "1000:1000"
-    image: "postgres:16.1"
+    image: "postgres:16.6"
     restart: "always"
     environment:
       POSTGRES_USER: "kotbot"
