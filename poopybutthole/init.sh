@@ -9,9 +9,10 @@ dnf update -y
 dnf install -y htop mc git nano
 
 # Install Docker
-dnf install -y dnf-plugins-core
-dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+# https://docs.docker.com/engine/install/fedora/
+dnf -y install dnf-plugins-core
+dnf-3 config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+dnf -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 systemctl enable docker
 systemctl start docker
 docker run hello-world
