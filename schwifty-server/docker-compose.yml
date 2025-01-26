@@ -161,7 +161,7 @@ services:
       - "./ttrss/tt-rss:/var/www/html/tt-rss"
     logging:
       driver: "journald"
-    stop_grace_period: 30s
+    stop_grace_period: 0s
     depends_on:
       - ttrss
     networks:
