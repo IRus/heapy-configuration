@@ -158,7 +158,7 @@ services:
       TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
       TTRSS_SELF_URL_PATH: "https://ibragimov.by/reader"
     volumes:
-      - "./ttrss/reader:/var/www/html/tt-rss"
+      - "./ttrss/reader:/var/www/html/reader"
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -174,7 +174,7 @@ services:
     restart: "always"
     environment:
       APP_UPSTREAM: "ttrss"
-      APP_BASE: "/reader/"
+      APP_BASE: "/reader"
     volumes:
       - "./ttrss/reader:/var/www/html/reader:ro"
     logging:
