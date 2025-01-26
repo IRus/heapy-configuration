@@ -131,7 +131,7 @@ services:
       TTRSS_DB_USER: "tinytinyrss"
       TTRSS_DB_NAME: "tinytinyrss"
       TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
-      TTRSS_SELF_URL_PATH: "https://ibragimov.by/reader"
+      TTRSS_SELF_URL_PATH: "https://ibragimov.by/reader/"
       TTRSS_SESSION_COOKIE_LIFETIME: "31536000"
     volumes:
       - "./ttrss/reader:/var/www/html/tt-rss"
@@ -174,7 +174,7 @@ services:
     restart: "always"
     environment:
       APP_UPSTREAM: "ttrss"
-      APP_BASE: "/reader"
+      APP_BASE: "/reader/"
     volumes:
       - "./ttrss/reader:/var/www/html/reader:ro"
     logging:
