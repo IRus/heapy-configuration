@@ -131,7 +131,7 @@ services:
       TTRSS_DB_USER: "tinytinyrss"
       TTRSS_DB_NAME: "tinytinyrss"
       TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
-      TTRSS_SELF_URL_PATH: "https://ibragimov.by/tt-rss"
+      TTRSS_SELF_URL_PATH: "https://ibragimov.by/reader"
       TTRSS_SESSION_COOKIE_LIFETIME: "31536000"
     volumes:
       - "./ttrss/tt-rss:/var/www/html/tt-rss"
@@ -156,7 +156,7 @@ services:
       TTRSS_DB_USER: "tinytinyrss"
       TTRSS_DB_NAME: "tinytinyrss"
       TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
-      TTRSS_SELF_URL_PATH: "https://ibragimov.by/tt-rss"
+      TTRSS_SELF_URL_PATH: "https://ibragimov.by/reader"
     volumes:
       - "./ttrss/tt-rss:/var/www/html/tt-rss"
     logging:
@@ -169,11 +169,12 @@ services:
 
   # docker build -t heapy/ttrss-nginx:main -f .docker/web-nginx/Dockerfile .
   ttrss_nginx:
-    container_name: "ibragimov.by-ttrss"
+    container_name: "ibragimov.by-reader"
     image: "heapy/ttrss-nginx:main"
     restart: "always"
     environment:
       APP_UPSTREAM: "ttrss"
+      APP_BASE: "/reader"
     volumes:
       - "./ttrss/tt-rss:/var/www/html/tt-rss:ro"
     logging:
