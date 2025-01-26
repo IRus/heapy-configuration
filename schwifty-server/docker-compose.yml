@@ -131,10 +131,10 @@ services:
       TTRSS_DB_USER: "tinytinyrss"
       TTRSS_DB_NAME: "tinytinyrss"
       TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
-      TTRSS_SELF_URL_PATH: "https://ibragimov.by/reader/"
+      TTRSS_SELF_URL_PATH: "https://ibragimov.by/tt-rss"
       TTRSS_SESSION_COOKIE_LIFETIME: "31536000"
     volumes:
-      - "./ttrss/reader:/var/www/html/tt-rss"
+      - "./ttrss/tt-rss:/var/www/html/tt-rss"
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -156,9 +156,9 @@ services:
       TTRSS_DB_USER: "tinytinyrss"
       TTRSS_DB_NAME: "tinytinyrss"
       TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
-      TTRSS_SELF_URL_PATH: "https://ibragimov.by/reader"
+      TTRSS_SELF_URL_PATH: "https://ibragimov.by/tt-rss"
     volumes:
-      - "./ttrss/reader:/var/www/html/reader"
+      - "./ttrss/tt-rss:/var/www/html/tt-rss"
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -169,14 +169,13 @@ services:
 
   # docker build -t heapy/ttrss-nginx:main -f .docker/web-nginx/Dockerfile .
   ttrss_nginx:
-    container_name: "ibragimov.by-reader"
+    container_name: "ibragimov.by-ttrss"
     image: "heapy/ttrss-nginx:main"
     restart: "always"
     environment:
       APP_UPSTREAM: "ttrss"
-      APP_BASE: "/reader"
     volumes:
-      - "./ttrss/reader:/var/www/html/reader:ro"
+      - "./ttrss/tt-rss:/var/www/html/tt-rss:ro"
     logging:
       driver: "journald"
     stop_grace_period: 30s
