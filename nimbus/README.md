@@ -14,6 +14,13 @@ nano .ssh/authorized_keys # add key
 sudo nano /etc/ssh/sshd_config # disable password login
 ```
 
+## Disable wi-fi
+
+```
+sudo nano /boot/firmware/config.txt
+dtoverlay=disable-wifi
+```
+
 ## Packages
 
 ```
