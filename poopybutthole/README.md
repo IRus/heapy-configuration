@@ -1,17 +1,3 @@
-## Cockpit
-
-Enable root
-
-```
-nano /etc/cockpit/disallowed-users
-```
-
-Remove cockpit
-
-```
-dnf remove cockpit-system
-```
-
 ## Root
 
 Remove root password

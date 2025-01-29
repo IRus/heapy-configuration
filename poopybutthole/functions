@@ -7,7 +7,12 @@ PROJECT="/root/heapy-configuration/poopybutthole";
 
 function hh_update_system() {
   echo "[📦] Update packages"
-  dnf update -y
+  sudo apt update
+  sudo apt list --upgradable
+  sudo apt dist-upgrade -y
+  sudo apt autoremove -y
+  sudo apt autoclean
+  sudo apt clean
 }
 
 function hh_update() {
