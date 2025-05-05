@@ -198,7 +198,7 @@ services:
   monitoring_grafana:
     container_name: "monitoring_grafana"
     user: "1000:1000"
-    image: "grafana/grafana:11.6"
+    image: "grafana/grafana:11.6.1"
     restart: "always"
     volumes:
       - "./grafana/data:/var/lib/grafana"
