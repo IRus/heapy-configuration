@@ -25,6 +25,7 @@ services:
       - kotbot
       - kotlin_link
       - repo_kotlin_link
+      - transfer_sh
 
   ruslan_ibragimov_by:
     container_name: "ruslan.ibragimov.by"
@@ -430,5 +431,22 @@ services:
     shm_size: "512M"
     ports:
       - "5432:80"
+    networks:
+      - schwifty
+
+  transfer_sh:
+    container_name: "transfer.sh"
+    image: "dutchcoders/transfer.sh"
+    restart: "always"
+    command: [ "--provider", "local" ]
+    environment:
+      BASEDIR: "/data/"
+      HTTP_AUTH_USER: "${TRANSFER_SH_USER}"
+      HTTP_AUTH_PASS: "${TRANSFER_SH_PASS}"
+    volumes:
+      - "./transfer_sh/data:/data"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
     networks:
       - schwifty
