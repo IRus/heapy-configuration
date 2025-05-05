@@ -103,7 +103,7 @@ services:
   ttrss_database:
     container_name: "ttrss_database"
     user: "1000:1000"
-    image: "postgres:16.6"
+    image: "postgres:16.8"
     restart: "always"
     environment:
       POSTGRES_USER: "tinytinyrss"
@@ -198,7 +198,7 @@ services:
   monitoring_grafana:
     container_name: "monitoring_grafana"
     user: "1000:1000"
-    image: "grafana/grafana:10.2.3"
+    image: "grafana/grafana:11.6"
     restart: "always"
     volumes:
       - "./grafana/data:/var/lib/grafana"
@@ -213,7 +213,7 @@ services:
 
   monitoring_prometheus:
     container_name: "monitoring_prometheus"
-    image: "prom/prometheus:v2.48.1"
+    image: "prom/prometheus:v3.3"
     user: "1000:1000"
     restart: "always"
     volumes:
@@ -230,7 +230,7 @@ services:
 
   monitoring_loki:
     container_name: "monitoring_loki"
-    image: "grafana/loki:2.8.7"
+    image: "grafana/loki:3.5"
     user: "1000:1000"
     restart: "always"
     volumes:
@@ -244,7 +244,7 @@ services:
 
   monitoring_promtail:
     container_name: "monitoring_promtail"
-    image: "grafana/promtail:2.8.7"
+    image: "grafana/promtail:3.5"
     user: "1000:1000"
     restart: always
     volumes:
@@ -261,7 +261,7 @@ services:
 
   bkug_by:
     container_name: "bkug.by"
-    image: "wordpress:6.7-php8.2-apache"
+    image: "wordpress:6.8-php8.2-apache"
     user: "1000:1000"
     restart: always
     logging:
@@ -275,7 +275,7 @@ services:
 
   bkug_by_db:
     container_name: "bkug.by_db"
-    image: "mariadb:11.6"
+    image: "mariadb:11.8"
     restart: always
     logging:
       driver: "journald"
@@ -301,7 +301,7 @@ services:
 
   streetball_name:
     container_name: "streetball.name"
-    image: "wordpress:6.7-php8.2-apache"
+    image: "wordpress:6.8-php8.2-apache"
     user: "1000:1000"
     restart: always
     logging:
@@ -315,7 +315,7 @@ services:
 
   streetball_name_db:
     container_name: "streetball.name_db"
-    image: "mariadb:11.6"
+    image: "mariadb:11.8"
     restart: always
     logging:
       driver: "journald"
@@ -329,7 +329,7 @@ services:
 
   shop_streetball_name:
     container_name: "shop.streetball.name"
-    image: "wordpress:6.7-php8.2-apache"
+    image: "wordpress:6.8-php8.2-apache"
     user: "1000:1000"
     restart: always
     logging:
@@ -343,7 +343,7 @@ services:
 
   shop_streetball_name_db:
     container_name: "shop.streetball.name_db"
-    image: "mariadb:11.6"
+    image: "mariadb:11.8"
     restart: always
     logging:
       driver: "journald"
@@ -402,7 +402,7 @@ services:
   kotbot_database:
     container_name: "kotbot_database"
     user: "1000:1000"
-    image: "postgres:16.6"
+    image: "postgres:16.8"
     restart: "always"
     environment:
       POSTGRES_USER: "kotbot"
