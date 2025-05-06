@@ -50,6 +50,23 @@ function hh_rpi_update() {
   sudo rpi-update;
 }
 
+function hh_ttrss_update() {
+  echo "Updating tt-rss repository..."
+  cd "${PROJECT}/ttrss/tt-rss" || exit 1
+
+  local BEFORE=$(git rev-parse HEAD)
+  git pl
+  local AFTER=$(git rev-parse HEAD)
+
+  if [ "$BEFORE" = "$AFTER" ]; then
+    echo "No changes found. Already up-to-date."
+    return 0
+  fi
+
+  echo "Changes between $BEFORE and $AFTER:"
+  git diff $BEFORE..$AFTER
+}
+
 function hh_rpi_eeprom_update() {
   sudo rpi-eeprom-update -a;
 }
