@@ -5,7 +5,7 @@
 
 PROJECT="/root/heapy-configuration/poopybutthole";
 
-function hh_update_system() {
+function hh_system_update() {
   echo "[📦] Update packages"
   sudo apt update
   sudo apt list --upgradable
@@ -16,7 +16,7 @@ function hh_update_system() {
 }
 
 function hh_update() {
-  hh_update_system;
+  hh_system_update;
 }
 
 function hh_pull_docker_images() {
