@@ -398,10 +398,13 @@ services:
     depends_on:
       - kotbot_database
 
+  # docker exec -it kotbot_database /usr/bin/pg_dumpall -U kotbot > dumpfile
+  # docker cp dumpfile kotbot_database:/dumpfile
+  # docker exec kotbot_database psql -U kotbot -d kotbot -f /dumpfile
   kotbot_database:
     container_name: "kotbot_database"
     user: "1000:1000"
-    image: "postgres:16.8"
+    image: "postgres:17.5"
     restart: "always"
     environment:
       POSTGRES_USER: "kotbot"
