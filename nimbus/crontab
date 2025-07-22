@@ -1,7 +1,4 @@
 # crontab -l -u pi
 
-# Regularly restarting Lytko thermostat, because otherwise there are huge chance it will stuck
-0 */6 * * * curl http://192.168.100.252/reset
-
 # Backup home
 20 4 * * * /home/pi/heapy-configuration/nimbus/backup.sh >> /tmp/cron.log 2>&1
