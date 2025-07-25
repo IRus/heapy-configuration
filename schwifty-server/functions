@@ -83,6 +83,8 @@ case "$1" in
   hh_update_docker)
     hh_pull_docker_images;
     hh_compose_up;
+    hh_prune_docker_images;
+    hh_ttrss_update;
     ;;
   *)
     ;;
