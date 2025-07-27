@@ -23,8 +23,8 @@ function hh_cloudflare_update() {
 
 function hh_pull_docker_images() {
   echo "[🆕] Pull latest images"
-  docker pull ghcr.io/blakeblackshear/frigate:stable
-  docker pull quay.io/oauth2-proxy/oauth2-proxy:v7.7.1
+  docker pull ghcr.io/blakeblackshear/frigate:0.15.2
+  docker pull quay.io/oauth2-proxy/oauth2-proxy:v7.10.0
 }
 
 function hh_compose_up() {
