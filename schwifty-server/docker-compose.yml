@@ -25,6 +25,7 @@ services:
       - kotbot
       - kotlin_link
       - repo_kotlin_link
+      - tg_spam
 
   ruslan_ibragimov_by:
     container_name: "ruslan.ibragimov.by"
@@ -433,5 +434,23 @@ services:
     shm_size: "512M"
     ports:
       - "5432:80"
+    networks:
+      - schwifty
+
+  tg_spam:
+    container_name: "tg_spam"
+    image: "ghcr.io/umputun/tg-spam:latest"
+    restart: "always"
+    environment:
+      TELEGRAM_TOKEN: "${TG_SPAM_TELEGRAM_TOKEN}"
+      TELEGRAM_GROUP: "${TG_SPAM_TELEGRAM_GROUP}"
+      SERVER_ENABLED: "true"
+      TRAINING: "${TG_SPAM_TRAINING}"
+      OPENAI_TOKEN: "${TG_SPAM_OPENAI_TOKEN}"
+      ADMIN_GROUP: "${TG_SPAM_ADMIN_GROUP}"
+    volumes:
+      - "./tg-spam:/srv/data"
+    logging:
+      driver: "journald"
     networks:
       - schwifty
