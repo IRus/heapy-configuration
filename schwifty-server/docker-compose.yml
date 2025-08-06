@@ -5,14 +5,14 @@ networks:
 
 services:
   cloudflared:
-    container_name: 'cloudflared'
-    image: 'cloudflare/cloudflared:latest'
-    command: [ 'tunnel', '--no-autoupdate', 'run']
+    container_name: "cloudflared"
+    image: "cloudflare/cloudflared:latest"
+    command: [ "tunnel", "--no-autoupdate", "run"]
     restart: always
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     logging:
-      driver: 'journald'
+      driver: "journald"
     networks:
       - schwifty
     depends_on:
@@ -28,21 +28,21 @@ services:
       - tg_spam
 
   ruslan_ibragimov_by:
-    container_name: 'ruslan.ibragimov.by'
-    image: 'ghcr.io/irus/blog:main'
-    restart: 'always'
+    container_name: "ruslan.ibragimov.by"
+    image: "ghcr.io/irus/blog:main"
+    restart: "always"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     networks:
       - schwifty
 
   heapy_io:
-    image: 'nginx:stable-alpine'
-    container_name: 'heapy.io-ingress'
-    restart: 'always'
+    image: "nginx:stable-alpine"
+    container_name: "heapy.io-ingress"
+    restart: "always"
     logging:
-      driver: 'journald'
+      driver: "journald"
     volumes:
       - ./heapy_io/nginx/conf.d:/etc/nginx/conf.d
     stop_grace_period: 30s
@@ -53,31 +53,31 @@ services:
       - heapy_io_root
 
   heapy_io_kotlin_jobs:
-    container_name: 'heapy.io-kotlin_jobs'
-    image: 'ghcr.io/heapy/kotlin_jobs:main'
-    restart: 'always'
+    container_name: "heapy.io-kotlin_jobs"
+    image: "ghcr.io/heapy/kotlin_jobs:main"
+    restart: "always"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     networks:
       - schwifty
 
   heapy_io_root:
-    container_name: 'heapy.io'
-    image: 'ghcr.io/heapy/heapy.io:main'
-    restart: 'always'
+    container_name: "heapy.io"
+    image: "ghcr.io/heapy/heapy.io:main"
+    restart: "always"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     networks:
       - schwifty
 
   ibragimov_by:
-    image: 'nginx:stable-alpine'
-    container_name: 'ibragimov.by-ingress'
-    restart: 'always'
+    image: "nginx:stable-alpine"
+    container_name: "ibragimov.by-ingress"
+    restart: "always"
     logging:
-      driver: 'journald'
+      driver: "journald"
     volumes:
       - ./ibragimov_by/nginx/conf.d:/etc/nginx/conf.d
     stop_grace_period: 30s
@@ -88,11 +88,11 @@ services:
       - ibragimov_by_currency
 
   ibragimov_by_currency:
-    container_name: 'ibragimov.by-currency'
-    image: 'ghcr.io/irus/currency:main'
-    restart: 'always'
+    container_name: "ibragimov.by-currency"
+    image: "ghcr.io/irus/currency:main"
+    restart: "always"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     networks:
       - schwifty
@@ -101,43 +101,43 @@ services:
   # docker cp dumpfile ttrss_database:/dumpfile
   # docker exec ttrss_database psql -U tinytinyrss -d tinytinyrss -f /dumpfile
   ttrss_database:
-    container_name: 'ttrss_database'
-    user: '1000:1000'
-    image: 'postgres:17.5'
-    restart: 'always'
+    container_name: "ttrss_database"
+    user: "1000:1000"
+    image: "postgres:17.5"
+    restart: "always"
     environment:
-      POSTGRES_USER: 'tinytinyrss'
-      POSTGRES_PASSWORD: 'HPALUhAY28G4LWDf'
-      POSTGRES_DB: 'tinytinyrss'
+      POSTGRES_USER: "tinytinyrss"
+      POSTGRES_PASSWORD: "HPALUhAY28G4LWDf"
+      POSTGRES_DB: "tinytinyrss"
     volumes:
-      - './ttrss/data/pgdata:/var/lib/postgresql/data'
-      - '/etc/passwd:/etc/passwd:ro'
+      - "./ttrss/data/pgdata:/var/lib/postgresql/data"
+      - "/etc/passwd:/etc/passwd:ro"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
-    shm_size: '512M'
+    shm_size: "512M"
     networks:
       - schwifty
 
   # docker build -t heapy/ttrss:main -f .docker/app/Dockerfile .
   ttrss:
-    container_name: 'ttrss'
-    image: 'heapy/ttrss:main'
-    restart: 'always'
+    container_name: "ttrss"
+    image: "heapy/ttrss:main"
+    restart: "always"
     environment:
       OWNER_UID: 1000
       OWNER_GID: 1000
       SKIP_RSYNC_ON_STARTUP: true
-      TTRSS_DB_HOST: 'ttrss_database'
-      TTRSS_DB_USER: 'tinytinyrss'
-      TTRSS_DB_NAME: 'tinytinyrss'
-      TTRSS_DB_PASS: 'HPALUhAY28G4LWDf'
-      TTRSS_SELF_URL_PATH: 'https://ibragimov.by/tt-rss'
-      TTRSS_SESSION_COOKIE_LIFETIME: '31536000'
+      TTRSS_DB_HOST: "ttrss_database"
+      TTRSS_DB_USER: "tinytinyrss"
+      TTRSS_DB_NAME: "tinytinyrss"
+      TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
+      TTRSS_SELF_URL_PATH: "https://ibragimov.by/tt-rss"
+      TTRSS_SESSION_COOKIE_LIFETIME: "31536000"
     volumes:
-      - './ttrss/tt-rss:/var/www/html/tt-rss'
+      - "./ttrss/tt-rss:/var/www/html/tt-rss"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     depends_on:
       - ttrss_database
@@ -146,22 +146,22 @@ services:
 
   # docker build -t heapy/ttrss-updater:main -f .docker/app/Dockerfile .
   ttrss_updater:
-    container_name: 'ttrss_updater'
-    image: 'heapy/ttrss-updater:main'
-    command: '/opt/tt-rss/updater.sh'
-    restart: 'always'
+    container_name: "ttrss_updater"
+    image: "heapy/ttrss-updater:main"
+    command: "/opt/tt-rss/updater.sh"
+    restart: "always"
     environment:
       OWNER_UID: 1000
       OWNER_GID: 1000
-      TTRSS_DB_HOST: 'ttrss_database'
-      TTRSS_DB_USER: 'tinytinyrss'
-      TTRSS_DB_NAME: 'tinytinyrss'
-      TTRSS_DB_PASS: 'HPALUhAY28G4LWDf'
-      TTRSS_SELF_URL_PATH: 'https://ibragimov.by/tt-rss'
+      TTRSS_DB_HOST: "ttrss_database"
+      TTRSS_DB_USER: "tinytinyrss"
+      TTRSS_DB_NAME: "tinytinyrss"
+      TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
+      TTRSS_SELF_URL_PATH: "https://ibragimov.by/tt-rss"
     volumes:
-      - './ttrss/tt-rss:/var/www/html/tt-rss'
+      - "./ttrss/tt-rss:/var/www/html/tt-rss"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 0s
     depends_on:
       - ttrss
@@ -170,15 +170,15 @@ services:
 
   # docker build -t heapy/ttrss-nginx:main -f .docker/web-nginx/Dockerfile .
   ttrss_nginx:
-    container_name: 'ibragimov.by-ttrss'
-    image: 'heapy/ttrss-nginx:main'
-    restart: 'always'
+    container_name: "ibragimov.by-ttrss"
+    image: "heapy/ttrss-nginx:main"
+    restart: "always"
     environment:
-      APP_UPSTREAM: 'ttrss'
+      APP_UPSTREAM: "ttrss"
     volumes:
-      - './ttrss/tt-rss:/var/www/html/tt-rss:ro'
+      - "./ttrss/tt-rss:/var/www/html/tt-rss:ro"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     depends_on:
       - ttrss
@@ -186,24 +186,24 @@ services:
       - schwifty
 
   kotlin_link:
-    container_name: 'kotlin.link'
-    image: 'ghcr.io/heapy/awesome-kotlin:main'
-    restart: 'always'
+    container_name: "kotlin.link"
+    image: "ghcr.io/heapy/awesome-kotlin:main"
+    restart: "always"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     networks:
       - schwifty
 
   monitoring_grafana:
-    container_name: 'monitoring_grafana'
-    user: '1000:1000'
-    image: 'grafana/grafana:11.6.1'
-    restart: 'always'
+    container_name: "monitoring_grafana"
+    user: "1000:1000"
+    image: "grafana/grafana:11.6.1"
+    restart: "always"
     volumes:
-      - './grafana/data:/var/lib/grafana'
+      - "./grafana/data:/var/lib/grafana"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     networks:
       - schwifty
@@ -212,15 +212,15 @@ services:
       - monitoring_loki
 
   monitoring_prometheus:
-    container_name: 'monitoring_prometheus'
-    image: 'prom/prometheus:v3.3.1'
-    user: '1000:1000'
-    restart: 'always'
+    container_name: "monitoring_prometheus"
+    image: "prom/prometheus:v3.3.1"
+    user: "1000:1000"
+    restart: "always"
     volumes:
-      - './prometheus/data:/prometheus'
-      - './prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro'
+      - "./prometheus/data:/prometheus"
+      - "./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     networks:
       - schwifty
@@ -229,29 +229,29 @@ services:
       - repo_kotlin_link
 
   monitoring_loki:
-    container_name: 'monitoring_loki'
-    image: 'grafana/loki:3.5'
-    user: '1000:1000'
-    restart: 'always'
+    container_name: "monitoring_loki"
+    image: "grafana/loki:3.5"
+    user: "1000:1000"
+    restart: "always"
     volumes:
-      - './loki/data:/loki'
-      - './loki/config/config.yml:/etc/loki/config.yml:ro'
+      - "./loki/data:/loki"
+      - "./loki/config/config.yml:/etc/loki/config.yml:ro"
     logging:
-      driver: 'journald'
+      driver: "journald"
     command: -config.file=/etc/loki/config.yml
     networks:
       - schwifty
 
   monitoring_promtail:
-    container_name: 'monitoring_promtail'
-    image: 'grafana/promtail:3.5'
-    user: '1000:1000'
+    container_name: "monitoring_promtail"
+    image: "grafana/promtail:3.5"
+    user: "1000:1000"
     restart: always
     volumes:
-      - './promtail/config/config.yml:/etc/promtail/config.yml:ro'
-      - '/var/log/journal/:/var/log/journal/:ro'
-      - '/run/log/journal/:/run/log/journal/:ro'
-      - '/etc/machine-id:/etc/machine-id:ro'
+      - "./promtail/config/config.yml:/etc/promtail/config.yml:ro"
+      - "/var/log/journal/:/var/log/journal/:ro"
+      - "/run/log/journal/:/run/log/journal/:ro"
+      - "/etc/machine-id:/etc/machine-id:ro"
     command: -config.file=/etc/promtail/config.yml
     stop_grace_period: 30s
     networks:
@@ -260,39 +260,39 @@ services:
       - monitoring_loki
 
   bkug_by:
-    container_name: 'bkug.by'
-    image: 'wordpress:6.8-php8.3-apache'
-    user: '1000:1000'
+    container_name: "bkug.by"
+    image: "wordpress:6.8-php8.3-apache"
+    user: "1000:1000"
     restart: always
     logging:
-      driver: 'journald'
+      driver: "journald"
     volumes:
-      - './bkug_by/wordpress:/var/www/html'
+      - "./bkug_by/wordpress:/var/www/html"
     networks:
       - schwifty
     depends_on:
       - bkug_by_db
 
   bkug_by_db:
-    container_name: 'bkug.by_db'
-    image: 'mariadb:11.8'
+    container_name: "bkug.by_db"
+    image: "mariadb:11.8"
     restart: always
     logging:
-      driver: 'journald'
+      driver: "journald"
     volumes:
-      - './bkug_by/maria:/var/lib/mysql'
+      - "./bkug_by/maria:/var/lib/mysql"
     environment:
-      MARIADB_ROOT_PASSWORD: 'Eb95FAoyGMLiMXp1xcBPDzCBf0jMnL3EFKTnBZBWaz3ac0pVrS'
-      MARIADB_AUTO_UPGRADE: '1'
+      MARIADB_ROOT_PASSWORD: "Eb95FAoyGMLiMXp1xcBPDzCBf0jMnL3EFKTnBZBWaz3ac0pVrS"
+      MARIADB_AUTO_UPGRADE: "1"
     networks:
       - schwifty
 
   streetball_by:
-    image: 'nginx:stable-alpine'
-    container_name: 'streetball.by-ingress'
-    restart: 'always'
+    image: "nginx:stable-alpine"
+    container_name: "streetball.by-ingress"
+    restart: "always"
     logging:
-      driver: 'journald'
+      driver: "journald"
     volumes:
       - ./streetball_by/nginx/conf.d:/etc/nginx/conf.d
     stop_grace_period: 30s
@@ -300,99 +300,99 @@ services:
       - schwifty
 
   streetball_name:
-    container_name: 'streetball.name'
-    image: 'wordpress:6.8-php8.3-apache'
-    user: '1000:1000'
+    container_name: "streetball.name"
+    image: "wordpress:6.8-php8.3-apache"
+    user: "1000:1000"
     restart: always
     logging:
-      driver: 'journald'
+      driver: "journald"
     volumes:
-      - './streetball_name/wordpress:/var/www/html'
+      - "./streetball_name/wordpress:/var/www/html"
     networks:
       - schwifty
     depends_on:
       - streetball_name_db
 
   streetball_name_db:
-    container_name: 'streetball.name_db'
-    image: 'mariadb:11.8'
+    container_name: "streetball.name_db"
+    image: "mariadb:11.8"
     restart: always
     logging:
-      driver: 'journald'
+      driver: "journald"
     volumes:
-      - './streetball_name/maria:/var/lib/mysql'
+      - "./streetball_name/maria:/var/lib/mysql"
     environment:
-      MARIADB_ROOT_PASSWORD: 'YKmpxXYrAwQOgREv2f9iGXNzyheGVwLlGK8SA1qcvk0S8kOtby'
-      MARIADB_AUTO_UPGRADE: '1'
+      MARIADB_ROOT_PASSWORD: "YKmpxXYrAwQOgREv2f9iGXNzyheGVwLlGK8SA1qcvk0S8kOtby"
+      MARIADB_AUTO_UPGRADE: "1"
     networks:
       - schwifty
 
   shop_streetball_name:
-    container_name: 'shop.streetball.name'
-    image: 'wordpress:6.8-php8.3-apache'
-    user: '1000:1000'
+    container_name: "shop.streetball.name"
+    image: "wordpress:6.8-php8.3-apache"
+    user: "1000:1000"
     restart: always
     logging:
-      driver: 'journald'
+      driver: "journald"
     volumes:
-      - './shop_streetball_name/wordpress:/var/www/html'
+      - "./shop_streetball_name/wordpress:/var/www/html"
     networks:
       - schwifty
     depends_on:
       - shop_streetball_name_db
 
   shop_streetball_name_db:
-    container_name: 'shop.streetball.name_db'
-    image: 'mariadb:11.8'
+    container_name: "shop.streetball.name_db"
+    image: "mariadb:11.8"
     restart: always
     logging:
-      driver: 'journald'
+      driver: "journald"
     volumes:
-      - './shop_streetball_name/maria:/var/lib/mysql'
+      - "./shop_streetball_name/maria:/var/lib/mysql"
     environment:
-      MARIADB_ROOT_PASSWORD: '7xcDfuvCt4BsNTB1LpDWUleWcc5WxWcyUxcXdo10hEQy2w4VrZ'
-      MARIADB_AUTO_UPGRADE: '1'
+      MARIADB_ROOT_PASSWORD: "7xcDfuvCt4BsNTB1LpDWUleWcc5WxWcyUxcXdo10hEQy2w4VrZ"
+      MARIADB_AUTO_UPGRADE: "1"
     networks:
       - schwifty
 
   repo_kotlin_link:
-    image: 'ghcr.io/heapy/repo.kotlin.link:main'
-    container_name: 'repo.kotlin.link'
-    restart: 'always'
+    image: "ghcr.io/heapy/repo.kotlin.link:main"
+    container_name: "repo.kotlin.link"
+    restart: "always"
     environment:
-      REPO_OPTS: '-Xmx256m -XX:+UseShenandoahGC'
+      REPO_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
     healthcheck:
-      test: [ 'CMD', 'curl', '-f', 'http://localhost:8080/healthcheck' ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
       interval: 30s
       timeout: 10s
       retries: 3
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     networks:
       - schwifty
 
   kotbot:
-    image: 'ghcr.io/heapy/kotbot:main'
-    container_name: 'kotbot.heapy.io'
-    restart: 'always'
+    image: "ghcr.io/heapy/kotbot:main"
+    container_name: "kotbot.heapy.io"
+    restart: "always"
     environment:
-      KOTBOT_OPTS: '-Xmx256m -XX:+UseShenandoahGC'
-      KOTBOT_TOKEN: '${KOTBOT_TOKEN}'
-      KOTBOT_POSTGRES_USER: 'kotbot'
-      KOTBOT_POSTGRES_PASSWORD: 'kotbot'
-      KOTBOT_POSTGRES_DATABASE: 'kotbot'
-      KOTBOT_POSTGRES_HOST: 'kotbot_database'
-      KOTBOT_POSTGRES_PORT: '5432'
-      KOTBOT_GPT_TOKEN: '${KOTBOT_GPT_TOKEN}'
-      KOTBOT_GPT_ORG_ID: '${KOTBOT_GPT_ORG_ID}'
+      KOTBOT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
+      KOTBOT_TOKEN: "${KOTBOT_TOKEN}"
+      KOTBOT_POSTGRES_USER: "kotbot"
+      KOTBOT_POSTGRES_PASSWORD: "kotbot"
+      KOTBOT_POSTGRES_DATABASE: "kotbot"
+      KOTBOT_POSTGRES_HOST: "kotbot_database"
+      KOTBOT_POSTGRES_PORT: "5432"
+      KOTBOT_GPT_TOKEN: "${KOTBOT_GPT_TOKEN}"
+      KOTBOT_GPT_ORG_ID: "${KOTBOT_GPT_ORG_ID}"
     healthcheck:
-      test: [ 'CMD', 'curl', '-f', 'http://localhost:8080/healthcheck' ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
       interval: 30s
       timeout: 10s
       retries: 3
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
     networks:
       - schwifty
@@ -403,56 +403,56 @@ services:
   # docker cp dumpfile kotbot_database:/dumpfile
   # docker exec kotbot_database psql -U kotbot -d kotbot -f /dumpfile
   kotbot_database:
-    container_name: 'kotbot_database'
-    user: '1000:1000'
-    image: 'postgres:17.5'
-    restart: 'always'
+    container_name: "kotbot_database"
+    user: "1000:1000"
+    image: "postgres:17.5"
+    restart: "always"
     environment:
-      POSTGRES_USER: 'kotbot'
-      POSTGRES_PASSWORD: 'kotbot'
-      POSTGRES_DB: 'kotbot'
+      POSTGRES_USER: "kotbot"
+      POSTGRES_PASSWORD: "kotbot"
+      POSTGRES_DB: "kotbot"
     volumes:
-      - './kotbot/pgdata:/var/lib/postgresql/data'
-      - '/etc/passwd:/etc/passwd:ro'
+      - "./kotbot/pgdata:/var/lib/postgresql/data"
+      - "/etc/passwd:/etc/passwd:ro"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
-    shm_size: '512M'
+    shm_size: "512M"
     networks:
       - schwifty
 
   pgadmin:
-    container_name: 'pgadmin'
-    image: 'dpage/pgadmin4:latest'
-    restart: 'always'
+    container_name: "pgadmin"
+    image: "dpage/pgadmin4:latest"
+    restart: "always"
     environment:
-      PGADMIN_DEFAULT_EMAIL: 'foo@bar.com'
-      PGADMIN_DEFAULT_PASSWORD: 'admin'
+      PGADMIN_DEFAULT_EMAIL: "foo@bar.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
     logging:
-      driver: 'journald'
+      driver: "journald"
     stop_grace_period: 30s
-    shm_size: '512M'
+    shm_size: "512M"
     ports:
-      - '5432:80'
+      - "5432:80"
     networks:
       - schwifty
 
   tg_spam:
-    container_name: 'tg_spam'
-    image: 'ghcr.io/umputun/tg-spam:latest'
-    restart: 'always'
+    container_name: "tg_spam"
+    image: "ghcr.io/umputun/tg-spam:latest"
+    restart: "always"
     environment:
-      TELEGRAM_TOKEN: '${TG_SPAM_TELEGRAM_TOKEN}'
-      TELEGRAM_GROUP: '${TG_SPAM_TELEGRAM_GROUP}'
-      SERVER_ENABLED: 'true'
-      TRAINING: '${TG_SPAM_TRAINING}'
-      OPENAI_TOKEN: '${TG_SPAM_OPENAI_TOKEN}'
-      ADMIN_GROUP: '${TG_SPAM_ADMIN_GROUP}'
-      NO_SPAM_REPLY: '${TG_SPAM_NO_SPAM_REPLY}'
-      SERVER_AUTH_HASH: '${TG_SPAM_SERVER_AUTH_HASH}'
+      TELEGRAM_TOKEN: "${TG_SPAM_TELEGRAM_TOKEN}"
+      TELEGRAM_GROUP: "${TG_SPAM_TELEGRAM_GROUP}"
+      SERVER_ENABLED: "true"
+      TRAINING: "${TG_SPAM_TRAINING}"
+      OPENAI_TOKEN: "${TG_SPAM_OPENAI_TOKEN}"
+      ADMIN_GROUP: "${TG_SPAM_ADMIN_GROUP}"
+      NO_SPAM_REPLY: "${TG_SPAM_NO_SPAM_REPLY}"
+      SERVER_AUTH_HASH: "${TG_SPAM_SERVER_AUTH_HASH}"
     volumes:
-      - './tg-spam/data:/srv/data'
+      - "./tg-spam/data:/srv/data"
     logging:
-      driver: 'journald'
+      driver: "journald"
     networks:
       - schwifty
