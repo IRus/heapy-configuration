@@ -449,7 +449,7 @@ services:
       OPENAI_TOKEN: "${TG_SPAM_OPENAI_TOKEN}"
       ADMIN_GROUP: "${TG_SPAM_ADMIN_GROUP}"
       NO_SPAM_REPLY: "${TG_SPAM_NO_SPAM_REPLY}"
-      SERVER_AUTH: ""
+      SERVER_AUTH: "${TG_SPAM_SERVER_AUTH}"
     volumes:
       - "./tg-spam/data:/srv/data"
     logging:
