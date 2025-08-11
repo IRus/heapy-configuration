@@ -37,7 +37,7 @@ services:
     container_name: "home_assistant"
     restart: "always"
     privileged: true
-    image: "ghcr.io/home-assistant/home-assistant:2025.7"
+    image: "ghcr.io/home-assistant/home-assistant:2025.8"
     volumes:
       - "./home_assistant:/config"
       - "/etc/localtime:/etc/localtime:ro"
