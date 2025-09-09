@@ -10,9 +10,18 @@
 
 ```
 sudo apt install nano mc git htop
+repo: docker
 binary: lazydocker
 binary: cloudflared
-repo: docker
+```
+
+### docker
+
+```
+https://docs.docker.com/engine/install/debian/#install-using-the-repository
+sudo usermod -aG docker $USER
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
 ```
 
 ### lazydocker
@@ -32,15 +41,6 @@ sudo mv cloudflared-linux-arm64 /usr/bin/cloudflared
 sudo chmod u+x /usr/bin/cloudflared
 ```
 
-### docker
-
-```
-https://docs.docker.com/engine/install/debian/#install-using-the-repository
-sudo usermod -aG docker $USER
-sudo systemctl enable docker.service
-sudo systemctl enable containerd.service
-```
-
 ## Setup fan control
 
 ```
@@ -48,4 +48,11 @@ sudo nano /boot/firmware/config.txt
 
 [all]
 dtoverlay=gpio-fan,gpiopin=14,temp=65000,hyst=5000
+```
+
+### or argon
+
+```
+curl https://download.argon40.com/argon1.sh | bash
+argonone-config
 ```
