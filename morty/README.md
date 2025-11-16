@@ -27,7 +27,7 @@ sudo systemctl enable containerd.service
 ### lazydocker
 
 ```
-wget https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Linux_arm64.tar.gz --output-document lazydocker.tar.gz
+wget https://github.com/jesseduffield/lazydocker/releases/download/v0.24.2/lazydocker_0.24.2_Linux_arm64.tar.gz --output-document lazydocker.tar.gz
 tar xzvf lazydocker.tar.gz lazydocker
 sudo mv lazydocker /usr/bin/lazydocker
 rm lazydocker.tar.gz
