@@ -19,7 +19,7 @@ binary: cloudflared
 ### lazydocker
 
 ```
-wget https://github.com/jesseduffield/lazydocker/releases/download/v0.24.2/lazydocker_0.24.2_Linux_x86_64.tar.gz --output-document lazydocker.tar.gz
+wget https://github.com/jesseduffield/lazydocker/releases/download/v0.24.4/lazydocker_0.24.4_Linux_x86_64.tar.gz --output-document lazydocker.tar.gz
 tar xzvf lazydocker.tar.gz lazydocker
 sudo mv lazydocker /usr/bin/lazydocker
 rm lazydocker.tar.gz
