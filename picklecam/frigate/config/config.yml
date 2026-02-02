@@ -1,6 +1,6 @@
 mqtt:
-  enabled: True
-  host: "192.168.1.250"
+  enabled: true
+  host: 192.168.1.250
   port: 1883
 
 ffmpeg:
@@ -18,22 +18,23 @@ objects:
     - dog
 
 record:
-  enabled: True
+  enabled: true
   retain:
-    days: 15
+    days: 30
     mode: motion
-  events:
+  alerts:
     retain:
-      default: 15
-      mode: motion
-
+      days: 60
+  detections:
+    retain:
+      days: 60
 snapshots:
-  enabled: True
+  enabled: true
   retain:
-    default: 30
+    default: 60
 
 birdseye:
-  enabled: True
+  enabled: true
   mode: continuous
 
 cameras:
@@ -63,3 +64,4 @@ cameras:
           roles:
             - detect
             - record
+version: 0.15-1
