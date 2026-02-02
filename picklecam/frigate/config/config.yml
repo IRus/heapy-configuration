@@ -16,7 +16,6 @@ objects:
     - person
     - cat
     - dog
-    - bird
 
 record:
   enabled: True
@@ -52,6 +51,11 @@ cameras:
           roles:
             - detect
             - record
+    objects:
+      filters:
+        person:
+          min_score: 0.70
+          threshold: 0.80
   back:
     ffmpeg:
       inputs:
