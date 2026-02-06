@@ -20,18 +20,18 @@ objects:
 record:
   enabled: true
   retain:
-    days: 30
-    mode: motion
+    days: 90
+    mode: all
   alerts:
     retain:
-      days: 60
+      days: 90
   detections:
     retain:
-      days: 60
+      days: 90
 snapshots:
   enabled: true
   retain:
-    default: 60
+    default: 90
 
 birdseye:
   enabled: true
