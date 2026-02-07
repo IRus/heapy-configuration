@@ -2,7 +2,7 @@ services:
   ingress:
     container_name: "ingress"
     restart: "always"
-    image: "quay.io/oauth2-proxy/oauth2-proxy:v7.10.0"
+    image: "quay.io/oauth2-proxy/oauth2-proxy:v7.14.2"
     volumes:
       - "./ingress/authenticated-emails:/etc/oauth2-proxy/authenticated-emails"
     ports:
@@ -23,7 +23,7 @@ services:
     container_name: "frigate"
     restart: "always"
     privileged: true
-    image: "ghcr.io/blakeblackshear/frigate:0.15.2"
+    image: "ghcr.io/blakeblackshear/frigate:0.16.4"
     shm_size: "256mb"
     volumes:
       - "/dev/bus/usb:/dev/bus/usb"
