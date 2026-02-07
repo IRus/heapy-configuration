@@ -24,7 +24,7 @@ services:
     restart: "always"
     privileged: true
     image: "ghcr.io/blakeblackshear/frigate:0.16.4"
-    shm_size: "256mb"
+    shm_size: "1gb"
     volumes:
       - "/dev/bus/usb:/dev/bus/usb"
       - "/etc/localtime:/etc/localtime:ro"
