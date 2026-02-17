@@ -2,7 +2,7 @@ services:
   mosquitto:
     container_name: "mosquitto"
     restart: "always"
-    image: "eclipse-mosquitto:2.1"
+    image: "eclipse-mosquitto:2.1-alpine"
     volumes:
       - "./mosquitto/config:/mosquitto/config"
       - "./mosquitto/data:/mosquitto/data"
