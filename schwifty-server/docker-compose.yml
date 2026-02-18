@@ -23,6 +23,7 @@ services:
       - streetball_name
       - shop_streetball_name
       - kotbot
+      - tgpt
       - kotlin_link
       - repo_kotlin_link
       - tg_spam
@@ -226,6 +227,7 @@ services:
       - schwifty
     depends_on:
       - kotbot
+      - tgpt
       - repo_kotlin_link
 
   monitoring_loki:
@@ -413,6 +415,54 @@ services:
       POSTGRES_DB: "kotbot"
     volumes:
       - "./kotbot/pgdata:/var/lib/postgresql/data"
+      - "/etc/passwd:/etc/passwd:ro"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    shm_size: "512M"
+    networks:
+      - schwifty
+
+  tgpt:
+    image: "ghcr.io/heapy/tgpt:main"
+    container_name: "tgpt.heapy.io"
+    restart: "always"
+    environment:
+      TGPT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
+      TGPT_BOT_TOKEN: "${TGPT_BOT_TOKEN}"
+      TGPT_OPENAI_API_KEY: "${TGPT_OPENAI_API_KEY}"
+      TGPT_POSTGRES_USER: "tgpt"
+      TGPT_POSTGRES_PASSWORD: "tgpt"
+      TGPT_POSTGRES_DATABASE: "tgpt"
+      TGPT_POSTGRES_HOST: "tgpt_database"
+      TGPT_POSTGRES_PORT: "5432"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+    depends_on:
+      - tgpt_database
+
+  # docker exec -it tgpt_database /usr/bin/pg_dumpall -U tgpt > dumpfile
+  # docker cp dumpfile tgpt_database:/dumpfile
+  # docker exec tgpt_database psql -U tgpt -d tgpt -f /dumpfile
+  tgpt_database:
+    container_name: "tgpt_database"
+    user: "1000:1000"
+    image: "postgres:17.5"
+    restart: "always"
+    environment:
+      POSTGRES_USER: "tgpt"
+      POSTGRES_PASSWORD: "tgpt"
+      POSTGRES_DB: "tgpt"
+    volumes:
+      - "./tgpt/pgdata:/var/lib/postgresql/data"
       - "/etc/passwd:/etc/passwd:ro"
     logging:
       driver: "journald"
