@@ -17,6 +17,7 @@ function hh_system_update() {
 
 function hh_pull_docker_images() {
   echo "[🆕] Pull latest images"
+  docker pull ghcr.io/irus/kotrol:main
   docker pull ghcr.io/irus/blog:main
   docker pull ghcr.io/irus/currency:main
   docker pull ghcr.io/heapy/heapy.io:main

@@ -27,6 +27,17 @@ services:
       - kotlin_link
       - repo_kotlin_link
       - tg_spam
+      - kotrol_heapy_io
+
+  kotrol_heapy_io:
+    container_name: "kotrol.heapy.io"
+    image: "ghcr.io/irus/kotrol:main"
+    restart: "always"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
 
   ruslan_ibragimov_by:
     container_name: "ruslan.ibragimov.by"
