@@ -38,6 +38,13 @@ birdseye:
   mode: continuous
 
 cameras:
+  garage:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_CAM249_PASSWORD}@192.168.1.249:554/stream1
+          roles:
+            - detect
+            - record
   front:
     ffmpeg:
       inputs:
