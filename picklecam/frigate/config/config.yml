@@ -71,4 +71,9 @@ cameras:
           roles:
             - detect
             - record
+    objects:
+      filters:
+        person:
+          min_score: 0.70
+          threshold: 0.80
 version: 0.15-1
