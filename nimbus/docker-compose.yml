@@ -43,3 +43,13 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "/run/dbus:/run/dbus:ro"
     network_mode: "host"
+  matter-server:
+    container_name: "matter-server"
+    restart: "always"
+    image: "ghcr.io/matter-js/matterjs-server:stable"
+    volumes:
+      - "./matter-server:/data"
+      - "/run/dbus:/run/dbus:ro"
+    network_mode: "host"
+    environment:
+      - "PRIMARY_INTERFACE=eth0"
