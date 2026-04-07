@@ -216,11 +216,11 @@ services:
       AWESOME__SERVER__GRACEFUL_SHUTDOWN_TIMEOUT: "10s"
       AWESOME__SERVER__REACT_DIST_PATH: "/app/frontend/"
       AWESOME__WEB__INTERNAL__HOST: "localhost"
-      AWESOME__WEB__INTERNAL__PORT: "9566"
+      AWESOME__WEB__INTERNAL__PORT: "8080"
       AWESOME__WEB__INTERNAL__PROTOCOL: "http"
-      AWESOME__WEB__EXTERNAL__HOST: "localhost"
-      AWESOME__WEB__EXTERNAL__PORT: "9566"
-      AWESOME__WEB__EXTERNAL__PROTOCOL: "http"
+      AWESOME__WEB__EXTERNAL__HOST: "kotlin.link"
+      AWESOME__WEB__EXTERNAL__PORT: "80"
+      AWESOME__WEB__EXTERNAL__PROTOCOL: "https"
       GH_TOKEN: "${AWESOME__GITHUB__TOKEN}"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
