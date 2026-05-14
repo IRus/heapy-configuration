@@ -1,6 +1,6 @@
 ## Wireguard setup
 
-To access OpenApi server need to setup Wireguard VPN.
+To access OpenAI server need to setup Wireguard VPN.
 
 1. Install Wireguard `sudo apt install wireguard resolvconf`
 2. Grab conf from vpn.heapy.io

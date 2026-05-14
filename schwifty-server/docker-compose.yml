@@ -8,11 +8,12 @@ services:
     container_name: "cloudflared"
     image: "cloudflare/cloudflared:latest"
     command: [ "tunnel", "--no-autoupdate", "run"]
-    restart: always
+    restart: "always"
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     logging:
       driver: "journald"
+    stop_grace_period: 30s
     networks:
       - schwifty
     depends_on:
@@ -22,6 +23,7 @@ services:
       - streetball_by
       - streetball_name
       - shop_streetball_name
+      - bkug_by
       - kotbot
       - tgpt
       - kotlin_link
@@ -290,6 +292,7 @@ services:
       - kotbot
       - tgpt
       - repo_kotlin_link
+      - kotlin_link
 
   monitoring_loki:
     container_name: "monitoring_loki"
@@ -309,7 +312,7 @@ services:
     container_name: "monitoring_promtail"
     image: "grafana/promtail:3.5"
     user: "1000:1000"
-    restart: always
+    restart: "always"
     volumes:
       - "./promtail/config/config.yml:/etc/promtail/config.yml:ro"
       - "/var/log/journal/:/var/log/journal/:ro"
@@ -326,7 +329,7 @@ services:
     container_name: "bkug.by"
     image: "wordpress:6.9-php8.5-apache"
     user: "1000:1000"
-    restart: always
+    restart: "always"
     logging:
       driver: "journald"
     volumes:
@@ -339,7 +342,7 @@ services:
   bkug_by_db:
     container_name: "bkug.by_db"
     image: "mariadb:11.8"
-    restart: always
+    restart: "always"
     logging:
       driver: "journald"
     volumes:
@@ -366,7 +369,7 @@ services:
     container_name: "streetball.name"
     image: "wordpress:6.9-php8.5-apache"
     user: "1000:1000"
-    restart: always
+    restart: "always"
     logging:
       driver: "journald"
     volumes:
@@ -379,7 +382,7 @@ services:
   streetball_name_db:
     container_name: "streetball.name_db"
     image: "mariadb:11.8"
-    restart: always
+    restart: "always"
     logging:
       driver: "journald"
     volumes:
@@ -394,7 +397,7 @@ services:
     container_name: "shop.streetball.name"
     image: "wordpress:6.9-php8.5-apache"
     user: "1000:1000"
-    restart: always
+    restart: "always"
     logging:
       driver: "journald"
     volumes:
@@ -407,7 +410,7 @@ services:
   shop_streetball_name_db:
     container_name: "shop.streetball.name_db"
     image: "mariadb:11.8"
-    restart: always
+    restart: "always"
     logging:
       driver: "journald"
     volumes:
@@ -565,5 +568,6 @@ services:
       - "./tg-spam/data:/srv/data"
     logging:
       driver: "journald"
+    stop_grace_period: 30s
     networks:
       - schwifty

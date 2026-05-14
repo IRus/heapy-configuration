@@ -4,6 +4,18 @@ global:
   scrape_interval: 30s
 
 scrape_configs:
+  - job_name: "prometheus"
+    metrics_path: "/metrics"
+    scrape_interval: 30s
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "grafana"
+    metrics_path: "/metrics"
+    scrape_interval: 30s
+    static_configs:
+      - targets: ["monitoring_grafana:3000"]
+
   - job_name: "kotbot"
     metrics_path: "/metrics"
     scrape_interval: 30s
