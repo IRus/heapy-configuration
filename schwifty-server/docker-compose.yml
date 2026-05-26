@@ -125,7 +125,7 @@ services:
       POSTGRES_PASSWORD: "HPALUhAY28G4LWDf"
       POSTGRES_DB: "tinytinyrss"
     volumes:
-      - "./ttrss/data/pgdata:/var/lib/postgresql/data"
+      - "./ttrss/data/pgdata:/var/lib/postgresql"
       - "/etc/passwd:/etc/passwd:ro"
     logging:
       driver: "journald"
@@ -479,7 +479,7 @@ services:
       POSTGRES_PASSWORD: "kotbot"
       POSTGRES_DB: "kotbot"
     volumes:
-      - "./kotbot/pgdata:/var/lib/postgresql/data"
+      - "./kotbot/pgdata:/var/lib/postgresql"
       - "/etc/passwd:/etc/passwd:ro"
     logging:
       driver: "journald"
@@ -527,7 +527,7 @@ services:
       POSTGRES_PASSWORD: "tgpt"
       POSTGRES_DB: "tgpt"
     volumes:
-      - "./tgpt/pgdata:/var/lib/postgresql/data"
+      - "./tgpt/pgdata:/var/lib/postgresql"
       - "/etc/passwd:/etc/passwd:ro"
     logging:
       driver: "journald"
