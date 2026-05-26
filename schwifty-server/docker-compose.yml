@@ -112,9 +112,9 @@ services:
     networks:
       - schwifty
 
-  # docker exec -it ttrss_database /usr/bin/pg_dumpall -U tinytinyrss > dumpfile
-  # docker cp dumpfile ttrss_database:/dumpfile
-  # docker exec ttrss_database psql -U tinytinyrss -d tinytinyrss -f /dumpfile
+  # docker exec -it ttrss_database /usr/bin/pg_dumpall -U tinytinyrss > ttrss_dumpfile
+  # docker cp ttrss_dumpfile ttrss_database:/ttrss_dumpfile
+  # docker exec ttrss_database psql -U tinytinyrss -d tinytinyrss -f /ttrss_dumpfile
   ttrss_database:
     container_name: "ttrss_database"
     user: "1000:1000"
@@ -238,9 +238,9 @@ services:
     depends_on:
       - awesome_kotlin_database
 
-  # docker exec -it awesome_kotlin_database /usr/bin/pg_dumpall -U awesome_kotlin > dumpfile
-  # docker cp dumpfile awesome_kotlin_database:/dumpfile
-  # docker exec awesome_kotlin_database psql -U awesome_kotlin -d awesome_kotlin -f /dumpfile
+  # docker exec -it awesome_kotlin_database /usr/bin/pg_dumpall -U awesome_kotlin > awesome_dumpfile
+  # docker cp awesome_dumpfile awesome_kotlin_database:/awesome_dumpfile
+  # docker exec awesome_kotlin_database psql -U awesome_kotlin -d awesome_kotlin -f /awesome_dumpfile
   awesome_kotlin_database:
     container_name: "awesome_kotlin_database"
     user: "1000:1000"
@@ -466,9 +466,9 @@ services:
     depends_on:
       - kotbot_database
 
-  # docker exec -it kotbot_database /usr/bin/pg_dumpall -U kotbot > dumpfile
-  # docker cp dumpfile kotbot_database:/dumpfile
-  # docker exec kotbot_database psql -U kotbot -d kotbot -f /dumpfile
+  # docker exec -it kotbot_database /usr/bin/pg_dumpall -U kotbot > kotbot_dumpfile
+  # docker cp kotbot_dumpfile kotbot_database:/kotbot_dumpfile
+  # docker exec kotbot_database psql -U kotbot -d kotbot -f /kotbot_dumpfile
   kotbot_database:
     container_name: "kotbot_database"
     user: "1000:1000"
@@ -514,9 +514,9 @@ services:
     depends_on:
       - tgpt_database
 
-  # docker exec -it tgpt_database /usr/bin/pg_dumpall -U tgpt > dumpfile
-  # docker cp dumpfile tgpt_database:/dumpfile
-  # docker exec tgpt_database psql -U tgpt -d tgpt -f /dumpfile
+  # docker exec -it tgpt_database /usr/bin/pg_dumpall -U tgpt > tgpt_dumpfile
+  # docker cp tgpt_dumpfile tgpt_database:/tgpt_dumpfile
+  # docker exec tgpt_database psql -U tgpt -d tgpt -f /tgpt_dumpfile
   tgpt_database:
     container_name: "tgpt_database"
     user: "1000:1000"
