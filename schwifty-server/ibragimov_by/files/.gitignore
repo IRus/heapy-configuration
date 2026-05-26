@@ -1,0 +1,3 @@
+# Keep this directory tracked, ignore everything dropped into it.
+*
+!.gitignore

@@ -19,3 +19,12 @@ sudo nano /boot/firmware/config.txt
 dtoverlay=disable-wifi
 dtparam=pciex1_gen=3
 ```
+
+## File drop (ibragimov.by/files)
+
+A public, read-only directory listing served by the `ibragimov.by` nginx ingress
+at <https://ibragimov.by/files/>. There is no web upload and no auth — anyone with
+the link can browse and download.
+
+Add files by placing them on the host under `ibragimov_by/files/` — the dir is
+bind-mounted read-only into the container. Contents are git-ignored.

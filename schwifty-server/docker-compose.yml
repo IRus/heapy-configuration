@@ -94,6 +94,7 @@ services:
       driver: "journald"
     volumes:
       - ./ibragimov_by/nginx/conf.d:/etc/nginx/conf.d
+      - ./ibragimov_by/files:/srv/files:ro
     stop_grace_period: 30s
     networks:
       - schwifty
