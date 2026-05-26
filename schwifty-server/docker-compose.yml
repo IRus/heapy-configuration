@@ -118,7 +118,7 @@ services:
   ttrss_database:
     container_name: "ttrss_database"
     user: "1000:1000"
-    image: "postgres:17.5"
+    image: "postgres:18.4"
     restart: "always"
     environment:
       POSTGRES_USER: "tinytinyrss"
@@ -244,7 +244,7 @@ services:
   awesome_kotlin_database:
     container_name: "awesome_kotlin_database"
     user: "1000:1000"
-    image: "postgres:18.3"
+    image: "postgres:18.4"
     restart: "always"
     environment:
       POSTGRES_USER: "awesome_kotlin"
@@ -472,7 +472,7 @@ services:
   kotbot_database:
     container_name: "kotbot_database"
     user: "1000:1000"
-    image: "postgres:17.5"
+    image: "postgres:18.4"
     restart: "always"
     environment:
       POSTGRES_USER: "kotbot"
@@ -520,7 +520,7 @@ services:
   tgpt_database:
     container_name: "tgpt_database"
     user: "1000:1000"
-    image: "postgres:17.5"
+    image: "postgres:18.4"
     restart: "always"
     environment:
       POSTGRES_USER: "tgpt"
