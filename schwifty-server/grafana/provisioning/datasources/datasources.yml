@@ -1,0 +1,24 @@
+apiVersion: 1
+
+datasources:
+  - name: prometheus
+    uid: b51a4801-2755-4a88-a500-273918d59f34
+    type: prometheus
+    access: proxy
+    url: http://monitoring_prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      httpMethod: POST
+      prometheusType: Prometheus
+      prometheusVersion: 3.3.1
+      timeInterval: 30s
+
+  - name: Loki
+    uid: 6myu7hrnz
+    type: loki
+    access: proxy
+    url: http://monitoring_loki:3100
+    editable: true
+    jsonData:
+      maxLines: 1000

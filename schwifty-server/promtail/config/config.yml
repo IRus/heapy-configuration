@@ -14,6 +14,26 @@ scrape_configs:
     journal:
       labels:
         job: systemd-journal
+        host: schwifty-server
     relabel_configs:
       - source_labels: [ "__journal__systemd_unit" ]
-        target_label: "systemd_unit"
+        target_label: "unit"
+      - source_labels: [ "__journal_syslog_identifier" ]
+        target_label: "syslog_identifier"
+      - source_labels: [ "__journal_priority_keyword" ]
+        target_label: "level"
+      - source_labels: [ "__journal_container_name" ]
+        target_label: "container"
+    pipeline_stages:
+      # Docker's journald driver sets PRIORITY (hence `level`) by stream:
+      # stdout -> info, stderr -> err. That is the honest "which stream" value,
+      # but it is not the application's real log level. For container logs only,
+      # parse the level out of the message and expose it as `detected_level`,
+      # leaving `level` untouched. systemd units keep their priority `level`.
+      - match:
+          selector: '{container=~".+"}'
+          stages:
+            - regex:
+                expression: '(?i)\b(?P<detected_level>trace|debug|info|warn|warning|error|err|fatal|panic|crit)\b'
+            - labels:
+                detected_level:

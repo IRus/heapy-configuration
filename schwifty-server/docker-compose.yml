@@ -265,8 +265,17 @@ services:
     user: "1000:1000"
     image: "grafana/grafana:11.6.1"
     restart: "always"
+    environment:
+      GF_SERVER_ROOT_URL: "https://monitoring.ibragimov.by"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_USERS_DEFAULT_THEME: "dark"
+      GF_METRICS_ENABLED: "true"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/etc/grafana/dashboards/schwifty-overview.json"
     volumes:
       - "./grafana/data:/var/lib/grafana"
+      - "./grafana/provisioning:/etc/grafana/provisioning:ro"
+      - "./grafana/dashboards:/etc/grafana/dashboards:ro"
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -275,6 +284,41 @@ services:
     depends_on:
       - monitoring_prometheus
       - monitoring_loki
+
+  monitoring_node_exporter:
+    container_name: "monitoring_node_exporter"
+    image: "prom/node-exporter:v1.9.1"
+    restart: "always"
+    pid: "host"
+    command:
+      - "--path.rootfs=/host"
+      - "--collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/containers/storage/.+)($$|/)"
+    volumes:
+      - "/:/host:ro,rslave"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+
+  monitoring_cadvisor:
+    container_name: "monitoring_cadvisor"
+    image: "gcr.io/cadvisor/cadvisor:v0.52.1"
+    restart: "always"
+    privileged: true
+    devices:
+      - "/dev/kmsg:/dev/kmsg"
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker:/var/lib/docker:ro"
+      - "/dev/disk:/dev/disk:ro"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
 
   monitoring_prometheus:
     container_name: "monitoring_prometheus"
@@ -293,7 +337,10 @@ services:
       - kotbot
       - tgpt
       - repo_kotlin_link
-      - kotlin_link
+      - monitoring_node_exporter
+      - monitoring_cadvisor
+      - monitoring_loki
+      - monitoring_promtail
 
   monitoring_loki:
     container_name: "monitoring_loki"
@@ -312,10 +359,11 @@ services:
   monitoring_promtail:
     container_name: "monitoring_promtail"
     image: "grafana/promtail:3.5"
-    user: "1000:1000"
+    user: "0:0"
     restart: "always"
     volumes:
       - "./promtail/config/config.yml:/etc/promtail/config.yml:ro"
+      - "./promtail/data:/tmp"
       - "/var/log/journal/:/var/log/journal/:ro"
       - "/run/log/journal/:/run/log/journal/:ro"
       - "/etc/machine-id:/etc/machine-id:ro"

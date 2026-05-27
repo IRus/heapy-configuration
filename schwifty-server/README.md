@@ -20,6 +20,28 @@ dtoverlay=disable-wifi
 dtparam=pciex1_gen=3
 ```
 
+## Monitoring
+
+Grafana configuration is provisioned from git:
+
+- `grafana/provisioning/datasources/datasources.yml` configures Prometheus and Loki.
+- `grafana/provisioning/dashboards/dashboards.yml` loads dashboards from `grafana/dashboards`.
+- `prometheus/config/prometheus.yml` scrapes applications, Grafana, Loki, Promtail, node exporter, and cAdvisor.
+- `promtail/config/config.yml` ships the systemd journal to Loki. `level` is the
+  journal priority (for container logs that means `info` for stdout / `err` for
+  stderr — the stream, not the app level). For container logs Promtail also
+  parses the real level out of the message into `detected_level`, e.g. query
+  true application warnings/errors with
+  `{container=~".+", detected_level=~"(?i)warn.*|err.*|fatal|panic"}`.
+
+Apply monitoring changes with:
+
+```
+docker compose up -d monitoring_node_exporter monitoring_cadvisor monitoring_prometheus monitoring_loki monitoring_promtail monitoring_grafana
+```
+
+`kotlin_link` is intentionally not scraped until the correct metrics endpoint is configured.
+
 ## File drop (ibragimov.by/files)
 
 A public, read-only directory listing served by the `ibragimov.by` nginx ingress
