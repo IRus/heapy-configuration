@@ -16,18 +16,9 @@ function hh_system_update() {
 }
 
 function hh_pull_docker_images() {
-  echo "[🆕] Pull latest images"
-  docker pull ghcr.io/irus/kotrol:main
-  docker pull ghcr.io/irus/blog:main
-  docker pull ghcr.io/irus/currency:main
-  docker pull ghcr.io/heapy/heapy.io:main
-  docker pull ghcr.io/heapy/kotbot:main
-  docker pull ghcr.io/heapy/tgpt:main
-  docker pull ghcr.io/heapy/kotlin_jobs:main
-  docker pull ghcr.io/heapy/repo.kotlin.link:main
-  docker pull ghcr.io/heapy/awesome-kotlin:main
-  docker pull cloudflare/cloudflared:latest
-  docker pull nginx:stable-alpine
+  echo "[🆕] Pull latest kodkod image"
+  cd "${PROJECT}" || exit 1
+  docker compose pull kodkod
 }
 
 function hh_compose_up() {
