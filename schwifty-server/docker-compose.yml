@@ -9,6 +9,8 @@ services:
     image: "cloudflare/cloudflared:latest"
     command: [ "tunnel", "--no-autoupdate", "run"]
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     logging:
@@ -35,6 +37,8 @@ services:
     container_name: "kotrol.heapy.io"
     image: "ghcr.io/irus/kotrol:main"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -45,6 +49,8 @@ services:
     container_name: "ruslan.ibragimov.by"
     image: "ghcr.io/irus/blog:main"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -55,6 +61,8 @@ services:
     image: "nginx:stable-alpine"
     container_name: "heapy.io-ingress"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     logging:
       driver: "journald"
     volumes:
@@ -70,6 +78,8 @@ services:
     container_name: "heapy.io-kotlin_jobs"
     image: "ghcr.io/heapy/kotlin_jobs:main"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -80,6 +90,8 @@ services:
     container_name: "heapy.io"
     image: "ghcr.io/heapy/heapy.io:main"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -90,6 +102,8 @@ services:
     image: "nginx:stable-alpine"
     container_name: "ibragimov.by-ingress"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     logging:
       driver: "journald"
     volumes:
@@ -106,6 +120,8 @@ services:
     container_name: "ibragimov.by-currency"
     image: "ghcr.io/irus/currency:main"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -204,6 +220,8 @@ services:
     container_name: "kotlin.link"
     image: "ghcr.io/heapy/awesome-kotlin:main"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     environment:
       AWESOME__JWT__SECRET: "${AWESOME__JWT__SECRET}"
       AWESOME__GITHUB__CLIENT_ID: "${AWESOME__GITHUB__CLIENT_ID}"
@@ -406,6 +424,8 @@ services:
     image: "nginx:stable-alpine"
     container_name: "streetball.by-ingress"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     logging:
       driver: "journald"
     volumes:
@@ -474,6 +494,8 @@ services:
     image: "ghcr.io/heapy/repo.kotlin.link:main"
     container_name: "repo.kotlin.link"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     environment:
       REPO_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
     healthcheck:
@@ -491,6 +513,9 @@ services:
     image: "ghcr.io/heapy/kotbot:main"
     container_name: "kotbot.heapy.io"
     restart: "always"
+    labels:
+      - "kodkod.autoheal.enable=true"
+      - "kodkod.update.enable=true"
     environment:
       KOTBOT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
       KOTBOT_TOKEN: "${KOTBOT_TOKEN}"
@@ -506,6 +531,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 20s
     logging:
       driver: "journald"
     stop_grace_period: 30s
@@ -513,6 +539,24 @@ services:
       - schwifty
     depends_on:
       - kotbot_database
+
+  kodkod:
+    container_name: "kodkod"
+    image: "ghcr.io/heapy/kodkod:latest"
+    restart: "always"
+    environment:
+      KODKOD_AUTOHEAL_INTERVAL: "10"
+      KODKOD_AUTOHEAL_START_PERIOD: "30"
+      KODKOD_UPDATE_INTERVAL: "3600"
+      KODKOD_UPDATE_CLEANUP: "true"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/etc/localtime:/etc/localtime:ro"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
 
   # docker exec -it kotbot_database /usr/bin/pg_dumpall -U kotbot > kotbot_dumpfile
   # docker cp kotbot_dumpfile kotbot_database:/kotbot_dumpfile
@@ -540,6 +584,8 @@ services:
     image: "ghcr.io/heapy/tgpt:main"
     container_name: "tgpt.heapy.io"
     restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
     environment:
       TGPT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
       TGPT_BOT_TOKEN: "${TGPT_BOT_TOKEN}"
