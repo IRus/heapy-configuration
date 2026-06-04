@@ -1,1 +1,1 @@
-*/15 * * * * /home/pi/heapy-configuration/schwifty-server/functions hh_update_docker
+0 */12 * * * /home/pi/heapy-configuration/schwifty-server/functions hh_update_docker
