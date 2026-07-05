@@ -32,6 +32,7 @@ services:
       - repo_kotlin_link
       - tg_spam
       - kotrol_heapy_io
+      - heapy_io_kinetica_docs
 
   kotrol_heapy_io:
     container_name: "kotrol.heapy.io"
@@ -73,10 +74,23 @@ services:
     depends_on:
       - heapy_io_kotlin_jobs
       - heapy_io_root
+      - heapy_io_kinetica_docs
 
   heapy_io_kotlin_jobs:
     container_name: "heapy.io-kotlin_jobs"
     image: "ghcr.io/heapy/kotlin_jobs:main"
+    restart: "always"
+    labels:
+      - "kodkod.update.enable=true"
+    logging:
+      driver: "journald"
+    stop_grace_period: 30s
+    networks:
+      - schwifty
+
+  heapy_io_kinetica_docs:
+    container_name: "kinetica.heapy.io"
+    image: "ghcr.io/heapy/kinetica-docs:latest"
     restart: "always"
     labels:
       - "kodkod.update.enable=true"
