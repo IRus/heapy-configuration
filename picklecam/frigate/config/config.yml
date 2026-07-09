@@ -43,15 +43,18 @@ objects:
 
 record:
   enabled: true
-  retain:
-    days: 90
-    mode: all
+  continuous:
+    days: 7          # keep EVERYTHING for 7 days (scrub-back buffer)
+  motion:
+    days: 14         # days 3–14: keep only segments with motion
   alerts:
     retain:
-      days: 90
+      days: 60       # footage around alerts kept 60 days
+      mode: motion
   detections:
     retain:
-      days: 90
+      days: 60       # footage around detections kept 60 days
+      mode: motion
 snapshots:
   enabled: true
   retain:
