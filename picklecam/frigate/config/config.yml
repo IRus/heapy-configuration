@@ -51,25 +51,37 @@ cameras:
             - detect
   garage:
     ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://admin:{FRIGATE_CAM248_PASSWORD}@192.168.1.248:554/stream1
           roles:
-            - detect
             - record
+        - path: rtsp://admin:{FRIGATE_CAM248_PASSWORD}@192.168.1.248:554/stream2
+          roles:
+            - detect
   front:
     ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://admin:{FRIGATE_CAM251_PASSWORD}@192.168.1.251:554/stream1
           roles:
-            - detect
             - record
+        - path: rtsp://admin:{FRIGATE_CAM251_PASSWORD}@192.168.1.251:554/stream2
+          roles:
+            - detect
   side:
     ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://admin:{FRIGATE_CAM252_PASSWORD}@192.168.1.252:554/stream1
           roles:
-            - detect
             - record
+        - path: rtsp://admin:{FRIGATE_CAM252_PASSWORD}@192.168.1.252:554/stream2
+          roles:
+            - detect
     objects:
       filters:
         person:
@@ -77,11 +89,15 @@ cameras:
           threshold: 0.80
   back:
     ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://admin:{FRIGATE_CAM253_PASSWORD}@192.168.1.253:554/stream1
           roles:
-            - detect
             - record
+        - path: rtsp://admin:{FRIGATE_CAM253_PASSWORD}@192.168.1.253:554/stream2
+          roles:
+            - detect
     objects:
       filters:
         person:
