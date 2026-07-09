@@ -38,6 +38,13 @@ birdseye:
   mode: continuous
 
 cameras:
+  home_kitchen:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_CAM247_PASSWORD}@192.168.1.247:554/stream1
+          roles:
+            - detect
+            - record
   garage:
     ffmpeg:
       inputs:
