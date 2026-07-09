@@ -40,11 +40,15 @@ birdseye:
 cameras:
   home_kitchen:
     ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://admin:{FRIGATE_CAM247_PASSWORD}@192.168.1.247:554/stream1
           roles:
-            - detect
             - record
+        - path: rtsp://admin:{FRIGATE_CAM247_PASSWORD}@192.168.1.247:554/stream2
+          roles:
+            - detect
   garage:
     ffmpeg:
       inputs:
