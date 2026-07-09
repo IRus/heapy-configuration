@@ -6,6 +6,12 @@ mqtt:
 ffmpeg:
   hwaccel_args: preset-vaapi
 
+go2rtc:
+  streams:
+    home_kitchen:
+      - rtsp://admin:{FRIGATE_CAM247_PASSWORD}@192.168.1.247:554/stream1
+      - ffmpeg:home_kitchen#audio=aac#audio=opus
+
 detectors:
   coral:
     type: edgetpu
@@ -41,13 +47,12 @@ cameras:
   home_kitchen:
     ffmpeg:
       output_args:
-        record: preset-record-generic-audio-aac
+        record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://admin:{FRIGATE_CAM247_PASSWORD}@192.168.1.247:554/stream1
+        - path: rtsp://127.0.0.1:8554/home_kitchen
+          input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_CAM247_PASSWORD}@192.168.1.247:554/stream2
-          roles:
             - detect
   garage:
     ffmpeg:
@@ -57,8 +62,6 @@ cameras:
         - path: rtsp://admin:{FRIGATE_CAM248_PASSWORD}@192.168.1.248:554/stream1
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_CAM248_PASSWORD}@192.168.1.248:554/stream2
-          roles:
             - detect
   front:
     ffmpeg:
@@ -68,8 +71,6 @@ cameras:
         - path: rtsp://admin:{FRIGATE_CAM251_PASSWORD}@192.168.1.251:554/stream1
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_CAM251_PASSWORD}@192.168.1.251:554/stream2
-          roles:
             - detect
   side:
     ffmpeg:
@@ -79,8 +80,6 @@ cameras:
         - path: rtsp://admin:{FRIGATE_CAM252_PASSWORD}@192.168.1.252:554/stream1
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_CAM252_PASSWORD}@192.168.1.252:554/stream2
-          roles:
             - detect
     objects:
       filters:
@@ -95,8 +94,6 @@ cameras:
         - path: rtsp://admin:{FRIGATE_CAM253_PASSWORD}@192.168.1.253:554/stream1
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_CAM253_PASSWORD}@192.168.1.253:554/stream2
-          roles:
             - detect
     objects:
       filters:
