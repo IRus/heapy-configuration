@@ -6,11 +6,29 @@ mqtt:
 ffmpeg:
   hwaccel_args: preset-vaapi
 
+# One restream per camera. The `#audio=aac#audio=opus` producer transcodes the
+# camera's G.711 audio into AAC (MSE player) + Opus (WebRTC) so live view has sound.
+# Video stays H.264 copy — only audio is transcoded (cheap).
 go2rtc:
   streams:
+    home_room:
+      - rtsp://admin:{FRIGATE_CAM246_PASSWORD}@192.168.1.246:554/stream1
+      - ffmpeg:home_room#audio=aac#audio=opus
     home_kitchen:
       - rtsp://admin:{FRIGATE_CAM247_PASSWORD}@192.168.1.247:554/stream1
       - ffmpeg:home_kitchen#audio=aac#audio=opus
+    garage:
+      - rtsp://admin:{FRIGATE_CAM248_PASSWORD}@192.168.1.248:554/stream1
+      - ffmpeg:garage#audio=aac#audio=opus
+    front:
+      - rtsp://admin:{FRIGATE_CAM251_PASSWORD}@192.168.1.251:554/stream1
+      - ffmpeg:front#audio=aac#audio=opus
+    side:
+      - rtsp://admin:{FRIGATE_CAM252_PASSWORD}@192.168.1.252:554/stream1
+      - ffmpeg:side#audio=aac#audio=opus
+    back:
+      - rtsp://admin:{FRIGATE_CAM253_PASSWORD}@192.168.1.253:554/stream1
+      - ffmpeg:back#audio=aac#audio=opus
 
 detectors:
   coral:
@@ -44,6 +62,16 @@ birdseye:
   mode: continuous
 
 cameras:
+  home_room:
+    ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-aac
+      inputs:
+        - path: rtsp://127.0.0.1:8554/home_room
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+            - detect
   home_kitchen:
     ffmpeg:
       output_args:
@@ -59,7 +87,8 @@ cameras:
       output_args:
         record: preset-record-generic-audio-aac
       inputs:
-        - path: rtsp://admin:{FRIGATE_CAM248_PASSWORD}@192.168.1.248:554/stream1
+        - path: rtsp://127.0.0.1:8554/garage
+          input_args: preset-rtsp-restream
           roles:
             - record
             - detect
@@ -68,7 +97,8 @@ cameras:
       output_args:
         record: preset-record-generic-audio-aac
       inputs:
-        - path: rtsp://admin:{FRIGATE_CAM251_PASSWORD}@192.168.1.251:554/stream1
+        - path: rtsp://127.0.0.1:8554/front
+          input_args: preset-rtsp-restream
           roles:
             - record
             - detect
@@ -77,7 +107,8 @@ cameras:
       output_args:
         record: preset-record-generic-audio-aac
       inputs:
-        - path: rtsp://admin:{FRIGATE_CAM252_PASSWORD}@192.168.1.252:554/stream1
+        - path: rtsp://127.0.0.1:8554/side
+          input_args: preset-rtsp-restream
           roles:
             - record
             - detect
@@ -91,7 +122,8 @@ cameras:
       output_args:
         record: preset-record-generic-audio-aac
       inputs:
-        - path: rtsp://admin:{FRIGATE_CAM253_PASSWORD}@192.168.1.253:554/stream1
+        - path: rtsp://127.0.0.1:8554/back
+          input_args: preset-rtsp-restream
           roles:
             - record
             - detect
