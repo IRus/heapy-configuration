@@ -1,0 +1,523 @@
+# Shared fragments. `x-` keys are ignored by Compose itself, they only exist so
+# that services below can merge them in with `<<:`.
+x-defaults: &defaults
+  restart: "always"
+  stop_grace_period: 30s
+  logging:
+    driver: "journald"
+  networks:
+    - schwifty
+
+# Marks a service for automatic image updates by kodkod.
+x-autoupdate: &autoupdate
+  - "kodkod.update.enable=true"
+
+x-jvm-healthcheck: &jvm-healthcheck
+  test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+
+networks:
+  schwifty:
+    name: schwifty
+    driver: bridge
+
+services:
+
+  # ---------------------------------------------------------------- ingress --
+
+  cloudflared:
+    <<: *defaults
+    container_name: "cloudflared"
+    image: "cloudflare/cloudflared:latest"
+    command: [ "tunnel", "--no-autoupdate", "run" ]
+    labels: *autoupdate
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    depends_on:
+      - heapy_io
+      - ruslan_ibragimov_by
+      - ibragimov_by
+      - streetball_by
+      - streetball_name
+      - shop_streetball_name
+      - bkug_by
+      - kotbot
+      - tgpt
+      - kotlin_link
+      - repo_kotlin_link
+      - tg_spam
+      - kotrol_heapy_io
+      - heapy_io_kinetica_docs
+
+  # --------------------------------------------------------------- heapy.io --
+
+  heapy_io:
+    <<: *defaults
+    container_name: "heapy.io-ingress"
+    image: "nginx:stable-alpine"
+    labels: *autoupdate
+    volumes:
+      - ./heapy_io/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - heapy_io_kotlin_jobs
+      - heapy_io_root
+      - heapy_io_kinetica_docs
+
+  heapy_io_root:
+    <<: *defaults
+    container_name: "heapy.io"
+    image: "ghcr.io/heapy/heapy.io:main"
+    labels: *autoupdate
+
+  heapy_io_kotlin_jobs:
+    <<: *defaults
+    container_name: "heapy.io-kotlin_jobs"
+    image: "ghcr.io/heapy/kotlin_jobs:main"
+    labels: *autoupdate
+
+  heapy_io_kinetica_docs:
+    <<: *defaults
+    container_name: "kinetica.heapy.io"
+    image: "ghcr.io/heapy/kinetica-docs:latest"
+    labels: *autoupdate
+
+  kotrol_heapy_io:
+    <<: *defaults
+    container_name: "kotrol.heapy.io"
+    image: "ghcr.io/irus/kotrol:main"
+    labels: *autoupdate
+
+  # ------------------------------------------------------------ ibragimov.by --
+
+  ibragimov_by:
+    <<: *defaults
+    container_name: "ibragimov.by-ingress"
+    image: "nginx:stable-alpine"
+    labels: *autoupdate
+    volumes:
+      - ./ibragimov_by/nginx/conf.d:/etc/nginx/conf.d
+      - ./ibragimov_by/files:/srv/files:ro
+    depends_on:
+      - ttrss_nginx
+      - ibragimov_by_currency
+
+  ibragimov_by_currency:
+    <<: *defaults
+    container_name: "ibragimov.by-currency"
+    image: "ghcr.io/irus/currency:main"
+    labels: *autoupdate
+
+  ruslan_ibragimov_by:
+    <<: *defaults
+    container_name: "ruslan.ibragimov.by"
+    image: "ghcr.io/irus/blog:main"
+    labels: *autoupdate
+
+  # ------------------------------------------------------------------- ttrss --
+
+  # docker exec -it ttrss_database /usr/bin/pg_dumpall -U tinytinyrss > ttrss_dumpfile
+  # docker cp ttrss_dumpfile ttrss_database:/ttrss_dumpfile
+  # docker exec ttrss_database psql -U tinytinyrss -d tinytinyrss -f /ttrss_dumpfile
+  ttrss_database:
+    <<: *defaults
+    container_name: "ttrss_database"
+    image: "postgres:18.4"
+    user: "1000:1000"
+    shm_size: "512M"
+    environment:
+      POSTGRES_USER: "tinytinyrss"
+      POSTGRES_PASSWORD: "HPALUhAY28G4LWDf"
+      POSTGRES_DB: "tinytinyrss"
+    volumes:
+      - "./ttrss/data/pgdata:/var/lib/postgresql"
+      - "/etc/passwd:/etc/passwd:ro"
+
+  # docker build -t heapy/ttrss:main -f .docker/app/Dockerfile .
+  ttrss:
+    <<: *defaults
+    container_name: "ttrss"
+    image: "heapy/ttrss:main"
+    environment:
+      OWNER_UID: 1000
+      OWNER_GID: 1000
+      SKIP_RSYNC_ON_STARTUP: true
+      TTRSS_DB_HOST: "ttrss_database"
+      TTRSS_DB_USER: "tinytinyrss"
+      TTRSS_DB_NAME: "tinytinyrss"
+      TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
+      TTRSS_SELF_URL_PATH: "https://ibragimov.by/tt-rss"
+      TTRSS_SESSION_COOKIE_LIFETIME: "31536000"
+    volumes:
+      - "./ttrss/tt-rss:/var/www/html/tt-rss"
+    depends_on:
+      - ttrss_database
+
+  # docker build -t heapy/ttrss-updater:main -f .docker/app/Dockerfile .
+  ttrss_updater:
+    <<: *defaults
+    container_name: "ttrss_updater"
+    image: "heapy/ttrss-updater:main"
+    command: "/opt/tt-rss/updater.sh"
+    stop_grace_period: 0s
+    environment:
+      OWNER_UID: 1000
+      OWNER_GID: 1000
+      TTRSS_DB_HOST: "ttrss_database"
+      TTRSS_DB_USER: "tinytinyrss"
+      TTRSS_DB_NAME: "tinytinyrss"
+      TTRSS_DB_PASS: "HPALUhAY28G4LWDf"
+      TTRSS_SELF_URL_PATH: "https://ibragimov.by/tt-rss"
+    volumes:
+      - "./ttrss/tt-rss:/var/www/html/tt-rss"
+    depends_on:
+      - ttrss
+
+  # docker build -t heapy/ttrss-nginx:main -f .docker/web-nginx/Dockerfile .
+  ttrss_nginx:
+    <<: *defaults
+    container_name: "ibragimov.by-ttrss"
+    image: "heapy/ttrss-nginx:main"
+    environment:
+      APP_UPSTREAM: "ttrss"
+    volumes:
+      - "./ttrss/tt-rss:/var/www/html/tt-rss:ro"
+    depends_on:
+      - ttrss
+
+  # ------------------------------------------------------------- kotlin.link --
+
+  kotlin_link:
+    <<: *defaults
+    container_name: "kotlin.link"
+    image: "ghcr.io/heapy/awesome-kotlin:main"
+    labels: *autoupdate
+    healthcheck: *jvm-healthcheck
+    environment:
+      AWESOME__JWT__SECRET: "${AWESOME__JWT__SECRET}"
+      AWESOME__GITHUB__CLIENT_ID: "${AWESOME__GITHUB__CLIENT_ID}"
+      AWESOME__GITHUB__CLIENT_SECRET: "${AWESOME__GITHUB__CLIENT_SECRET}"
+      AWESOME__GITHUB__REDIRECT_URL: "https://kotlin.link/auth/github"
+      AWESOME__JDBC__PORT: "5432"
+      AWESOME__JDBC__HOST: "awesome_kotlin_database"
+      AWESOME__JDBC__USERNAME: "awesome_kotlin"
+      AWESOME__JDBC__PASSWORD: "awesome_kotlin"
+      AWESOME__JDBC__DATABASE_NAME: "awesome_kotlin"
+      AWESOME__SERVER__PORT: "8080"
+      AWESOME__SERVER__HOST: "0.0.0.0"
+      AWESOME__SERVER__GRACEFUL_SHUTDOWN_TIMEOUT: "10s"
+      AWESOME__SERVER__REACT_DIST_PATH: "/app/frontend/"
+      AWESOME__WEB__INTERNAL__HOST: "localhost"
+      AWESOME__WEB__INTERNAL__PORT: "8080"
+      AWESOME__WEB__INTERNAL__PROTOCOL: "http"
+      AWESOME__WEB__EXTERNAL__HOST: "kotlin.link"
+      AWESOME__WEB__EXTERNAL__PORT: "80"
+      AWESOME__WEB__EXTERNAL__PROTOCOL: "https"
+      GH_TOKEN: "${AWESOME__GITHUB__TOKEN}"
+    depends_on:
+      - awesome_kotlin_database
+
+  # docker exec -it awesome_kotlin_database /usr/bin/pg_dumpall -U awesome_kotlin > awesome_dumpfile
+  # docker cp awesome_dumpfile awesome_kotlin_database:/awesome_dumpfile
+  # docker exec awesome_kotlin_database psql -U awesome_kotlin -d awesome_kotlin -f /awesome_dumpfile
+  awesome_kotlin_database:
+    <<: *defaults
+    container_name: "awesome_kotlin_database"
+    image: "postgres:18.4"
+    user: "1000:1000"
+    shm_size: "512M"
+    environment:
+      POSTGRES_USER: "awesome_kotlin"
+      POSTGRES_PASSWORD: "awesome_kotlin"
+      POSTGRES_DB: "awesome_kotlin"
+    volumes:
+      - "./awesome_kotlin/pgdata:/var/lib/postgresql"
+      - "/etc/passwd:/etc/passwd:ro"
+
+  repo_kotlin_link:
+    <<: *defaults
+    container_name: "repo.kotlin.link"
+    image: "ghcr.io/heapy/repo.kotlin.link:main"
+    labels: *autoupdate
+    healthcheck: *jvm-healthcheck
+    environment:
+      REPO_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
+
+  # -------------------------------------------------------------------- bots --
+
+  kotbot:
+    <<: *defaults
+    container_name: "kotbot.heapy.io"
+    image: "ghcr.io/heapy/kotbot:main"
+    labels:
+      - "kodkod.autoheal.enable=true"
+      - "kodkod.update.enable=true"
+    healthcheck:
+      <<: *jvm-healthcheck
+      start_period: 20s
+    environment:
+      KOTBOT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
+      KOTBOT_TOKEN: "${KOTBOT_TOKEN}"
+      KOTBOT_POSTGRES_USER: "kotbot"
+      KOTBOT_POSTGRES_PASSWORD: "kotbot"
+      KOTBOT_POSTGRES_DATABASE: "kotbot"
+      KOTBOT_POSTGRES_HOST: "kotbot_database"
+      KOTBOT_POSTGRES_PORT: "5432"
+      KOTBOT_GPT_TOKEN: "${KOTBOT_GPT_TOKEN}"
+      KOTBOT_GPT_ORG_ID: "${KOTBOT_GPT_ORG_ID}"
+    depends_on:
+      - kotbot_database
+
+  # docker exec -it kotbot_database /usr/bin/pg_dumpall -U kotbot > kotbot_dumpfile
+  # docker cp kotbot_dumpfile kotbot_database:/kotbot_dumpfile
+  # docker exec kotbot_database psql -U kotbot -d kotbot -f /kotbot_dumpfile
+  kotbot_database:
+    <<: *defaults
+    container_name: "kotbot_database"
+    image: "postgres:18.4"
+    user: "1000:1000"
+    shm_size: "512M"
+    environment:
+      POSTGRES_USER: "kotbot"
+      POSTGRES_PASSWORD: "kotbot"
+      POSTGRES_DB: "kotbot"
+    volumes:
+      - "./kotbot/pgdata:/var/lib/postgresql"
+      - "/etc/passwd:/etc/passwd:ro"
+
+  tgpt:
+    <<: *defaults
+    container_name: "tgpt.heapy.io"
+    image: "ghcr.io/heapy/tgpt:main"
+    labels: *autoupdate
+    healthcheck: *jvm-healthcheck
+    environment:
+      TGPT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
+      TGPT_BOT_TOKEN: "${TGPT_BOT_TOKEN}"
+      TGPT_OPENAI_API_KEY: "${TGPT_OPENAI_API_KEY}"
+      TGPT_POSTGRES_USER: "tgpt"
+      TGPT_POSTGRES_PASSWORD: "tgpt"
+      TGPT_POSTGRES_DATABASE: "tgpt"
+      TGPT_POSTGRES_HOST: "tgpt_database"
+      TGPT_POSTGRES_PORT: "5432"
+    depends_on:
+      - tgpt_database
+
+  # docker exec -it tgpt_database /usr/bin/pg_dumpall -U tgpt > tgpt_dumpfile
+  # docker cp tgpt_dumpfile tgpt_database:/tgpt_dumpfile
+  # docker exec tgpt_database psql -U tgpt -d tgpt -f /tgpt_dumpfile
+  tgpt_database:
+    <<: *defaults
+    container_name: "tgpt_database"
+    image: "postgres:18.4"
+    user: "1000:1000"
+    shm_size: "512M"
+    environment:
+      POSTGRES_USER: "tgpt"
+      POSTGRES_PASSWORD: "tgpt"
+      POSTGRES_DB: "tgpt"
+    volumes:
+      - "./tgpt/pgdata:/var/lib/postgresql"
+      - "/etc/passwd:/etc/passwd:ro"
+
+  tg_spam:
+    <<: *defaults
+    container_name: "tg_spam"
+    image: "ghcr.io/umputun/tg-spam:latest"
+    environment:
+      TELEGRAM_TOKEN: "${TG_SPAM_TELEGRAM_TOKEN}"
+      TELEGRAM_GROUP: "${TG_SPAM_TELEGRAM_GROUP}"
+      SERVER_ENABLED: "true"
+      TRAINING: "${TG_SPAM_TRAINING}"
+      OPENAI_TOKEN: "${TG_SPAM_OPENAI_TOKEN}"
+      ADMIN_GROUP: "${TG_SPAM_ADMIN_GROUP}"
+      NO_SPAM_REPLY: "${TG_SPAM_NO_SPAM_REPLY}"
+      SERVER_AUTH: "${TG_SPAM_SERVER_AUTH}"
+    volumes:
+      - "./tg-spam/data:/srv/data"
+
+  # --------------------------------------------------------------- wordpress --
+
+  bkug_by:
+    <<: *defaults
+    container_name: "bkug.by"
+    image: "wordpress:7.0-php8.5-apache"
+    user: "1000:1000"
+    volumes:
+      - "./bkug_by/wordpress:/var/www/html"
+    depends_on:
+      - bkug_by_db
+
+  bkug_by_db:
+    <<: *defaults
+    container_name: "bkug.by_db"
+    image: "mariadb:11.8"
+    environment:
+      MARIADB_ROOT_PASSWORD: "Eb95FAoyGMLiMXp1xcBPDzCBf0jMnL3EFKTnBZBWaz3ac0pVrS"
+      MARIADB_AUTO_UPGRADE: "1"
+    volumes:
+      - "./bkug_by/maria:/var/lib/mysql"
+
+  streetball_by:
+    <<: *defaults
+    container_name: "streetball.by-ingress"
+    image: "nginx:stable-alpine"
+    labels: *autoupdate
+    volumes:
+      - ./streetball_by/nginx/conf.d:/etc/nginx/conf.d
+
+  streetball_name:
+    <<: *defaults
+    container_name: "streetball.name"
+    image: "wordpress:7.0-php8.5-apache"
+    user: "1000:1000"
+    volumes:
+      - "./streetball_name/wordpress:/var/www/html"
+    depends_on:
+      - streetball_name_db
+
+  streetball_name_db:
+    <<: *defaults
+    container_name: "streetball.name_db"
+    image: "mariadb:11.8"
+    environment:
+      MARIADB_ROOT_PASSWORD: "YKmpxXYrAwQOgREv2f9iGXNzyheGVwLlGK8SA1qcvk0S8kOtby"
+      MARIADB_AUTO_UPGRADE: "1"
+    volumes:
+      - "./streetball_name/maria:/var/lib/mysql"
+
+  shop_streetball_name:
+    <<: *defaults
+    container_name: "shop.streetball.name"
+    image: "wordpress:7.0-php8.5-apache"
+    user: "1000:1000"
+    volumes:
+      - "./shop_streetball_name/wordpress:/var/www/html"
+    depends_on:
+      - shop_streetball_name_db
+
+  shop_streetball_name_db:
+    <<: *defaults
+    container_name: "shop.streetball.name_db"
+    image: "mariadb:11.8"
+    environment:
+      MARIADB_ROOT_PASSWORD: "7xcDfuvCt4BsNTB1LpDWUleWcc5WxWcyUxcXdo10hEQy2w4VrZ"
+      MARIADB_AUTO_UPGRADE: "1"
+    volumes:
+      - "./shop_streetball_name/maria:/var/lib/mysql"
+
+  # -------------------------------------------------------------- monitoring --
+
+  monitoring_grafana:
+    <<: *defaults
+    container_name: "monitoring_grafana"
+    image: "grafana/grafana:11.6.1"
+    user: "1000:1000"
+    environment:
+      GF_SERVER_ROOT_URL: "https://monitoring.ibragimov.by"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_USERS_DEFAULT_THEME: "dark"
+      GF_METRICS_ENABLED: "true"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/etc/grafana/dashboards/schwifty-overview.json"
+    volumes:
+      - "./grafana/data:/var/lib/grafana"
+      - "./grafana/provisioning:/etc/grafana/provisioning:ro"
+      - "./grafana/dashboards:/etc/grafana/dashboards:ro"
+    depends_on:
+      - monitoring_prometheus
+      - monitoring_loki
+
+  monitoring_prometheus:
+    <<: *defaults
+    container_name: "monitoring_prometheus"
+    image: "prom/prometheus:v3.3.1"
+    user: "1000:1000"
+    volumes:
+      - "./prometheus/data:/prometheus"
+      - "./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+    depends_on:
+      - kotbot
+      - tgpt
+      - repo_kotlin_link
+      - monitoring_node_exporter
+      - monitoring_cadvisor
+      - monitoring_loki
+      - monitoring_promtail
+
+  monitoring_loki:
+    <<: *defaults
+    container_name: "monitoring_loki"
+    image: "grafana/loki:3.5"
+    user: "1000:1000"
+    command: -config.file=/etc/loki/config.yml
+    volumes:
+      - "./loki/data:/loki"
+      - "./loki/config/config.yml:/etc/loki/config.yml:ro"
+
+  monitoring_promtail:
+    <<: *defaults
+    container_name: "monitoring_promtail"
+    image: "grafana/promtail:3.5"
+    user: "0:0"
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - "./promtail/config/config.yml:/etc/promtail/config.yml:ro"
+      - "./promtail/data:/tmp"
+      - "/var/log/journal/:/var/log/journal/:ro"
+      - "/run/log/journal/:/run/log/journal/:ro"
+      - "/etc/machine-id:/etc/machine-id:ro"
+    depends_on:
+      - monitoring_loki
+
+  monitoring_node_exporter:
+    <<: *defaults
+    container_name: "monitoring_node_exporter"
+    image: "prom/node-exporter:v1.9.1"
+    pid: "host"
+    command:
+      - "--path.rootfs=/host"
+      - "--collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/containers/storage/.+)($$|/)"
+    volumes:
+      - "/:/host:ro,rslave"
+
+  monitoring_cadvisor:
+    <<: *defaults
+    container_name: "monitoring_cadvisor"
+    image: "gcr.io/cadvisor/cadvisor:v0.52.1"
+    privileged: true
+    devices:
+      - "/dev/kmsg:/dev/kmsg"
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker:/var/lib/docker:ro"
+      - "/dev/disk:/dev/disk:ro"
+
+  # --------------------------------------------------------------------- ops --
+
+  kodkod:
+    <<: *defaults
+    container_name: "kodkod"
+    image: "ghcr.io/heapy/kodkod:latest"
+    environment:
+      KODKOD_AUTOHEAL_INTERVAL: "10"
+      KODKOD_AUTOHEAL_START_PERIOD: "30"
+      KODKOD_UPDATE_INTERVAL: "3600"
+      KODKOD_UPDATE_CLEANUP: "true"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/etc/localtime:/etc/localtime:ro"
+
+  pgadmin:
+    <<: *defaults
+    container_name: "pgadmin"
+    image: "dpage/pgadmin4:latest"
+    shm_size: "512M"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "foo@bar.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "5432:80"
