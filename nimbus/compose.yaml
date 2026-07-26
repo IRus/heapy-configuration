@@ -1,5 +1,10 @@
+x-journald: &journald
+  logging:
+    driver: "journald"
+
 services:
   mosquitto:
+    <<: *journald
     container_name: "mosquitto"
     restart: "always"
     image: "eclipse-mosquitto:2.1-alpine"
@@ -11,10 +16,11 @@ services:
       - "0.0.0.0:1883:1883"
       - "0.0.0.0:9001:9001"
   zigbee2mqtt:
+    <<: *journald
     container_name: "zigbee2mqtt"
     restart: "always"
     privileged: true
-    image: "koenkk/zigbee2mqtt:2.8.0"
+    image: "koenkk/zigbee2mqtt:2.12.1"
     devices:
       - "/dev/ttyUSB0:/dev/ttyUSB0"
     volumes:
@@ -25,25 +31,28 @@ services:
     environment:
       - "TZ=Europe/Minsk"
   prometheus:
+    <<: *journald
     container_name: "prometheus"
     restart: "always"
-    image: "prom/prometheus:v2.53.1"
+    image: "prom/prometheus:v3.13.1"
     user: "1000:1000"
     volumes:
       - "./prometheus/data:/prometheus"
       - "./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
     network_mode: "host"
   home_assistant:
+    <<: *journald
     container_name: "home_assistant"
     restart: "always"
     privileged: true
-    image: "ghcr.io/home-assistant/home-assistant:2026.2"
+    image: "ghcr.io/home-assistant/home-assistant:2026.7"
     volumes:
       - "./home_assistant:/config"
       - "/etc/localtime:/etc/localtime:ro"
       - "/run/dbus:/run/dbus:ro"
     network_mode: "host"
   matter-server:
+    <<: *journald
     container_name: "matter-server"
     restart: "always"
     image: "ghcr.io/matter-js/matterjs-server:stable"
