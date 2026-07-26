@@ -35,17 +35,23 @@ detectors:
     type: edgetpu
     device: usb
 
+# `detect.enabled` defaults to false since 0.16, so it has to be set
+# explicitly — without it object detection is simply off.
+detect:
+  enabled: true
+
 objects:
   track:
     - person
     - cat
     - dog
 
+# Since 0.17 recording retention is tiered: `continuous` and `motion` are
+# separate top-level fields, they replaced the old `retain: {days, mode}`.
 record:
   enabled: true
-  retain:
-    days: 14
-    mode: all        # всё подряд 7 дней (scrub-back)
+  continuous:
+    days: 14       # всё подряд 14 дней (scrub-back)
   alerts:
     retain:
       days: 60
@@ -134,4 +140,8 @@ cameras:
         person:
           min_score: 0.70
           threshold: 0.80
-version: 0.15-1
+# Config schema version, not the Frigate version. Keep it at the schema the
+# file is actually written for: on startup Frigate migrates anything older and
+# writes the result back over this file, which would otherwise leave the copy
+# in git permanently behind the one on the host.
+version: 0.17-0

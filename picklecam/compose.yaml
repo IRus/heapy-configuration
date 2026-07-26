@@ -1,8 +1,13 @@
+x-journald: &journald
+  logging:
+    driver: "journald"
+
 services:
   ingress:
+    <<: *journald
     container_name: "ingress"
     restart: "always"
-    image: "quay.io/oauth2-proxy/oauth2-proxy:v7.14.2"
+    image: "quay.io/oauth2-proxy/oauth2-proxy:v7.15.3"
     volumes:
       - "./ingress/authenticated-emails:/etc/oauth2-proxy/authenticated-emails"
     ports:
@@ -17,13 +22,15 @@ services:
       OAUTH2_PROXY_REDIRECT_URL: "${OAUTH2_PROXY_REDIRECT_URL}"
       OAUTH2_PROXY_UPSTREAMS: "http://frigate:5000"
     depends_on:
-      - frigate
+      frigate:
+        condition: "service_healthy"
 
   frigate:
+    <<: *journald
     container_name: "frigate"
     restart: "always"
     privileged: true
-    image: "ghcr.io/blakeblackshear/frigate:0.16.4"
+    image: "ghcr.io/blakeblackshear/frigate:0.17.2"
     shm_size: "1gb"
     volumes:
       - "/dev/bus/usb:/dev/bus/usb"
@@ -36,6 +43,8 @@ services:
         tmpfs:
           size: 1000000000
     ports:
+      # 5000 is the plain UI/API — Home Assistant talks to it directly over the
+      # LAN. Remote access goes through `ingress` on 5001 instead.
       - "5000:5000"
       - "8554:8554"
       - "8555:8555/tcp"
