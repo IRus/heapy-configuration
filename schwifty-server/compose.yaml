@@ -29,6 +29,15 @@ x-mariadb-healthcheck: &mariadb-healthcheck
   retries: 5
   start_period: 30s
 
+# Heap is capped at 256m by the *_OPTS below. Measured working set a minute
+# after start: kotbot 307 MiB, tgpt 241 MiB, repo.kotlin.link 100 MiB — the
+# rest is metaspace, code cache, GC structures and thread stacks. 768M leaves
+# room for a full heap without letting a leak take the host down.
+x-jvm-limits: &jvm-limits
+  resources:
+    limits:
+      memory: 768M
+
 x-jvm-healthcheck: &jvm-healthcheck
   test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
   interval: 30s
@@ -263,6 +272,7 @@ services:
     image: "ghcr.io/heapy/repo.kotlin.link:main"
     labels: *autoupdate
     healthcheck: *jvm-healthcheck
+    deploy: *jvm-limits
     environment:
       REPO_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
 
@@ -276,6 +286,7 @@ services:
       - "kodkod.autoheal.enable=true"
       - "kodkod.update.enable=true"
     healthcheck: *jvm-healthcheck
+    deploy: *jvm-limits
     environment:
       KOTBOT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
       KOTBOT_TOKEN: "${KOTBOT_TOKEN}"
@@ -318,6 +329,7 @@ services:
     image: "ghcr.io/heapy/tgpt:main"
     labels: *autoupdate
     healthcheck: *jvm-healthcheck
+    deploy: *jvm-limits
     environment:
       TGPT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
       TGPT_BOT_TOKEN: "${TGPT_BOT_TOKEN}"

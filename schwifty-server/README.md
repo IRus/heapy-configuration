@@ -20,6 +20,29 @@ dtoverlay=disable-wifi
 dtparam=pciex1_gen=3
 ```
 
+## Enable the memory cgroup
+
+Raspberry Pi OS boots with `cgroup_disable=memory`, which the firmware adds on
+its own — it is not written anywhere in `cmdline.txt`. Without the memory
+cgroup, Docker silently ignores every memory limit (`docker info` says
+`WARNING: No memory limit support`) and cAdvisor reports zero for all memory
+metrics, so the memory panels in Grafana stay empty.
+
+Append to the single line in `/boot/firmware/cmdline.txt` — the file must stay
+one line, anything after a newline is ignored:
+
+```
+cgroup_enable=memory cgroup_memory=1
+```
+
+The firmware still passes `cgroup_disable=memory`, both end up on the kernel
+command line and the later one wins. Reboot, then verify:
+
+```
+cat /sys/fs/cgroup/cgroup.controllers   # must list `memory` (this host is cgroup v2)
+docker info | grep -i "memory limit"    # the warning must be gone
+```
+
 ## Monitoring
 
 Grafana configuration is provisioned from git:
