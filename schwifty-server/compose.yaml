@@ -12,11 +12,29 @@ x-defaults: &defaults
 x-autoupdate: &autoupdate
   - "kodkod.update.enable=true"
 
+# POSTGRES_USER / POSTGRES_DB come from the container's own environment, `$$`
+# keeps Compose from interpolating them at parse time.
+x-postgres-healthcheck: &postgres-healthcheck
+  test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+  interval: 10s
+  timeout: 5s
+  retries: 5
+  start_period: 30s
+
+# healthcheck.sh ships with the official mariadb image.
+x-mariadb-healthcheck: &mariadb-healthcheck
+  test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+  interval: 10s
+  timeout: 5s
+  retries: 5
+  start_period: 30s
+
 x-jvm-healthcheck: &jvm-healthcheck
   test: [ "CMD", "curl", "-f", "http://localhost:8080/healthcheck" ]
   interval: 30s
   timeout: 10s
   retries: 3
+  start_period: 20s
 
 networks:
   schwifty:
@@ -126,6 +144,7 @@ services:
     image: "postgres:18.4"
     user: "1000:1000"
     shm_size: "512M"
+    healthcheck: *postgres-healthcheck
     environment:
       POSTGRES_USER: "tinytinyrss"
       POSTGRES_PASSWORD: "HPALUhAY28G4LWDf"
@@ -152,7 +171,8 @@ services:
     volumes:
       - "./ttrss/tt-rss:/var/www/html/tt-rss"
     depends_on:
-      - ttrss_database
+      ttrss_database:
+        condition: "service_healthy"
 
   # docker build -t heapy/ttrss-updater:main -f .docker/app/Dockerfile .
   ttrss_updater:
@@ -216,7 +236,8 @@ services:
       AWESOME__WEB__EXTERNAL__PROTOCOL: "https"
       GH_TOKEN: "${AWESOME__GITHUB__TOKEN}"
     depends_on:
-      - awesome_kotlin_database
+      awesome_kotlin_database:
+        condition: "service_healthy"
 
   # docker exec -it awesome_kotlin_database /usr/bin/pg_dumpall -U awesome_kotlin > awesome_dumpfile
   # docker cp awesome_dumpfile awesome_kotlin_database:/awesome_dumpfile
@@ -227,6 +248,7 @@ services:
     image: "postgres:18.4"
     user: "1000:1000"
     shm_size: "512M"
+    healthcheck: *postgres-healthcheck
     environment:
       POSTGRES_USER: "awesome_kotlin"
       POSTGRES_PASSWORD: "awesome_kotlin"
@@ -253,9 +275,7 @@ services:
     labels:
       - "kodkod.autoheal.enable=true"
       - "kodkod.update.enable=true"
-    healthcheck:
-      <<: *jvm-healthcheck
-      start_period: 20s
+    healthcheck: *jvm-healthcheck
     environment:
       KOTBOT_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
       KOTBOT_TOKEN: "${KOTBOT_TOKEN}"
@@ -271,7 +291,8 @@ services:
       KOTBOT_CAS_FORCE_FLAGGED: "${KOTBOT_CAS_FORCE_FLAGGED}"
       KOTBOT_TEST_USER_ID: "${KOTBOT_TEST_USER_ID}"
     depends_on:
-      - kotbot_database
+      kotbot_database:
+        condition: "service_healthy"
 
   # docker exec -it kotbot_database /usr/bin/pg_dumpall -U kotbot > kotbot_dumpfile
   # docker cp kotbot_dumpfile kotbot_database:/kotbot_dumpfile
@@ -282,6 +303,7 @@ services:
     image: "postgres:18.4"
     user: "1000:1000"
     shm_size: "512M"
+    healthcheck: *postgres-healthcheck
     environment:
       POSTGRES_USER: "kotbot"
       POSTGRES_PASSWORD: "kotbot"
@@ -306,7 +328,8 @@ services:
       TGPT_POSTGRES_HOST: "tgpt_database"
       TGPT_POSTGRES_PORT: "5432"
     depends_on:
-      - tgpt_database
+      tgpt_database:
+        condition: "service_healthy"
 
   # docker exec -it tgpt_database /usr/bin/pg_dumpall -U tgpt > tgpt_dumpfile
   # docker cp tgpt_dumpfile tgpt_database:/tgpt_dumpfile
@@ -317,6 +340,7 @@ services:
     image: "postgres:18.4"
     user: "1000:1000"
     shm_size: "512M"
+    healthcheck: *postgres-healthcheck
     environment:
       POSTGRES_USER: "tgpt"
       POSTGRES_PASSWORD: "tgpt"
@@ -348,15 +372,19 @@ services:
     container_name: "bkug.by"
     image: "wordpress:7.0-php8.5-apache"
     user: "1000:1000"
+    security_opt:
+      - "no-new-privileges:true"
     volumes:
       - "./bkug_by/wordpress:/var/www/html"
     depends_on:
-      - bkug_by_db
+      bkug_by_db:
+        condition: "service_healthy"
 
   bkug_by_db:
     <<: *defaults
     container_name: "bkug.by_db"
     image: "mariadb:11.8"
+    healthcheck: *mariadb-healthcheck
     environment:
       MARIADB_ROOT_PASSWORD: "Eb95FAoyGMLiMXp1xcBPDzCBf0jMnL3EFKTnBZBWaz3ac0pVrS"
       MARIADB_AUTO_UPGRADE: "1"
@@ -376,15 +404,19 @@ services:
     container_name: "streetball.name"
     image: "wordpress:7.0-php8.5-apache"
     user: "1000:1000"
+    security_opt:
+      - "no-new-privileges:true"
     volumes:
       - "./streetball_name/wordpress:/var/www/html"
     depends_on:
-      - streetball_name_db
+      streetball_name_db:
+        condition: "service_healthy"
 
   streetball_name_db:
     <<: *defaults
     container_name: "streetball.name_db"
     image: "mariadb:11.8"
+    healthcheck: *mariadb-healthcheck
     environment:
       MARIADB_ROOT_PASSWORD: "YKmpxXYrAwQOgREv2f9iGXNzyheGVwLlGK8SA1qcvk0S8kOtby"
       MARIADB_AUTO_UPGRADE: "1"
@@ -396,15 +428,19 @@ services:
     container_name: "shop.streetball.name"
     image: "wordpress:7.0-php8.5-apache"
     user: "1000:1000"
+    security_opt:
+      - "no-new-privileges:true"
     volumes:
       - "./shop_streetball_name/wordpress:/var/www/html"
     depends_on:
-      - shop_streetball_name_db
+      shop_streetball_name_db:
+        condition: "service_healthy"
 
   shop_streetball_name_db:
     <<: *defaults
     container_name: "shop.streetball.name_db"
     image: "mariadb:11.8"
+    healthcheck: *mariadb-healthcheck
     environment:
       MARIADB_ROOT_PASSWORD: "7xcDfuvCt4BsNTB1LpDWUleWcc5WxWcyUxcXdo10hEQy2w4VrZ"
       MARIADB_AUTO_UPGRADE: "1"
