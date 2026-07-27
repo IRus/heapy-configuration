@@ -472,7 +472,7 @@ services:
   monitoring_prometheus:
     <<: *defaults
     container_name: "monitoring_prometheus"
-    image: "prom/prometheus:v3.3.1"
+    image: "prom/prometheus:v3.13.1"
     user: "1000:1000"
     volumes:
       - "./prometheus/data:/prometheus"
@@ -489,7 +489,7 @@ services:
   monitoring_loki:
     <<: *defaults
     container_name: "monitoring_loki"
-    image: "grafana/loki:3.5"
+    image: "grafana/loki:3.7.4"
     user: "1000:1000"
     command: -config.file=/etc/loki/config.yml
     volumes:
@@ -514,7 +514,7 @@ services:
   monitoring_node_exporter:
     <<: *defaults
     container_name: "monitoring_node_exporter"
-    image: "prom/node-exporter:v1.9.1"
+    image: "prom/node-exporter:v1.12.1"
     pid: "host"
     command:
       - "--path.rootfs=/host"
@@ -525,7 +525,7 @@ services:
   monitoring_cadvisor:
     <<: *defaults
     container_name: "monitoring_cadvisor"
-    image: "gcr.io/cadvisor/cadvisor:v0.52.1"
+    image: "gcr.io/cadvisor/cadvisor:v0.60.5"
     privileged: true
     devices:
       - "/dev/kmsg:/dev/kmsg"

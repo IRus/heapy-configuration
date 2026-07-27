@@ -11,7 +11,7 @@ datasources:
     jsonData:
       httpMethod: POST
       prometheusType: Prometheus
-      prometheusVersion: 3.3.1
+      prometheusVersion: 3.13.1
       timeInterval: 30s
 
   - name: Loki
