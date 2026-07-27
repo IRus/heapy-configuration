@@ -266,6 +266,10 @@ services:
       KOTBOT_POSTGRES_PORT: "5432"
       KOTBOT_GPT_TOKEN: "${KOTBOT_GPT_TOKEN}"
       KOTBOT_GPT_ORG_ID: "${KOTBOT_GPT_ORG_ID}"
+      # Debug knobs, normally blank. Set them in .env to pin CAS/test behaviour
+      # to a single account without editing this file on the host.
+      KOTBOT_CAS_FORCE_FLAGGED: "${KOTBOT_CAS_FORCE_FLAGGED}"
+      KOTBOT_TEST_USER_ID: "${KOTBOT_TEST_USER_ID}"
     depends_on:
       - kotbot_database
 
