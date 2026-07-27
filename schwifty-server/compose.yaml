@@ -12,6 +12,12 @@ x-defaults: &defaults
 x-autoupdate: &autoupdate
   - "kodkod.update.enable=true"
 
+# Same, plus kodkod restarts the container when its healthcheck goes red.
+# Only for services that have a healthcheck and that nothing else depends on.
+x-autoheal: &autoheal
+  - "kodkod.autoheal.enable=true"
+  - "kodkod.update.enable=true"
+
 # POSTGRES_USER / POSTGRES_DB come from the container's own environment, `$$`
 # keeps Compose from interpolating them at parse time.
 x-postgres-healthcheck: &postgres-healthcheck
@@ -221,7 +227,7 @@ services:
     <<: *defaults
     container_name: "kotlin.link"
     image: "ghcr.io/heapy/awesome-kotlin:main"
-    labels: *autoupdate
+    labels: *autoheal
     healthcheck: *jvm-healthcheck
     deploy: *jvm-limits
     environment:
@@ -272,7 +278,7 @@ services:
     <<: *defaults
     container_name: "repo.kotlin.link"
     image: "ghcr.io/heapy/repo.kotlin.link:main"
-    labels: *autoupdate
+    labels: *autoheal
     healthcheck: *jvm-healthcheck
     deploy: *jvm-limits
     environment:
@@ -284,9 +290,7 @@ services:
     <<: *defaults
     container_name: "kotbot.heapy.io"
     image: "ghcr.io/heapy/kotbot:main"
-    labels:
-      - "kodkod.autoheal.enable=true"
-      - "kodkod.update.enable=true"
+    labels: *autoheal
     healthcheck: *jvm-healthcheck
     deploy: *jvm-limits
     environment:
@@ -329,7 +333,7 @@ services:
     <<: *defaults
     container_name: "tgpt.heapy.io"
     image: "ghcr.io/heapy/tgpt:main"
-    labels: *autoupdate
+    labels: *autoheal
     healthcheck: *jvm-healthcheck
     deploy: *jvm-limits
     environment:
