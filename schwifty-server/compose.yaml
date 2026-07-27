@@ -223,7 +223,9 @@ services:
     image: "ghcr.io/heapy/awesome-kotlin:main"
     labels: *autoupdate
     healthcheck: *jvm-healthcheck
+    deploy: *jvm-limits
     environment:
+      AWESOME_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
       AWESOME__JWT__SECRET: "${AWESOME__JWT__SECRET}"
       AWESOME__GITHUB__CLIENT_ID: "${AWESOME__GITHUB__CLIENT_ID}"
       AWESOME__GITHUB__CLIENT_SECRET: "${AWESOME__GITHUB__CLIENT_SECRET}"
