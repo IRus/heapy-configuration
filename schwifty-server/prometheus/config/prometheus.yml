@@ -35,11 +35,11 @@ scrape_configs:
     static_configs:
       - targets: ["monitoring_loki:3100"]
 
-  - job_name: "promtail"
+  - job_name: "alloy"
     metrics_path: "/metrics"
     scrape_interval: 30s
     static_configs:
-      - targets: ["monitoring_promtail:3200"]
+      - targets: ["monitoring_alloy:12345"]
 
   - job_name: "kotbot"
     metrics_path: "/metrics"

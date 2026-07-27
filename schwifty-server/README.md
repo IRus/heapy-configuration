@@ -26,18 +26,25 @@ Grafana configuration is provisioned from git:
 
 - `grafana/provisioning/datasources/datasources.yml` configures Prometheus and Loki.
 - `grafana/provisioning/dashboards/dashboards.yml` loads dashboards from `grafana/dashboards`.
-- `prometheus/config/prometheus.yml` scrapes applications, Grafana, Loki, Promtail, node exporter, and cAdvisor.
-- `promtail/config/config.yml` ships the systemd journal to Loki. `level` is the
+- `prometheus/config/prometheus.yml` scrapes applications, Grafana, Loki, Alloy, node exporter, and cAdvisor.
+- `alloy/config/config.alloy` ships the systemd journal to Loki. `level` is the
   journal priority (for container logs that means `info` for stdout / `err` for
-  stderr — the stream, not the app level). For container logs Promtail also
+  stderr — the stream, not the app level). For container logs Alloy also
   parses the real level out of the message into `detected_level`, e.g. query
   true application warnings/errors with
   `{container=~".+", detected_level=~"(?i)warn.*|err.*|fatal|panic"}`.
+  It replaced Promtail, which reached end-of-life in March 2026.
 
 Apply monitoring changes with:
 
 ```
-docker compose up -d monitoring_node_exporter monitoring_cadvisor monitoring_prometheus monitoring_loki monitoring_promtail monitoring_grafana
+docker compose up -d monitoring_node_exporter monitoring_cadvisor monitoring_prometheus monitoring_loki monitoring_alloy monitoring_grafana
+```
+
+Check the Alloy config before restarting it:
+
+```
+docker compose run --rm --no-deps monitoring_alloy validate /etc/alloy/config.alloy
 ```
 
 `kotlin_link` is intentionally not scraped until the correct metrics endpoint is configured.

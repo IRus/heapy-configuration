@@ -1,0 +1,67 @@
+// Ported from the Promtail config this replaced (Promtail went EOL in March
+// 2026). https://grafana.com/docs/alloy/latest/reference/components/loki/
+
+// Journal fields are internal (`__journal_*`) and get dropped before the entry
+// is shipped unless a rule copies them onto a real label.
+loki.relabel "journal" {
+  forward_to = []
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+
+  rule {
+    source_labels = ["__journal_syslog_identifier"]
+    target_label  = "syslog_identifier"
+  }
+
+  rule {
+    source_labels = ["__journal_priority_keyword"]
+    target_label  = "level"
+  }
+
+  rule {
+    source_labels = ["__journal_container_name"]
+    target_label  = "container"
+  }
+}
+
+loki.source.journal "schwifty" {
+  forward_to    = [loki.process.container_level.receiver]
+  relabel_rules = loki.relabel.journal.rules
+
+  labels = {
+    job  = "systemd-journal",
+    host = "schwifty-server",
+  }
+}
+
+// Docker's journald driver sets PRIORITY (hence `level`) by stream:
+// stdout -> info, stderr -> err. That is the honest "which stream" value, but
+// it is not the application's real log level. For container logs only, parse
+// the level out of the message and expose it as `detected_level`, leaving
+// `level` untouched. systemd units keep their priority `level`.
+loki.process "container_level" {
+  forward_to = [loki.write.loki.receiver]
+
+  stage.match {
+    selector = "{container=~\".+\"}"
+
+    stage.regex {
+      expression = "(?i)\\b(?P<detected_level>trace|debug|info|warn|warning|error|err|fatal|panic|crit)\\b"
+    }
+
+    stage.labels {
+      values = {
+        detected_level = "",
+      }
+    }
+  }
+}
+
+loki.write "loki" {
+  endpoint {
+    url = "http://monitoring_loki:3100/loki/api/v1/push"
+  }
+}

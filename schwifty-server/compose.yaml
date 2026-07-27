@@ -484,7 +484,7 @@ services:
       - monitoring_node_exporter
       - monitoring_cadvisor
       - monitoring_loki
-      - monitoring_promtail
+      - monitoring_alloy
 
   monitoring_loki:
     <<: *defaults
@@ -496,15 +496,21 @@ services:
       - "./loki/data:/loki"
       - "./loki/config/config.yml:/etc/loki/config.yml:ro"
 
-  monitoring_promtail:
+  # Replaced Promtail, which reached end-of-life in March 2026.
+  monitoring_alloy:
     <<: *defaults
-    container_name: "monitoring_promtail"
-    image: "grafana/promtail:3.5"
+    container_name: "monitoring_alloy"
+    image: "grafana/alloy:v1.18.0"
     user: "0:0"
-    command: -config.file=/etc/promtail/config.yml
+    command:
+      - "run"
+      - "--server.http.listen-addr=0.0.0.0:12345"
+      - "--storage.path=/var/lib/alloy/data"
+      - "--disable-reporting"
+      - "/etc/alloy/config.alloy"
     volumes:
-      - "./promtail/config/config.yml:/etc/promtail/config.yml:ro"
-      - "./promtail/data:/tmp"
+      - "./alloy/config/config.alloy:/etc/alloy/config.alloy:ro"
+      - "./alloy/data:/var/lib/alloy/data"
       - "/var/log/journal/:/var/log/journal/:ro"
       - "/run/log/journal/:/run/log/journal/:ro"
       - "/etc/machine-id:/etc/machine-id:ro"

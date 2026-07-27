@@ -320,7 +320,7 @@
             "uid": "b51a4801-2755-4a88-a500-273918d59f34"
           },
           "editorMode": "code",
-          "expr": "sum(rate(promtail_dropped_entries_total{job=\"promtail\"}[$__rate_interval])) or vector(0)",
+          "expr": "sum(rate(loki_write_dropped_entries_total{job=\"alloy\"}[$__rate_interval])) or vector(0)",
           "instant": false,
           "legendFormat": "dropped",
           "range": true,
@@ -709,9 +709,9 @@
             "uid": "b51a4801-2755-4a88-a500-273918d59f34"
           },
           "editorMode": "code",
-          "expr": "sum(rate(promtail_read_bytes_total{job=\"promtail\"}[$__rate_interval])) or vector(0)",
+          "expr": "sum(rate(loki_write_sent_bytes_total{job=\"alloy\"}[$__rate_interval])) or vector(0)",
           "instant": false,
-          "legendFormat": "read",
+          "legendFormat": "sent",
           "range": true,
           "refId": "A"
         },
@@ -721,14 +721,14 @@
             "uid": "b51a4801-2755-4a88-a500-273918d59f34"
           },
           "editorMode": "code",
-          "expr": "sum(rate(promtail_sent_bytes_total{job=\"promtail\"}[$__rate_interval])) or vector(0)",
+          "expr": "sum(rate(loki_write_dropped_bytes_total{job=\"alloy\"}[$__rate_interval])) or vector(0)",
           "instant": false,
-          "legendFormat": "sent",
+          "legendFormat": "dropped",
           "range": true,
           "refId": "B"
         }
       ],
-      "title": "Promtail Throughput",
+      "title": "Alloy Throughput",
       "type": "timeseries"
     },
     {
