@@ -83,6 +83,7 @@ services:
       - tg_spam
       - kotrol_heapy_io
       - heapy_io_kinetica_docs
+      - paris_heapyhop_com
 
   # --------------------------------------------------------------- heapy.io --
 
@@ -120,6 +121,14 @@ services:
     <<: *defaults
     container_name: "kotrol.heapy.io"
     image: "ghcr.io/irus/kotrol:main"
+    labels: *autoupdate
+
+  # --------------------------------------------------------- heapyhop.com --
+
+  paris_heapyhop_com:
+    <<: *defaults
+    container_name: "paris.heapyhop.com"
+    image: "ghcr.io/irus/flaneur:main"
     labels: *autoupdate
 
   # ------------------------------------------------------------ ibragimov.by --
