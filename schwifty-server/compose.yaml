@@ -84,6 +84,7 @@ services:
       - kotrol_heapy_io
       - heapy_io_kinetica_docs
       - paris_heapyhop_com
+      - sql_heapyhop_com
 
   # --------------------------------------------------------------- heapy.io --
 
@@ -130,6 +131,44 @@ services:
     container_name: "paris.heapyhop.com"
     image: "ghcr.io/irus/flaneur:main"
     labels: *autoupdate
+
+  sql_heapyhop_com:
+    <<: *defaults
+    container_name: "sql.heapyhop.com"
+    image: "ghcr.io/irus/sql-nastya:main"
+    labels: *autoheal
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "3000"
+      DATABASE_URL: "postgres://sql_nastya:sql_nastya@sql_heapyhop_com_database:5432/sql_nastya"
+    depends_on:
+      sql_heapyhop_com_database:
+        condition: "service_healthy"
+
+  # The trainer connects as the unprivileged `sql_nastya` role, which init.sql
+  # creates on first start along with the read-only `archive` schema one lesson
+  # needs. Everything a student writes lands in per-session temporary tables.
+  sql_heapyhop_com_database:
+    <<: *defaults
+    container_name: "sql.heapyhop.com_database"
+    image: "postgres:18.4"
+    user: "1000:1000"
+    shm_size: "512M"
+    healthcheck: *postgres-healthcheck
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "sql_nastya"
+    volumes:
+      - "./sql_heapyhop_com/pgdata:/var/lib/postgresql"
+      - "./sql_heapyhop_com/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro"
+      - "/etc/passwd:/etc/passwd:ro"
 
   # ------------------------------------------------------------ ibragimov.by --
 
