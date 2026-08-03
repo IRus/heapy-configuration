@@ -147,6 +147,10 @@ services:
       HOST: "0.0.0.0"
       PORT: "3000"
       DATABASE_URL: "postgres://sql_nastya:sql_nastya@sql_heapyhop_com_database:5432/sql_nastya"
+      # Прогресс синхронизируется между устройствами и живёт в схеме app под
+      # отдельной ролью — роль ученика её не видит. Ученика опознаёт Access
+      # по заголовку, который добавляет cloudflared.
+      PROGRESS_DATABASE_URL: "postgres://sql_nastya_app:sql_nastya_app@sql_heapyhop_com_database:5432/sql_nastya"
     depends_on:
       sql_heapyhop_com_database:
         condition: "service_healthy"
@@ -168,6 +172,7 @@ services:
     volumes:
       - "./sql_heapyhop_com/pgdata:/var/lib/postgresql"
       - "./sql_heapyhop_com/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro"
+      - "./sql_heapyhop_com/progress.sql:/docker-entrypoint-initdb.d/02-progress.sql:ro"
       - "/etc/passwd:/etc/passwd:ro"
 
   # ------------------------------------------------------------ ibragimov.by --
