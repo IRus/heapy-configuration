@@ -151,6 +151,12 @@ services:
       # отдельной ролью — роль ученика её не видит. Ученика опознаёт Access
       # по заголовку, который добавляет cloudflared.
       PROGRESS_DATABASE_URL: "postgres://sql_nastya_app:sql_nastya_app@sql_heapyhop_com_database:5432/sql_nastya"
+      # Смысловая проверка решения моделью через kotlm. Зависимости в depends_on
+      # намеренно нет: проверка задумана fail-open, и недоступный прокси не должен
+      # мешать ученику — задание просто засчитывается по совпадению данных.
+      LLM_BASE_URL: "http://kotlm:8080/v1"
+      LLM_API_KEY: "${SQL_NASTYA_KOTLM_KEY}"
+      LLM_MODEL: "${SQL_NASTYA_LLM_MODEL:-gpt-5.6}"
     depends_on:
       sql_heapyhop_com_database:
         condition: "service_healthy"
@@ -628,6 +634,44 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/localtime:/etc/localtime:ro"
+
+  # Единственный держатель сессии Codex. Подписка — это OAuth, а не ключ:
+  # refresh-токен поворачивается при каждом обновлении, поэтому вторая копия
+  # тех же токенов рано или поздно разлогинит первую. Проекты ходят сюда по
+  # своим ключам через OpenAI-совместимый API; наружу порт не публикуется.
+  #
+  #   kotlm/secrets/clients.json    ключи и лимиты проектов (см. clients.example.json)
+  #   kotlm/secrets/codex_auth.json первичные токены, дальше состояние живёт в kotlm/state
+  #
+  # Оба каталога должны принадлежать pi (1000:1000): состояние прокси пишет сам,
+  # и повёрнутый refresh-токен обязан пережить рестарт.
+  #
+  # Вход прямо на сервере, без копирования файла:
+  #   curl -sX POST -H "Authorization: Bearer $$KOTLM_ADMIN_KEY" http://127.0.0.1:8080/auth/device/start
+  # открыть выданную ссылку, ввести код, затем опросить /auth/device/poll.
+  kotlm:
+    <<: *defaults
+    container_name: "kotlm"
+    image: "ghcr.io/heapy/kotlm:main"
+    # autoheal смотрит на /live, а не на /health: подписка без токенов — повод
+    # разобраться, но не повод перезапускать контейнер по кругу.
+    labels: *autoheal
+    user: "1000:1000"
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://127.0.0.1:8080/live" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    environment:
+      KOTLM_AUTH_FILE: "/secrets/codex_auth.json"
+      KOTLM_CLIENTS_FILE: "/secrets/clients.json"
+      KOTLM_STATE_DIR: "/var/lib/kotlm"
+      KOTLM_ADMIN_KEY: "${KOTLM_ADMIN_KEY}"
+      KOTLM_ALLOWED_MODELS: "${KOTLM_ALLOWED_MODELS:-gpt-5.6}"
+    volumes:
+      - "./kotlm/secrets:/secrets:ro"
+      - "./kotlm/state:/var/lib/kotlm"
 
   pgadmin:
     <<: *defaults
