@@ -156,7 +156,7 @@ services:
       # мешать ученику — задание просто засчитывается по совпадению данных.
       LLM_BASE_URL: "http://kotlm:8080/v1"
       LLM_API_KEY: "${SQL_NASTYA_KOTLM_KEY}"
-      LLM_MODEL: "${SQL_NASTYA_LLM_MODEL:-gpt-5.6}"
+      LLM_MODEL: "${SQL_NASTYA_LLM_MODEL:-gpt-5.6-sol}"
     depends_on:
       sql_heapyhop_com_database:
         condition: "service_healthy"
@@ -668,7 +668,7 @@ services:
       KOTLM_CLIENTS_FILE: "/secrets/clients.json"
       KOTLM_STATE_DIR: "/var/lib/kotlm"
       KOTLM_ADMIN_KEY: "${KOTLM_ADMIN_KEY}"
-      KOTLM_ALLOWED_MODELS: "${KOTLM_ALLOWED_MODELS:-gpt-5.6}"
+      KOTLM_ALLOWED_MODELS: "${KOTLM_ALLOWED_MODELS:-gpt-5.6-sol}"
     volumes:
       - "./kotlm/secrets:/secrets:ro"
       - "./kotlm/state:/var/lib/kotlm"
