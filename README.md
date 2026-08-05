@@ -3,3 +3,4 @@
 3. `nimbus` - L, raspberry pi with mqtt, z2m and home assistant
 4. `morty` - S, raspberry pi with mqtt, z2m and home assistant
 5. `picklecam` - S, old desktop with frigate
+6. `meeseekscam` - D+N, frigate in Kolodishchi

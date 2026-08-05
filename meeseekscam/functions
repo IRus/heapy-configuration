@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# Install script
+# source /home/meeseekscam/heapy-configuration/meeseekscam/functions
+
+PROJECT="/home/meeseekscam/heapy-configuration/meeseekscam";
+
+function hh_system_update() {
+  echo "[📦] Update packages"
+  sudo apt update
+  sudo apt list --upgradable
+  sudo apt dist-upgrade -y
+  sudo apt autoremove -y
+  sudo apt autoclean
+  sudo apt clean
+}
+
+function hh_cloudflare_update() {
+    sudo cloudflared version
+    sudo cloudflared update
+    sudo cloudflared version
+}
+
+function hh_pull_docker_images() {
+  echo "[🆕] Pull latest images"
+  docker pull ghcr.io/blakeblackshear/frigate:0.17.2
+  docker pull quay.io/oauth2-proxy/oauth2-proxy:v7.15.3
+}
+
+function hh_compose_up() {
+  echo "[🌈] Update containers"
+  cd "${PROJECT}" || exit 1
+  docker compose up -d
+}
+
+function hh_prune_docker_images() {
+  echo "[🧹] Remove unused images";
+  docker system prune -f;
+}
+
+function hh_update() {
+  hh_system_update;
+  hh_pull_docker_images;
+  hh_compose_up;
+  hh_prune_docker_images;
+}
+
+function home() {
+  cd $PROJECT || exit 1
+}
+
+case "$1" in
+  hh_update_docker)
+    hh_pull_docker_images;
+    hh_compose_up;
+    ;;
+  *)
+    ;;
+esac

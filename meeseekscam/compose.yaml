@@ -1,0 +1,54 @@
+x-journald: &journald
+  logging:
+    driver: "journald"
+
+services:
+  ingress:
+    <<: *journald
+    container_name: "ingress"
+    restart: "always"
+    image: "quay.io/oauth2-proxy/oauth2-proxy:v7.15.3"
+    volumes:
+      - "./ingress/authenticated-emails:/etc/oauth2-proxy/authenticated-emails"
+    ports:
+      - "5001:4180"
+    environment:
+      OAUTH2_PROXY_PROVIDER: "google"
+      OAUTH2_PROXY_CLIENT_ID: "${OAUTH2_PROXY_CLIENT_ID}"
+      OAUTH2_PROXY_CLIENT_SECRET: "${OAUTH2_PROXY_CLIENT_SECRET}"
+      OAUTH2_PROXY_COOKIE_SECRET: "${OAUTH2_PROXY_COOKIE_SECRET}"
+      OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE: "/etc/oauth2-proxy/authenticated-emails"
+      OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
+      OAUTH2_PROXY_REDIRECT_URL: "${OAUTH2_PROXY_REDIRECT_URL}"
+      OAUTH2_PROXY_UPSTREAMS: "http://frigate:5000"
+    depends_on:
+      frigate:
+        condition: "service_healthy"
+
+  frigate:
+    <<: *journald
+    container_name: "frigate"
+    restart: "always"
+    privileged: true
+    image: "ghcr.io/blakeblackshear/frigate:0.17.2"
+    shm_size: "1gb"
+    volumes:
+      - "/dev/bus/usb:/dev/bus/usb"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./frigate/config:/config"
+      - "./frigate/storage:/media/frigate"
+      - "/dev/dri/renderD128:/dev/dri/renderD128"
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    ports:
+      # 5000 is the plain UI/API for LAN access. Remote access goes through
+      # `ingress` on 5001 instead.
+      - "5000:5000"
+      - "8554:8554"
+      - "8555:8555/tcp"
+      - "8555:8555/udp"
+    environment:
+      LIBVA_DRIVER_NAME: "i965"
+      FRIGATE_CAM1_PASSWORD: "${FRIGATE_CAM1_PASSWORD}"
