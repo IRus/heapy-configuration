@@ -35,7 +35,7 @@ binary: rclone
 ### lazydocker
 
 ```
-wget https://github.com/jesseduffield/lazydocker/releases/download/v0.24.4/lazydocker_0.24.4_Linux_arm64.tar.gz --output-document lazydocker.tar.gz
+wget https://github.com/jesseduffield/lazydocker/releases/download/v0.25.2/lazydocker_0.25.2_Linux_arm64.tar.gz --output-document lazydocker.tar.gz
 tar xzvf lazydocker.tar.gz lazydocker
 sudo mv lazydocker /usr/bin/lazydocker
 rm lazydocker.tar.gz
@@ -44,7 +44,7 @@ rm lazydocker.tar.gz
 ### cloudflared
 
 ```
-wget https://github.com/cloudflare/cloudflared/releases/download/2024.4.1/cloudflared-linux-arm64 --output-document cloudflared
+wget https://github.com/cloudflare/cloudflared/releases/download/2026.7.3/cloudflared-linux-arm64 --output-document cloudflared
 sudo mv cloudflared /usr/bin/cloudflared
 sudo chmod u+x /usr/bin/cloudflared
 ```
