@@ -16,9 +16,9 @@ function hh_system_update() {
 }
 
 function hh_cloudflare_update() {
-    sudo cloudflared version
-    sudo cloudflared update
-    sudo cloudflared version
+  sudo cloudflared version
+  sudo cloudflared update
+  sudo cloudflared version
 }
 
 function hh_pull_docker_images() {
