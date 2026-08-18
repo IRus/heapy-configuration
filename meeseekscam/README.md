@@ -4,7 +4,16 @@
 
 ```
 nano .ssh/authorized_keys # add key
-sudo nano /etc/ssh/sshd_config # disable password login
+
+# disable password login
+sudo tee /etc/ssh/sshd_config.d/10-hardening.conf > /dev/null <<'EOF'
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin prohibit-password
+PubkeyAuthentication yes
+EOF
+
+sudo sshd -t && sudo systemctl reload ssh
 ```
 
 ## Packages
@@ -28,7 +37,7 @@ rm lazydocker.tar.gz
 ### cloudflared
 
 ```
-wget https://github.com/cloudflare/cloudflared/releases/download/2026.7.3/cloudflared-linux-amd64
+wget https://github.com/cloudflare/cloudflared/releases/download/2026.8.2/cloudflared-linux-amd64
 sudo mv cloudflared-linux-amd64 /usr/bin/cloudflared
 sudo chmod u+x /usr/bin/cloudflared
 ```
@@ -36,7 +45,7 @@ sudo chmod u+x /usr/bin/cloudflared
 ### docker
 
 ```
-https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+https://docs.docker.com/engine/install/debian/#install-using-the-repository
 sudo usermod -aG docker $USER
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
