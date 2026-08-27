@@ -43,6 +43,34 @@ cat /sys/fs/cgroup/cgroup.controllers   # must list `memory` (this host is cgrou
 docker info | grep -i "memory limit"    # the warning must be gone
 ```
 
+## Tailscale serve (kotlm in the tailnet)
+
+`kotlm` is the only service published outside this host, and only inside the
+tailnet — there is no funnel, so nothing is reachable from the public internet.
+Clients on other machines use it, for example `visa-spain` on `claws`, which
+sets `KOTLM_BASE_URL=https://schwifty-server.tail872780.ts.net`.
+
+The chain is: tailnet HTTPS on :443 -> `127.0.0.1:8080` -> the `ports:` binding
+of the `kotlm` service in `compose.yaml`. Drop that binding and every off-host
+client stops working; services inside this compose file are unaffected, they
+reach the proxy as `kotlm:8080`.
+
+Tailscale keeps this config in `/var/lib/tailscale/tailscaled.state`, which is
+not in git. On a new host, recreate it after the node has joined the tailnet:
+
+```
+sudo tailscale serve --bg --https=443 http://127.0.0.1:8080
+```
+
+Verify, and clear it if it ever needs rebuilding:
+
+```
+tailscale serve status                  # must show / proxy http://127.0.0.1:8080
+tailscale serve status --json           # the full handler map
+curl -s https://<node>.<tailnet>.ts.net/live   # must answer OK
+sudo tailscale serve reset              # removes every handler on this node
+```
+
 ## Monitoring
 
 Grafana configuration is provisioned from git:
@@ -57,6 +85,11 @@ Grafana configuration is provisioned from git:
   true application warnings/errors with
   `{container=~".+", detected_level=~"(?i)warn.*|err.*|fatal|panic"}`.
   It replaced Promtail, which reached end-of-life in March 2026.
+- `grafana/dashboards/kotlm.json` (folder Monitoring, uid `kotlm-proxy`) shows the
+  kotlm proxy: requests and tokens per client, why requests were refused
+  (`rate_limited` is the per-minute cap, `budget_exhausted` the daily token
+  budget from `kotlm/secrets/clients.json`), upstream errors, and failures to
+  persist the session state.
 
 Apply monitoring changes with:
 

@@ -5,6 +5,12 @@
       "key": "put-a-long-random-string-here",
       "requestsPerMinute": 30,
       "dailyTokens": 300000
+    },
+    {
+      "name": "visa-spain",
+      "key": "put-a-long-random-string-here",
+      "requestsPerMinute": 60,
+      "dailyTokens": 10000000
     }
   ]
 }

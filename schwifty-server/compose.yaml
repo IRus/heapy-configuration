@@ -638,7 +638,8 @@ services:
   # Единственный держатель сессии Codex. Подписка — это OAuth, а не ключ:
   # refresh-токен поворачивается при каждом обновлении, поэтому вторая копия
   # тех же токенов рано или поздно разлогинит первую. Проекты ходят сюда по
-  # своим ключам через OpenAI-совместимый API; наружу порт не публикуется.
+  # своим ключам через OpenAI-совместимый API. Соседи по compose обращаются по
+  # имени kotlm:8080, клиенты с других машин — через tailscale serve, см. README.
   #
   #   kotlm/secrets/clients.json    ключи и лимиты проектов (см. clients.example.json)
   #   kotlm/secrets/codex_auth.json первичные токены, дальше состояние живёт в kotlm/state
@@ -668,7 +669,12 @@ services:
       KOTLM_CLIENTS_FILE: "/secrets/clients.json"
       KOTLM_STATE_DIR: "/var/lib/kotlm"
       KOTLM_ADMIN_KEY: "${KOTLM_ADMIN_KEY}"
-      KOTLM_ALLOWED_MODELS: "${KOTLM_ALLOWED_MODELS:-gpt-5.6-sol}"
+      KOTLM_ALLOWED_MODELS: "${KOTLM_ALLOWED_MODELS:-gpt-5.6-sol,gpt-5.6-luna}"
+    # Порт слушает только петлевой адрес: снаружи в него ходит tailscale serve,
+    # который отдаёт прокси в tailnet. Убрать проброс — отвалятся клиенты
+    # с других машин, например visa-spain на claws.
+    ports:
+      - "127.0.0.1:8080:8080"
     volumes:
       - "./kotlm/secrets:/secrets:ro"
       - "./kotlm/state:/var/lib/kotlm"
