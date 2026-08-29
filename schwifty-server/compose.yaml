@@ -85,6 +85,7 @@ services:
       - heapy_io_kinetica_docs
       - paris_heapyhop_com
       - sql_heapyhop_com
+      - reachable_heapyhop_com
 
   # --------------------------------------------------------------- heapy.io --
 
@@ -180,6 +181,20 @@ services:
       - "./sql_heapyhop_com/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro"
       - "./sql_heapyhop_com/progress.sql:/docker-entrypoint-initdb.d/02-progress.sql:ro"
       - "/etc/passwd:/etc/passwd:ro"
+
+  # Карта пешей доступности. Статика за nginx, который заодно проксирует /ors/
+  # в OpenRouteService и сам подставляет ключ: в браузер ключ не попадает.
+  # NGINX_ENVSUBST_FILTER нужен, потому что образ nginx прогоняет шаблон конфига
+  # через envsubst; фильтр не даёт посторонней переменной окружения подменить
+  # что-то в конфиге.
+  reachable_heapyhop_com:
+    <<: *defaults
+    container_name: "reachable.heapyhop.com"
+    image: "ghcr.io/irus/reachable:main"
+    labels: *autoupdate
+    environment:
+      ORS_API_KEY: "${REACHABLE_ORS_API_KEY}"
+      NGINX_ENVSUBST_FILTER: "^ORS_"
 
   # ------------------------------------------------------------ ibragimov.by --
 
