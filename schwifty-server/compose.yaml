@@ -182,19 +182,16 @@ services:
       - "./sql_heapyhop_com/progress.sql:/docker-entrypoint-initdb.d/02-progress.sql:ro"
       - "/etc/passwd:/etc/passwd:ro"
 
-  # Карта пешей доступности. Статика за nginx, который заодно проксирует /ors/
-  # в OpenRouteService и сам подставляет ключ: в браузер ключ не попадает.
-  # NGINX_ENVSUBST_FILTER нужен, потому что образ nginx прогоняет шаблон конфига
-  # через envsubst; фильтр не даёт посторонней переменной окружения подменить
-  # что-то в конфиге.
+  # Карта пешей доступности. Статика за nginx, который заодно проксирует /iso/
+  # в публичный Valhalla от FOSSGIS. Ключа этот сервис не требует, поэтому и
+  # секретов у сервиса нет; прокси нужен, чтобы запрос оставался на том же
+  # origin и чтобы ограничить частоту обращений к бесплатному серверу.
+  # OpenRouteService здесь не годится: провайдер режет до него TLS.
   reachable_heapyhop_com:
     <<: *defaults
     container_name: "reachable.heapyhop.com"
     image: "ghcr.io/irus/reachable:main"
     labels: *autoupdate
-    environment:
-      ORS_API_KEY: "${REACHABLE_ORS_API_KEY}"
-      NGINX_ENVSUBST_FILTER: "^ORS_"
 
   # ------------------------------------------------------------ ibragimov.by --
 
