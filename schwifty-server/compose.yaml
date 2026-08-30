@@ -56,6 +56,17 @@ networks:
     name: schwifty
     driver: bridge
 
+  # Путь до api.openrouteservice.org не пропускает пакеты больше ~1420 байт, а
+  # Path MTU Discovery на нём сломан: TCP-порт открывается, TLS-рукопожатие
+  # доходит до сертификата и встаёт до таймаута. Выглядит как блокировка, но
+  # это она и есть — чёрная дыра MTU. Отдельная сеть с MTU 1400 лечит это, не
+  # трогая остальные сервисы; её использует только reachable.heapyhop.com.
+  ors_egress:
+    name: ors_egress
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
+
 services:
 
   # ---------------------------------------------------------------- ingress --
@@ -182,16 +193,30 @@ services:
       - "./sql_heapyhop_com/progress.sql:/docker-entrypoint-initdb.d/02-progress.sql:ro"
       - "/etc/passwd:/etc/passwd:ro"
 
-  # Карта пешей доступности. Статика за nginx, который заодно проксирует /iso/
-  # в публичный Valhalla от FOSSGIS. Ключа этот сервис не требует, поэтому и
-  # секретов у сервиса нет; прокси нужен, чтобы запрос оставался на том же
-  # origin и чтобы ограничить частоту обращений к бесплатному серверу.
-  # OpenRouteService здесь не годится: провайдер режет до него TLS.
+  # Карта пешей доступности. Статика за nginx, который заодно проксирует /ors/
+  # в OpenRouteService и сам подставляет ключ: в браузер ключ не попадает.
+  # NGINX_ENVSUBST_FILTER нужен, потому что образ nginx прогоняет шаблон конфига
+  # через envsubst; фильтр не даёт посторонней переменной окружения подменить
+  # что-то в конфиге.
+  #
+  # Networks здесь переопределяет список из *defaults, а не дополняет его,
+  # поэтому schwifty указан явно — без него cloudflared не найдёт контейнер.
+  # ors_egress стоит с большим priority: Docker подключает такую сеть первой, и
+  # маршрут по умолчанию идёт через неё, то есть наружу контейнер выходит с
+  # MTU 1400. Иначе запросы к ORS висят до таймаута, см. комментарий у сети.
   reachable_heapyhop_com:
     <<: *defaults
     container_name: "reachable.heapyhop.com"
     image: "ghcr.io/irus/reachable:main"
     labels: *autoupdate
+    networks:
+      ors_egress:
+        priority: 100
+      schwifty:
+        priority: 0
+    environment:
+      ORS_API_KEY: "${REACHABLE_ORS_API_KEY}"
+      NGINX_ENVSUBST_FILTER: "^ORS_"
 
   # ------------------------------------------------------------ ibragimov.by --
 
