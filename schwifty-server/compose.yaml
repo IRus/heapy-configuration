@@ -158,11 +158,11 @@ services:
     environment:
       HOST: "0.0.0.0"
       PORT: "3000"
-      DATABASE_URL: "postgres://sql_nastya:sql_nastya@sql_heapyhop_com_database:5432/sql_nastya"
+      DATABASE_URL: "postgres://sql_trainer:sql_trainer@sql_heapyhop_com_database:5432/sql_trainer"
       # Прогресс синхронизируется между устройствами и живёт в схеме app под
       # отдельной ролью — роль ученика её не видит. Ученика опознаёт Access
       # по заголовку, который добавляет cloudflared.
-      PROGRESS_DATABASE_URL: "postgres://sql_nastya_app:sql_nastya_app@sql_heapyhop_com_database:5432/sql_nastya"
+      PROGRESS_DATABASE_URL: "postgres://sql_trainer_app:sql_trainer_app@sql_heapyhop_com_database:5432/sql_trainer"
       # Смысловая проверка решения моделью через kotlm. Зависимости в depends_on
       # намеренно нет: проверка задумана fail-open, и недоступный прокси не должен
       # мешать ученику — задание просто засчитывается по совпадению данных.
@@ -173,7 +173,7 @@ services:
       sql_heapyhop_com_database:
         condition: "service_healthy"
 
-  # The trainer connects as the unprivileged `sql_nastya` role, which init.sql
+  # The trainer connects as the unprivileged `sql_trainer` role, which init.sql
   # creates on first start along with the read-only `archive` schema one lesson
   # needs. Everything a student writes lands in per-session temporary tables.
   sql_heapyhop_com_database:
@@ -186,7 +186,7 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
-      POSTGRES_DB: "sql_nastya"
+      POSTGRES_DB: "sql_trainer"
     volumes:
       - "./sql_heapyhop_com/pgdata:/var/lib/postgresql"
       - "./sql_heapyhop_com/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro"

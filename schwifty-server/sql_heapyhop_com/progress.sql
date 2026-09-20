@@ -5,15 +5,15 @@
 -- же можно применить к работающей базе, где схемы app ещё нет:
 --   psql "$DATABASE_URL" -f docker/progress.sql
 --
--- Роль ученика sql_nastya прав на схему app не получает: иначе прогресс
+-- Роль ученика sql_trainer прав на схему app не получает: иначе прогресс
 -- остальных читался бы обычным SELECT прямо из урока.
 
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'sql_nastya_app') THEN
-    CREATE ROLE sql_nastya_app
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'sql_trainer_app') THEN
+    CREATE ROLE sql_trainer_app
       LOGIN
-      PASSWORD 'sql_nastya_app'
+      PASSWORD 'sql_trainer_app'
       NOSUPERUSER
       NOCREATEDB
       NOCREATEROLE
@@ -37,6 +37,6 @@ CREATE TABLE IF NOT EXISTS app.progress (
 REVOKE ALL ON SCHEMA app FROM PUBLIC;
 REVOKE ALL ON app.progress FROM PUBLIC;
 
-GRANT CONNECT ON DATABASE sql_nastya TO sql_nastya_app;
-GRANT USAGE ON SCHEMA app TO sql_nastya_app;
-GRANT SELECT, INSERT, UPDATE, DELETE ON app.progress TO sql_nastya_app;
+GRANT CONNECT ON DATABASE sql_trainer TO sql_trainer_app;
+GRANT USAGE ON SCHEMA app TO sql_trainer_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON app.progress TO sql_trainer_app;

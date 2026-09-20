@@ -4,19 +4,19 @@
 
 -- Роль приложения намеренно не владеет базой и не может создавать постоянные
 -- объекты. Учебные запросы работают только с временными таблицами сессии.
-CREATE ROLE sql_nastya
+CREATE ROLE sql_trainer
   LOGIN
-  PASSWORD 'sql_nastya'
+  PASSWORD 'sql_trainer'
   NOSUPERUSER
   NOCREATEDB
   NOCREATEROLE
   NOINHERIT;
 
-REVOKE ALL ON DATABASE sql_nastya FROM PUBLIC;
-GRANT CONNECT, TEMPORARY ON DATABASE sql_nastya TO sql_nastya;
+REVOKE ALL ON DATABASE sql_trainer FROM PUBLIC;
+GRANT CONNECT, TEMPORARY ON DATABASE sql_trainer TO sql_trainer;
 
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
-GRANT USAGE ON SCHEMA public TO sql_nastya;
+GRANT USAGE ON SCHEMA public TO sql_trainer;
 
 -- Небольшая постоянная read-only схема для урока о полных именах таблиц.
 -- Временная учебная схема тоже содержит customers, поэтому ученик должен
@@ -38,5 +38,5 @@ INSERT INTO archive.customers (id, name, city, email, registered_at) VALUES
 
 REVOKE ALL ON SCHEMA archive FROM PUBLIC;
 REVOKE ALL ON archive.customers FROM PUBLIC;
-GRANT USAGE ON SCHEMA archive TO sql_nastya;
-GRANT SELECT ON archive.customers TO sql_nastya;
+GRANT USAGE ON SCHEMA archive TO sql_trainer;
+GRANT SELECT ON archive.customers TO sql_trainer;
