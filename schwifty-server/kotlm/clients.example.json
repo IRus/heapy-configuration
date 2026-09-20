@@ -1,7 +1,7 @@
 {
   "clients": [
     {
-      "name": "sql-nastya",
+      "name": "sql-trainer",
       "key": "put-a-long-random-string-here",
       "requestsPerMinute": 30,
       "dailyTokens": 300000

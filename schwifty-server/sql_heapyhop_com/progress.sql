@@ -1,4 +1,4 @@
--- Copied from https://github.com/IRus/sql-nastya (docker/progress.sql), which stays the source of truth.
+-- Copied from https://github.com/IRus/sql-trainer (docker/progress.sql), which stays the source of truth.
 -- Синхронизация прогресса между устройствами.
 --
 -- Файл идемпотентен: PostgreSQL выполняет его при создании пустой базы, и его

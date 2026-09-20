@@ -574,7 +574,7 @@
         "type": "prometheus",
         "uid": "b51a4801-2755-4a88-a500-273918d59f34"
       },
-      "description": "Токены за скользящие 24 часа по каждому клиенту. Сравнивайте с dailyTokens из kotlm/secrets/clients.json: sql-nastya 300000, visa-spain 1000000.",
+      "description": "Токены за скользящие 24 часа по каждому клиенту. Сравнивайте с dailyTokens из kotlm/secrets/clients.json: sql-trainer 300000, visa-spain 1000000.",
       "fieldConfig": {
         "defaults": {
           "color": {

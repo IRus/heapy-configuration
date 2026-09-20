@@ -1,4 +1,4 @@
--- Copied from https://github.com/IRus/sql-nastya (docker/init.sql), which stays
+-- Copied from https://github.com/IRus/sql-trainer (docker/init.sql), which stays
 -- the source of truth. Postgres runs it once, when pgdata is still empty, so
 -- changes here only take effect on a fresh database.
 
