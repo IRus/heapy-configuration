@@ -97,6 +97,7 @@ services:
       - paris_heapyhop_com
       - sql_heapyhop_com
       - reachable_heapyhop_com
+      - cards_heapyhop_com
 
   # --------------------------------------------------------------- heapy.io --
 
@@ -217,6 +218,32 @@ services:
     environment:
       ORS_API_KEY: "${REACHABLE_ORS_API_KEY}"
       NGINX_ENVSUBST_FILTER: "^ORS_"
+
+  cards_heapyhop_com:
+    <<: *defaults
+    container_name: "cards.heapyhop.com"
+    image: "ghcr.io/irus/kotland:main"
+    labels: *autoheal
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://127.0.0.1:8080/healthz" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy: *jvm-limits
+    environment:
+      APP_OPTS: "-Xmx256m -XX:+UseShenandoahGC"
+      DB_PATH: "/data/db/app.sqlite"
+      MEDIA_ROOT: "/data/library/media"
+      GOOGLE_CLIENT_ID: "${CARDS_GOOGLE_CLIENT_ID}"
+      GOOGLE_CLIENT_SECRET: "${CARDS_GOOGLE_CLIENT_SECRET}"
+      GOOGLE_REDIRECT_URI: "https://cards.heapyhop.com/auth/callback"
+      SESSION_SECRET: "${CARDS_SESSION_SECRET}"
+      SESSION_SECURE: "true"
+      ADMIN_EMAILS: "${CARDS_ADMIN_EMAILS}"
+    volumes:
+      - "./cards_heapyhop_com/db:/data/db"
+      - "./cards_heapyhop_com/library:/data/library"
 
   # ------------------------------------------------------------ ibragimov.by --
 
