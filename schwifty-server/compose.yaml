@@ -140,7 +140,7 @@ services:
 
   # --------------------------------------------------------- heapyhop.com --
 
-  # Private bedroom planner: bedroom.heapyhop.com, behind Cloudflare Access.
+  # Public read-only bedroom planner: bedroom.heapyhop.com.
   bedroom_planner:
     <<: *defaults
     container_name: "bedroom-planner"

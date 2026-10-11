@@ -117,7 +117,7 @@ bind-mounted read-only into the container. Contents are git-ignored.
 
 ## Bedroom planner
 
-Private app at <https://bedroom.heapyhop.com>, repository `IRus/bedroom-planner`.
+Public read-only app at <https://bedroom.heapyhop.com>; private repository `IRus/bedroom-planner`.
 The `bedroom_planner` service uses `ghcr.io/irus/bedroom-planner:main` on the
 `schwifty` network, listening on port 8080 with `/healthz`. The image has its
 own healthcheck and includes all frontend dependencies; no volumes or host
@@ -125,9 +125,10 @@ ports are needed. Kodkod handles unhealthy-container restarts. Automatic image
 updates are disabled until the updater has dedicated private-registry credentials.
 
 The remotely managed `schwifty-server` Cloudflare Tunnel routes this hostname
-to `http://bedroom_planner:8080`. A separate Cloudflare Access application
-uses the existing **Ruslan Access** policy; DNS is a proxied tunnel CNAME.
-Tunnel and Access settings are managed in Cloudflare, not in this repository.
+to `http://bedroom_planner:8080`; DNS is a proxied tunnel CNAME. Cloudflare Access
+is intentionally disabled: anyone can load the page and base room model.
+Edits stay in browser localStorage and do not modify server files. Tunnel
+settings are managed in Cloudflare, not in this repository.
 
 Deploy only this service:
 
