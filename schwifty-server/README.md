@@ -121,7 +121,8 @@ Private app at <https://bedroom.heapyhop.com>, repository `IRus/bedroom-planner`
 The `bedroom_planner` service uses `ghcr.io/irus/bedroom-planner:main` on the
 `schwifty` network, listening on port 8080 with `/healthz`. The image has its
 own healthcheck and includes all frontend dependencies; no volumes or host
-ports are needed. Kodkod handles updates and unhealthy-container restarts.
+ports are needed. Kodkod handles unhealthy-container restarts. Automatic image
+updates are disabled until the updater has dedicated private-registry credentials.
 
 The remotely managed `schwifty-server` Cloudflare Tunnel routes this hostname
 to `http://bedroom_planner:8080`. A separate Cloudflare Access application
@@ -136,6 +137,8 @@ docker compose up -d --no-deps bedroom_planner
 docker compose exec -T bedroom_planner wget -qO- http://127.0.0.1:8080/healthz
 ```
 
-The host and updater must have read access to the private GHCR package.
+Pulling requires read access to the private GHCR package. For the initial
+deployment an authenticated Docker client pulled through `ssh://schwifty`, using
+a temporary local registry login; no registry token was stored on the server.
 Layouts are stored in browser localStorage per origin. To move a layout from
 the old localhost/ChatGPT Site, export JSON there and import it at the new URL.
