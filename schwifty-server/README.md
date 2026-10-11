@@ -113,3 +113,29 @@ the link can browse and download.
 
 Add files by placing them on the host under `ibragimov_by/files/` — the dir is
 bind-mounted read-only into the container. Contents are git-ignored.
+
+
+## Bedroom planner
+
+Private app at <https://bedroom.heapyhop.com>, repository `IRus/bedroom-planner`.
+The `bedroom_planner` service uses `ghcr.io/irus/bedroom-planner:main` on the
+`schwifty` network, listening on port 8080 with `/healthz`. The image has its
+own healthcheck and includes all frontend dependencies; no volumes or host
+ports are needed. Kodkod handles updates and unhealthy-container restarts.
+
+The remotely managed `schwifty-server` Cloudflare Tunnel routes this hostname
+to `http://bedroom_planner:8080`. A separate Cloudflare Access application
+uses the existing **Ruslan Access** policy; DNS is a proxied tunnel CNAME.
+Tunnel and Access settings are managed in Cloudflare, not in this repository.
+
+Deploy only this service:
+
+```sh
+docker compose pull bedroom_planner
+docker compose up -d --no-deps bedroom_planner
+docker compose exec -T bedroom_planner wget -qO- http://127.0.0.1:8080/healthz
+```
+
+The host and updater must have read access to the private GHCR package.
+Layouts are stored in browser localStorage per origin. To move a layout from
+the old localhost/ChatGPT Site, export JSON there and import it at the new URL.
