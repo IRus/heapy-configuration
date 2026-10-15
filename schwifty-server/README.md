@@ -144,30 +144,40 @@ a temporary local registry login; no registry token was stored on the server.
 Layouts are stored in browser localStorage per origin. To move a layout from
 the old localhost/ChatGPT Site, export JSON there and import it at the new URL.
 
-
 ## Trip planner
 
-Static travel planner at <https://trip.heapyhop.com>, protected by Cloudflare
-Access with the owner email and the existing Nastya Access group.
-Source repository `IRus/november_2026` and image
-`ghcr.io/irus/november_2026:main` are private. The `trip_heapyhop_com` service
-serves port 8080 on the existing `schwifty` network, without a host port.
-The remotely managed `schwifty-server` tunnel routes the hostname to
-`http://trip_heapyhop_com:8080`. Configure Access before adding DNS/ingress;
-never disable it to publish an update. Preserve other tunnel routes.
+<https://trip.heapyhop.com>: Kotlin/Ktor backend and static frontend, with a
+shared SQLite plan and the last 100 revisions. The source `IRus/november_2026`
+and image `ghcr.io/irus/november_2026:main` are private. Build locally using
+`npm run build`, `./kotlin test`, and `./kotlin package` before the Docker build.
+The service runs as UID 1000, with a read-only root and persistent
+`./trip/data:/data`. Create this directory owned by pi (1000:1000), mode 700.
+Do not delete it on deployment. Include this directory in server backups;
+copy a stopped database or use SQLite's online backup API, not just the live
+main DB file (WAL may contain recent transactions). JSON export and retained
+revisions are recovery aids, not an off-server backup.
 
-The static bundle is built locally with `npm run build` in the private source
-repository. The image packages this bundle into nginx. Pull private images
-using an authenticated local Docker client over `ssh://schwifty`; do not
-store a registry token on the server. Automatic registry updates are disabled
-until dedicated credentials are configured for the updater.
+Cloudflare Access continues to allow the owner email and Nastya Access group.
+Ktor independently validates the Access JWT issuer, audience and signature.
+The normal tunnel route to `http://trip_heapyhop_com:8080` requires Access JWTs.
+A more specific `/calendar/*` Access app bypasses browser login only for the
+calendar subscription path. Its tunnel ingress matches exactly
+`^/calendar/[A-Za-z0-9_-]{43}\.ics$` before the protected site route and does
+not require an Access JWT. The backend requires a random 256-bit revocable
+subscription token here, stored only as a SHA-256 hash. No public listing,
+mutation, API or static content is exposed by that route. Do not log feed URLs.
+Each signed-in user creates/revokes their own read-only link inside the site.
+
+Publish with a temporary authenticated local Docker client over
+`ssh://schwifty`; do not store registry tokens on the server. Automatic image
+updates remain disabled. Restart only `trip_heapyhop_com`:
 
 ```sh
-docker -H ssh://schwifty pull ghcr.io/irus/november_2026:main
-ssh schwifty 'cd /home/pi/heapy-configuration/schwifty-server && docker compose up -d --no-deps trip_heapyhop_com'
-ssh schwifty 'cd /home/pi/heapy-configuration/schwifty-server && docker compose exec -T trip_heapyhop_com wget -qO- http://127.0.0.1:8080/healthz'
+docker compose up -d --no-deps trip_heapyhop_com
+docker compose exec -T trip_heapyhop_com curl -fsS http://127.0.0.1:8080/healthz
 ```
 
-Edits remain in browser localStorage, with JSON backup/restore and KML export
-for Organic Maps. There is no cross-device or multi-user synchronization.
-Verify unauthenticated HTTP requests redirect to Cloudflare Access.
+Verify the API redirects unauthenticated external clients to Access; direct
+origin API calls without a valid JWT return 401. Unknown calendar tokens must
+return 404. For rollback, preserve the database and use the previous image;
+the pre-backend static image is retained locally as `:before-backend`.

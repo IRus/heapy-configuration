@@ -162,14 +162,20 @@ services:
     <<: *defaults
     container_name: "trip.heapyhop.com"
     image: "ghcr.io/irus/november_2026:main"
-    # Private GHCR image: pull with an authenticated local Docker client.
+    # Private image built locally with Kotlin Toolchain; no host port.
     labels:
       - "kodkod.autoheal.enable=true"
+    user: "1000:1000"
     read_only: true
     tmpfs:
-      - /var/cache/nginx
-      - /var/run
-      - /tmp
+      - /tmp:rw,nosuid,size=128m
+    volumes:
+      - ./trip/data:/data
+    environment:
+      TRIP_ORIGIN: "https://trip.heapyhop.com"
+      CF_ACCESS_ISSUER: "https://heapy.cloudflareaccess.com"
+      CF_ACCESS_AUD: "07c8ff946b15d64ee264ea73279e352a4654c6009bcff7c8f4aa9d0157abb195"
+    deploy: *jvm-limits
     security_opt:
       - no-new-privileges:true
 
