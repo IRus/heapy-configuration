@@ -81,6 +81,7 @@ services:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     depends_on:
       - bedroom_planner
+      - trip_heapyhop_com
       - heapy_io
       - ruslan_ibragimov_by
       - ibragimov_by
@@ -155,6 +156,22 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
+
+  # Private trip planner; Cloudflare Access protects trip.heapyhop.com.
+  trip_heapyhop_com:
+    <<: *defaults
+    container_name: "trip.heapyhop.com"
+    image: "ghcr.io/irus/november_2026:main"
+    # Private GHCR image: pull with an authenticated local Docker client.
+    labels:
+      - "kodkod.autoheal.enable=true"
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
 
   paris_heapyhop_com:
     <<: *defaults

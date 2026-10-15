@@ -143,3 +143,31 @@ deployment an authenticated Docker client pulled through `ssh://schwifty`, using
 a temporary local registry login; no registry token was stored on the server.
 Layouts are stored in browser localStorage per origin. To move a layout from
 the old localhost/ChatGPT Site, export JSON there and import it at the new URL.
+
+
+## Trip planner
+
+Static travel planner at <https://trip.heapyhop.com>, protected by Cloudflare
+Access with an explicit two-person email allowlist maintained in Cloudflare.
+Source repository `IRus/november_2026` and image
+`ghcr.io/irus/november_2026:main` are private. The `trip_heapyhop_com` service
+serves port 8080 on the existing `schwifty` network, without a host port.
+The remotely managed `schwifty-server` tunnel routes the hostname to
+`http://trip_heapyhop_com:8080`. Configure Access before adding DNS/ingress;
+never disable it to publish an update. Preserve other tunnel routes.
+
+The static bundle is built locally with `npm run build` in the private source
+repository. The image packages this bundle into nginx. Pull private images
+using an authenticated local Docker client over `ssh://schwifty`; do not
+store a registry token on the server. Automatic registry updates are disabled
+until dedicated credentials are configured for the updater.
+
+```sh
+docker -H ssh://schwifty pull ghcr.io/irus/november_2026:main
+ssh schwifty 'cd /home/pi/heapy-configuration/schwifty-server && docker compose up -d --no-deps trip_heapyhop_com'
+ssh schwifty 'cd /home/pi/heapy-configuration/schwifty-server && docker compose exec -T trip_heapyhop_com wget -qO- http://127.0.0.1:8080/healthz'
+```
+
+Edits remain in browser localStorage, with JSON backup/restore and KML export
+for Organic Maps. There is no cross-device or multi-user synchronization.
+Verify unauthenticated HTTP requests redirect to Cloudflare Access.
