@@ -148,7 +148,7 @@ the old localhost/ChatGPT Site, export JSON there and import it at the new URL.
 ## Trip planner
 
 Static travel planner at <https://trip.heapyhop.com>, protected by Cloudflare
-Access with an explicit two-person email allowlist maintained in Cloudflare.
+Access with the owner email and the existing Nastya Access group.
 Source repository `IRus/november_2026` and image
 `ghcr.io/irus/november_2026:main` are private. The `trip_heapyhop_com` service
 serves port 8080 on the existing `schwifty` network, without a host port.
