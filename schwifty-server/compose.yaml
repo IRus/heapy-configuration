@@ -100,6 +100,7 @@ services:
       - sql_heapyhop_com
       - reachable_heapyhop_com
       - cards_heapyhop_com
+      - solo_accounting
 
   # --------------------------------------------------------------- heapy.io --
 
@@ -795,3 +796,37 @@ services:
       PGADMIN_DEFAULT_PASSWORD: "admin"
     ports:
       - "5432:80"
+
+  # ---------------------------------------------------- solo.heapyhop.com --
+
+  solo_accounting:
+    <<: *defaults
+    container_name: "solo-accounting"
+    image: "${SOLO_IMAGE:-ghcr.io/irus/solo-history-processor@sha256:202aa5a9f17209ad3af2c9278e58b964d855919ccbb0d96ed0b030a0b405237e}"
+    labels:
+      - "kodkod.autoheal.enable=true"
+    user: "1000:1000"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    environment:
+      TELEGRAM_BOT_TOKEN: ${SOLO_TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${SOLO_TELEGRAM_CHAT_ID:-}
+      INGEST_API_KEY: ${SOLO_INGEST_API_KEY:-}
+      ADMIN_API_KEY: ${SOLO_ADMIN_API_KEY:-}
+      DB_PATH: /data/solo.db
+      LISTEN_ADDR: ":8080"
+      GOMEMLIMIT: 100MiB
+    volumes:
+      - ./solo/data:/data
+    healthcheck:
+      test: ["CMD", "/solo", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 256M

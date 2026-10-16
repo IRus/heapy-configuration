@@ -181,3 +181,78 @@ Verify the API redirects unauthenticated external clients to Access; direct
 origin API calls without a valid JWT return 401. Unknown calendar tokens must
 return 404. For rollback, preserve the database and use the previous image;
 the pre-backend static image is retained locally as `:before-backend`.
+
+## Solo accounting
+
+`solo.heapyhop.com` routes through the existing Cloudflare Tunnel to
+`http://solo_accounting:8080`. No host port is published. The source is the
+`server/` directory in private repository `IRus/solo-history-processor`;
+the private image is `ghcr.io/irus/solo-history-processor`. The final image
+contains one static Go binary and CA certificates, running as UID 1000.
+Kotlin conversion tooling remains independent.
+
+Configure the `SOLO_*` variables from `.env-template` in the server's untracked
+`.env`. `SOLO_TELEGRAM_CHAT_ID` is the negative group ID. Every human member of
+this group (including anonymous group administrators) can use accounting;
+other chats and bots are ignored. Give the bot admin rights or disable group
+privacy in BotFather. Telegram uses long polling, not a webhook. A pre-existing
+webhook must be deliberately removed before startup. Run only one instance.
+
+Create `solo/data` owned by 1000:1000, mode 700. Do not replace this directory
+on deployment. It contains the SQLite database, WAL, audit journal and durable
+reply queue. A new database starts at zero; after the bot is running send
+`Purchase: EUR970.98` once to establish the starting amount. Restarts do not
+reset it. Foreign currencies are converted to EUR through Frankfurter's public
+API without another secret. Daily rates are persisted, and the original amount,
+rate, rate date and result are audited. Pending conversions survive restart;
+the displayed balance remains provisional until they finish. See the source
+README for date selection, exact rounding and unsupported currencies.
+
+Reply `/reprocess` to a missed user message: its original chat/message ID
+prevents duplicate booking. Deleted messages and lost edit history cannot be
+recovered this way. HTTP SMS intake starts independently of Telegram.
+
+GitHub Actions in the source repository runs vet, race tests and vulnerability
+checks, then publishes AMD64/ARM64 images to private GHCR. It tags each commit
+and reports its digest. Pin `SOLO_IMAGE` to the resulting immutable digest.
+Keep registry credentials in a temporary local Docker client configuration,
+not on schwifty. Automatic image updates are disabled. Deploy only this service:
+
+```sh
+mkdir -p solo/data
+chmod 700 solo/data
+docker compose up -d --no-deps solo_accounting
+docker compose exec -T solo_accounting /solo healthcheck
+```
+
+The iPhone posts `{id,text}` to `POST /v1/operations` with
+`Authorization: Bearer <SOLO_INGEST_API_KEY>`. Persist an ID and text before
+sending and reuse them on retries. Replace the old direct Telegram call;
+the server now publishes SMS and accounting results. Different IDs are distinct
+operations even when the text matches. This does not deduplicate two separate
+Shortcut runs that generated different IDs.
+
+`GET /healthz` is liveness. Docker healthcheck uses public `GET /readyz` for
+polling failures, permanent reply failures, and delayed delivery. Kodkod handles
+unhealthy containers and notifications. `/v1/status`,
+`/v1/audit`, and `/v1/outbox` require `SOLO_ADMIN_API_KEY`. Do not put that key
+on the phone. The source README describes pagination, cancellations and retry
+operations. Neither keys nor message text are written to application logs.
+
+For a consistent SQLite snapshot including WAL data:
+
+```sh
+docker compose exec -T solo_accounting /solo backup /data/solo-backup-20261016.db
+docker compose exec -T solo_accounting /solo verify
+```
+
+Backup scheduling and off-host retention are managed by the owner. Use unique
+filenames and test restore before relying on the backups. Copying only the live
+main DB file is unsafe. Restore with the service stopped, preserving the old
+DB/WAL/SHM elsewhere and without mixing old WAL files with the restored DB.
+Preserve data on rollback. Currency support upgrades the SQLite schema from
+v1 to v2. A v1 binary refuses a v2 database: returning to v1 requires the
+pre-upgrade snapshot and reconciliation of subsequent operations. Telegram retains pending updates
+for at most 24 hours; longer outages require reconciliation. Telegram replies
+can duplicate after ambiguous network failures, but carry the same audit
+record number and never book the operation twice.
