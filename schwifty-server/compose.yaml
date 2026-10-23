@@ -119,7 +119,7 @@ services:
   heapy_io_root:
     <<: *defaults
     container_name: "heapy.io"
-    image: "ghcr.io/heapy/heapy.io:main"
+    image: "ghcr.io/heapy/heapy-landing:main"
     labels: *autoupdate
 
   heapy_io_kotlin_jobs:

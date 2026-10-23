@@ -256,3 +256,27 @@ pre-upgrade snapshot and reconciliation of subsequent operations. Telegram retai
 for at most 24 hours; longer outages require reconciliation. Telegram replies
 can duplicate after ambiguous network failures, but carry the same audit
 record number and never book the operation twice.
+
+## Heapy landing at heapy.io
+
+The `heapy_io_root` service serves the ecosystem story at `/` and the Komok page
+at `/komok/` from `ghcr.io/heapy/heapy-landing:main`, built by the `Landing`
+workflow in [Heapy/heapy-landing](https://github.com/Heapy/heapy-landing).
+The image contains static files and nginx on port 80, with `/healthz`.
+The existing `heapy_io` ingress routes `/` to this service; `/kotlin_jobs` and
+`kinetica.heapy.io` retain their separate upstreams.
+
+After the image has been published:
+
+```sh
+docker compose pull heapy_io_root
+docker compose up -d --no-deps heapy_io_root
+docker compose exec -T heapy_io_root wget -qO- http://127.0.0.1/healthz
+docker compose exec -T heapy_io wget -qO- http://heapy_io_root/
+docker compose exec -T heapy_io wget -qO- http://heapy_io_root/komok/
+```
+
+Only recreate `heapy_io_root`; the ingress resolves its Docker DNS name on
+requests. The existing auto-update label follows the `main` image tag.
+For rollback, select a previous `ghcr.io/heapy/heapy-landing:sha-<commit>` image
+in this service and run `docker compose up -d --no-deps heapy_io_root`.
