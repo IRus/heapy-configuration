@@ -21,7 +21,7 @@ function hh_update() {
 
 function hh_pull_docker_images() {
   echo "[🆕] Pull latest images"
-  docker pull ghcr.io/wg-easy/wg-easy:latest
+  docker compose -f "${PROJECT}/compose.yaml" pull wireguard
 }
 
 function home() {

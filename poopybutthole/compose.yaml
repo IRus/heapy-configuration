@@ -1,11 +1,11 @@
 services:
   wireguard:
     container_name: "wireguard"
-    image: "ghcr.io/wg-easy/wg-easy:latest"
+    image: "ghcr.io/wg-easy/wg-easy:15"
     restart: "always"
     environment:
-      WG_HOST: "vpn.heapy.io"
-      PASSWORD_HASH: "${WIREGUARD_PASSWORD_HASH}"
+      INSECURE: "true"
+      DISABLE_IPV6: "true"
     volumes:
       - "./wireguard/data/:/etc/wireguard"
     logging:
@@ -13,8 +13,8 @@ services:
     stop_grace_period: 30s
     ports:
       - "51820:51820/udp"
-      # http://vpn.heapy.io:51821/
-      # - "51821:51821/tcp"
+      # Local backend for Tailscale Serve.
+      - "127.0.0.1:51821:51821/tcp"
     cap_add:
       - "NET_ADMIN"
       - "SYS_MODULE"
